@@ -1,0 +1,13 @@
+.x-datepicker .x-monthpicker-buttons {
+    position: absolute;
+}
+.x-mask {
+    background: #e4e4e4;
+}
+.x-monthpicker-buttons {
+    position: relative;
+}
+.x-tab-default-top {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}

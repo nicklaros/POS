@@ -1,0 +1,17 @@
+/* Using standard theme */
+.ux-notification-window .x-window-body {
+    text-align: center;
+    padding: 15px;
+}
+
+/* Custom styling */
+.ux-notification-light .x-window-header {
+    background-color: #8b99a8;
+}
+
+.ux-notification-light .x-window-body {
+    text-align: center;
+    padding: 10px 5px 15px;
+    background-color: #8b99a8;
+    color: #f4f4f4;
+}

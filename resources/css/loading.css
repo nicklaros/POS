@@ -1,0 +1,134 @@
+
+.bubblingG {
+text-align: center;
+width:80px;
+height:50px;
+}
+
+.bubblingG span {
+display: inline-block;
+vertical-align: middle;
+width: 10px;
+height: 10px;
+margin: 25px auto;
+background: #789;
+-moz-border-radius: 50px;
+-moz-animation: bubblingG 0.8s infinite alternate;
+-webkit-border-radius: 50px;
+-webkit-animation: bubblingG 0.8s infinite alternate;
+-ms-border-radius: 50px;
+-ms-animation: bubblingG 0.8s infinite alternate;
+-o-border-radius: 50px;
+-o-animation: bubblingG 0.8s infinite alternate;
+border-radius: 50px;
+animation: bubblingG 0.8s infinite alternate;
+}
+
+#bubblingG_1 {
+-moz-animation-delay: 0s;
+-webkit-animation-delay: 0s;
+-ms-animation-delay: 0s;
+-o-animation-delay: 0s;
+animation-delay: 0s;
+}
+
+#bubblingG_2 {
+-moz-animation-delay: 0.24s;
+-webkit-animation-delay: 0.24s;
+-ms-animation-delay: 0.24s;
+-o-animation-delay: 0.24s;
+animation-delay: 0.24s;
+}
+
+#bubblingG_3 {
+-moz-animation-delay: 0.48s;
+-webkit-animation-delay: 0.48s;
+-ms-animation-delay: 0.48s;
+-o-animation-delay: 0.48s;
+animation-delay: 0.48s;
+}
+
+@-moz-keyframes bubblingG {
+0% {
+width: 10px;
+height: 10px;
+background-color:#789;
+-moz-transform: translateY(0);
+}
+
+100% {
+width: 24px;
+height: 24px;
+background-color:#F5F5F5;
+-moz-transform: translateY(-21px);
+}
+
+}
+
+@-webkit-keyframes bubblingG {
+0% {
+width: 10px;
+height: 10px;
+background-color:#789;
+-webkit-transform: translateY(0);
+}
+
+100% {
+width: 24px;
+height: 24px;
+background-color:#F5F5F5;
+-webkit-transform: translateY(-21px);
+}
+
+}
+
+@-ms-keyframes bubblingG {
+0% {
+width: 10px;
+height: 10px;
+background-color:#789;
+-ms-transform: translateY(0);
+}
+
+100% {
+width: 24px;
+height: 24px;
+background-color:#F5F5F5;
+-ms-transform: translateY(-21px);
+}
+
+}
+
+@-o-keyframes bubblingG {
+0% {
+width: 10px;
+height: 10px;
+background-color:#789;
+-o-transform: translateY(0);
+}
+
+100% {
+width: 24px;
+height: 24px;
+background-color:#F5F5F5;
+-o-transform: translateY(-21px);
+}
+
+}
+
+@keyframes bubblingG {
+0% {
+width: 10px;
+height: 10px;
+background-color: #789;
+transform: translateY(0);
+}
+
+100% {
+width: 24px;
+height: 24px;
+background-color:#F5F5F5;
+transform: translateY(-21px);
+}
+
+}

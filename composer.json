@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-0": {
+            "ORM": "remote"
+        }
+    },
+    "require": {
+        "symfony/http-foundation": "2.3.*",
+		"propel/propel": "2.0.0-alpha3"		
+    }
+}
