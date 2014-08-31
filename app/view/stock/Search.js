@@ -1,8 +1,8 @@
 Ext.define('POS.view.stock.Search' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.searchstock',
-    id: 'searchstock',
-    controller: 'searchstock',
+    alias : 'widget.search-stock',
+    id: 'search-stock',
+    controller: 'search-stock',
 
     requires: [
         'POS.view.stock.SearchController'

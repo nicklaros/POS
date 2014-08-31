@@ -1,6 +1,6 @@
 Ext.define('POS.view.stock.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.editstock',
+    alias: 'controller.edit-stock',
 
     requires: [
         'Ext.fn.Util'

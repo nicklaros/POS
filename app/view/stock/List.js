@@ -1,15 +1,15 @@
 Ext.define('POS.view.stock.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.liststock',
-    controller: 'liststock',
+    alias : 'widget.list-stock',
+    controller: 'list-stock',
 
     requires: [
         'Ext.fn.Render',
         'POS.store.Stock',
         'POS.view.stock.Add',
         'POS.view.stock.Edit',
-        'POS.view.stock.Search',
-        'POS.view.stock.ListController'
+        'POS.view.stock.ListController',
+        'POS.view.stock.Search'
     ],
 
     autoScroll: true,
@@ -21,25 +21,25 @@ Ext.define('POS.view.stock.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-tasks glyph"></i> Stock';
 
-        var store = 'POS.store.Stock';
+        var store = POS.app.getStore('POS.store.Stock');
         this.store = store;
 
         this.columns = [
             {header: 'id', dataIndex:'id', hidden:true},
-            {header: 'Kode', dataIndex: 'kode', width:120},
-            {header: 'Nama', dataIndex: 'nama', width:275},
-            {header: 'Satuan', dataIndex: 'satuan', width:75},
-            {header: 'Stock', dataIndex: 'jumlah_stock', width:70, align: 'right'},
-            {header: 'Harga<br />Beli', dataIndex: 'hrg_beli', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kode', dataIndex: 'code', width:120},
+            {header: 'Nama', dataIndex: 'name', width:275},
+            {header: 'Satuan', dataIndex: 'unit', width:75},
+            {header: 'Stock', dataIndex: 'amount', width:70, align: 'right'},
+            {header: 'Harga<br />Beli', dataIndex: 'buy', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
             {
                 text: 'Harga Jual',
                 columns:[
-                    {header: 'Biasa', dataIndex: 'hrg_jual_biasa', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Grosir', dataIndex: 'hrg_jual_grosir', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Lain', dataIndex: 'hrg_jual_lain', width:100, renderer: Ext.fn.Render.currency, align: 'right'}
+                    {header: 'Biasa', dataIndex: 'sell_public', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
+                    {header: 'Grosir', dataIndex: 'sell_distributor', width:100, renderer: Ext.fn.Render.currency, align: 'right'},
+                    {header: 'Lain', dataIndex: 'sell_misc', width:100, renderer: Ext.fn.Render.currency, align: 'right'}
                 ]
             },
-            {header: 'Diskon', dataIndex: 'diskon', width:90, renderer: Ext.fn.Render.diskon, align: 'right'}
+            {header: 'Diskon', dataIndex: 'discount', width:90, renderer: Ext.fn.Render.diskon, align: 'right'}
         ];
 
         this.dockedItems = [{

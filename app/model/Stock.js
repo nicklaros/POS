@@ -2,14 +2,14 @@ Ext.define('POS.model.Stock', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id', type: 'int'},
-        {name: 'kode', type: 'string'},
-        {name: 'nama', type: 'string'},
-        {name: 'jumlah_stock', type: 'string'},
-        {name: 'satuan', type: 'string'},
-        {name: 'hrg_beli', type: 'int'},
-        {name: 'hrg_jual_biasa', type: 'int'},
-        {name: 'hrg_jual_grosir', type: 'int'},
-        {name: 'hrg_jual_lain', type: 'int'},
-        {name: 'diskon', type: 'int'}
+        {name: 'code', type: 'string'},
+        {name: 'name', type: 'string'},
+        {name: 'amount', type: 'string'},
+        {name: 'unit', type: 'string'},
+        {name: 'buy', type: 'int'},
+        {name: 'sell_public', type: 'int'},
+        {name: 'sell_distributor', type: 'int'},
+        {name: 'sell_misc', type: 'int'},
+        {name: 'discount', type: 'int'}
     ]
 });

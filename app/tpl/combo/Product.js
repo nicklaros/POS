@@ -1,9 +1,9 @@
-Ext.define('Ext.tpl.combo.Produk', {
+Ext.define('Ext.tpl.combo.Product', {
     extend: 'Ext.XTemplate',
 
     html: [
         '<div class="lst">',
-        '<strong>{nama}</strong> {kode}',
+        '<strong>{name}</strong> <small>{code}</small>',
         '</div>'
     ],
 

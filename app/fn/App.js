@@ -58,7 +58,7 @@ Ext.define('Ext.fn.App', {
     },
 
     mnListStock: function(){
-        this.newTab('liststock');
+        this.newTab('list-stock');
     },
 
     mnListUser: function(){

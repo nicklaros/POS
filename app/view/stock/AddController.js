@@ -1,13 +1,13 @@
 Ext.define('POS.view.stock.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.addstock',
+    alias: 'controller.add-stock',
 
     control: {
         '#': {
             boxready: function(){
-                var barang = this.lookupReference('barang');
+                var product = this.lookupReference('product');
                 setTimeout(function(){
-                    barang.focus();
+                    product.focus();
                 }, 10);
             }
         },

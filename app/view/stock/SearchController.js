@@ -1,6 +1,6 @@
 Ext.define('POS.view.stock.SearchController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.searchstock',
+    alias: 'controller.search-stock',
 
     control: {
         '#': {

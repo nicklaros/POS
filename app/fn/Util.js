@@ -51,12 +51,12 @@ Ext.define('Ext.fn.Util', {
     },
 
     applyProxy: function(){
-        POS.app.getStore('POS.store.combo.Barang').setProxy({
+        POS.app.getStore('POS.store.combo.Product').setProxy({
             type: 'websocket',
-            storeId: 'comboBarang',
+            storeId: 'combo-product',
             websocket: Ext.ws.Main,
             api: {
-                read: 'combo/barang'
+                read: 'combo/product'
             },
             reader: {
                 type: 'json',
