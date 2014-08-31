@@ -14,10 +14,6 @@ Ext.define('Ext.fn.Util', {
         Ext.fn.WebSocket.listen(Ext.ws.Main);
 
         // instantiate store
-        POS.app.getStore('POS.store.combo.Barang');
-        POS.app.getStore('POS.store.combo.LevelUser');
-        POS.app.getStore('POS.store.Stock');
-        POS.app.getStore('POS.store.User');
 
         // Give the store a proxy
         Ext.fn.Util.applyProxy();

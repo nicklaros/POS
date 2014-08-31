@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edituser',
+    alias: 'controller.edit-user',
 
     requires: [
         'Ext.fn.Util'
@@ -23,9 +23,9 @@ Ext.define('POS.view.user.EditController', {
             form = this.lookupReference('form');
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('user/loadFormUbah', {id: id});
+        Ext.ws.Main.send('user/loadFormEdit', {id: id});
         Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('user/loadFormUbah', function(websocket, data){
+            Ext.ws.Main.on('user/loadFormEdit', function(websocket, data){
                 Ext.fn.App.setLoading(false);
                 if (data.success){
                     form.getForm().setValues(data.root);

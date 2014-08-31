@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.adduser',
+    alias: 'controller.add-user',
 
     requires: [
         'Ext.fn.Util'

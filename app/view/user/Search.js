@@ -1,11 +1,11 @@
 Ext.define('POS.view.user.Search' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.searchuser',
-    id: 'searchuser',
-    controller: 'searchuser',
+    alias : 'widget.search-user',
+    id: 'search-user',
+    controller: 'search-user',
 
     requires: [
-        'POS.store.combo.LevelUser',
+        'POS.custom.field.ComboRole',
         'POS.store.User',
         'POS.view.user.SearchController'
     ],
@@ -26,20 +26,15 @@ Ext.define('POS.view.user.Search' ,{
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Nama',
-                name: 'nama',
-                reference: 'nama',
-                emptyText: EF0,
+                name: 'name',
+                reference: 'name',
+                emptyText: EMPTY_TEXT_0,
                 anchor: '100%'
             },{
-                xtype: 'combo',
+                xtype: 'combo-role',
                 fieldLabel: 'Level',
-                name: 'level',
-                triggerAction: 'all',
-                queryMode: 'local',
-                store: 'POS.store.combo.LevelUser',
-                displayField: 'val',
-                forceSelection: true,
-                emptyText: EF0,
+                name: 'role',
+                emptyText: EMPTY_TEXT_0,
                 anchor: '100%',
                 listeners: {
                     change: 'levelChange'

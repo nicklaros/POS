@@ -62,7 +62,7 @@ Ext.define('Ext.fn.App', {
     },
 
     mnListUser: function(){
-        this.newTab('listuser');
+        this.newTab('list-user');
     },
 
     mnUbahBiodata: function(){
