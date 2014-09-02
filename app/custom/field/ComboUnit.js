@@ -18,6 +18,7 @@ Ext.define('POS.custom.field.ComboUnit', {
     minChars: 1,
     queryDelay: 50,
     queryMode: 'remote',
+    triggerAction: 'query',
     typeAhead: true,
     typeAheadDelay: 250,
     listeners: {
