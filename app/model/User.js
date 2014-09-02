@@ -3,9 +3,10 @@ Ext.define('POS.model.User', {
     fields: [
         {name: 'id', type: 'int'},
         {name: 'user', type: 'string'},
-        {name: 'level', type: 'string'},
-        {name: 'nama', type: 'string'},
-        {name: 'alamat', type: 'string'},
-        {name: 'telp', type: 'string'}
+        {name: 'role_id', type: 'int'},
+        {name: 'role', type: 'string'},
+        {name: 'name', type: 'string'},
+        {name: 'address', type: 'string'},
+        {name: 'phone', type: 'string'}
     ]
 });

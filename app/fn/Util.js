@@ -14,10 +14,6 @@ Ext.define('Ext.fn.Util', {
         Ext.fn.WebSocket.listen(Ext.ws.Main);
 
         // instantiate store
-        POS.app.getStore('POS.store.combo.Barang');
-        POS.app.getStore('POS.store.combo.LevelUser');
-        POS.app.getStore('POS.store.Stock');
-        POS.app.getStore('POS.store.User');
 
         // Give the store a proxy
         Ext.fn.Util.applyProxy();
@@ -55,12 +51,25 @@ Ext.define('Ext.fn.Util', {
     },
 
     applyProxy: function(){
-        POS.app.getStore('POS.store.combo.Barang').setProxy({
+        POS.app.getStore('POS.store.combo.Product').setProxy({
             type: 'websocket',
-            storeId: 'comboBarang',
+            storeId: 'combo-product',
             websocket: Ext.ws.Main,
             api: {
-                read: 'combo/barang'
+                read: 'combo/product'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
+        POS.app.getStore('POS.store.combo.Unit').setProxy({
+            type: 'websocket',
+            storeId: 'combo-unit',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/unit'
             },
             reader: {
                 type: 'json',

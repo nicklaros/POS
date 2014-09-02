@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edituser',
+    alias: 'controller.edit-user',
 
     requires: [
         'Ext.fn.Util'
@@ -23,15 +23,16 @@ Ext.define('POS.view.user.EditController', {
             form = this.lookupReference('form');
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('user/loadFormUbah', {id: id});
-        Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('user/loadFormUbah', function(websocket, data){
+        Ext.ws.Main.send('user/loadFormEdit', {id: id});
+        var monitor = Ext.fn.WebSocket.monitor(
+            Ext.ws.Main.on('user/loadFormEdit', function(websocket, result){
+                clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
-                if (data.success){
-                    form.getForm().setValues(data.root);
+                if (result.success){
+                    form.getForm().setValues(result.data);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', data.errmsg);
+                    Ext.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -50,8 +51,9 @@ Ext.define('POS.view.user.EditController', {
 
             Ext.fn.App.setLoading(true);
             Ext.ws.Main.send('user/update', values);
-            Ext.fn.WebSocket.monitor(
+            var monitor = Ext.fn.WebSocket.monitor(
                 Ext.ws.Main.on('user/update', function(websocket, data){
+                    clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();

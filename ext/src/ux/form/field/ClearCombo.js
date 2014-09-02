@@ -1,27 +1,22 @@
 Ext.define('Ext.ux.form.field.ClearCombo', {
 	extend: 'Ext.form.field.ComboBox',
 	alias: 'widget.clearcombo',
-	
-	trigger2Cls: 'x-form-clear-trigger',
+    
+    triggers: {
+        picker: {
+            handler: 'onTriggerClick', 
+            scope: 'this'
+        },
+        trigger2: {
+            cls: 'x-form-clear-trigger',
+            handler: function(args) {
+                this.onTrigger2Click(args);
+            }
+        }
+    },
 
 	initComponent: function () {
 		var me = this;
-
-
-		me.addEvents(
-			/**
-			* @event beforeclear
-			*
-			* @param {<|#NAMESPACE#|>.FilterCombo} FilterCombo The filtercombo that triggered the event
-			*/
-			'beforeclear',
-			/**
-			* @event beforeclear
-			*
-			* @param {<|#NAMESPACE#|>.FilterCombo} FilterCombo The filtercombo that triggered the event
-			*/
-			'clear'
-		);
 
 		me.callParent(arguments);
 
@@ -51,7 +46,7 @@ Ext.define('Ext.ux.form.field.ClearCombo', {
 	onShowClearTrigger: function (show) {
 		var me = this;
 
-		show = ( Ext.isBoolean( show ) ) ? show : true;
+		show = true;
 		if (show) {
 			me.triggerEl.each(function (el, c, i) {
 				if (i === 1) {
@@ -70,7 +65,12 @@ Ext.define('Ext.ux.form.field.ClearCombo', {
 				}
 			});
 		}
-		me.updateLayout();
+		// ToDo -> Version specific methods
+		if (Ext.lastRegisteredVersion.shortVersion > 407) {
+			me.updateLayout();
+		} else {
+			me.updateEditState();
+		}
 	},
 
 	/**

@@ -1,6 +1,6 @@
 Ext.define('POS.view.stock.ListController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.liststock',
+    alias: 'controller.list-stock',
 
     requires: [
         'Ext.fn.Util'
@@ -24,7 +24,7 @@ Ext.define('POS.view.stock.ListController', {
         },
         'button[reference=add]': {
             click: function(){
-                Ext.fn.App.window('addstock')
+                Ext.fn.App.window('add-stock')
             }
         },
         'button[reference=edit]': {
@@ -49,11 +49,12 @@ Ext.define('POS.view.stock.ListController', {
 
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('stock/destroy', {id: id});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('stock/destroy', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
-                                        POS.app.getStore('POS.store.User').load();
+                                        POS.app.getStore('POS.store.Stock').load();
                                     }else{
                                         Ext.fn.App.notification('Ups', data.errmsg);
                                     }
@@ -69,7 +70,7 @@ Ext.define('POS.view.stock.ListController', {
         },
         'button[reference=search]': {
             click: function(){
-                Ext.fn.App.window('searchstock');
+                Ext.fn.App.window('search-stock');
             }
         },
         'button[reference=reset]': {
@@ -82,7 +83,7 @@ Ext.define('POS.view.stock.ListController', {
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('editstock');
+        var edit = Ext.fn.App.window('edit-stock');
         edit.getController().load(rec.get('id'));
     }
 });

@@ -1,8 +1,8 @@
 Ext.define('POS.view.stock.Search' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.searchstock',
-    id: 'searchstock',
-    controller: 'searchstock',
+    alias : 'widget.search-stock',
+    id: 'search-stock',
+    controller: 'search-stock',
 
     requires: [
         'POS.view.stock.SearchController'
@@ -23,19 +23,19 @@ Ext.define('POS.view.stock.Search' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Nama',
-                name: 'nama',
-                reference: 'nama',
-                emptyText: EF0,
+                fieldLabel: 'Nama Produk',
+                name: 'product',
+                reference: 'product',
+                emptyText: EMPTY_TEXT_0,
                 anchor: '100%',
                 listeners: {
                     specialkey: 'specialkey'
                 }
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Kode Barang',
-                name: 'kode',
-                emptyText: EF0,
+                fieldLabel: 'Kode Produk',
+                name: 'code',
+                emptyText: EMPTY_TEXT_0,
                 anchor: '100%',
                 listeners: {
                     specialkey: 'specialkey'

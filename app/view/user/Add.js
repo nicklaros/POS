@@ -1,11 +1,11 @@
 Ext.define('POS.view.user.Add' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.adduser',
-    id: 'adduser',
-    controller: 'adduser',
+    alias : 'widget.add-user',
+    id: 'add-user',
+    controller: 'add-user',
 
     requires: [
-        'POS.store.combo.LevelUser',
+        'POS.custom.field.ComboRole',
         'POS.view.user.AddController'
     ],
 
@@ -23,26 +23,20 @@ Ext.define('POS.view.user.Add' ,{
             monitorValid: true,
             bodyPadding: 10,
             items: [{
-                xtype: 'combo',
+                xtype: 'combo-role',
                 fieldLabel: 'Level',
-                name: 'level',
-                triggerAction: 'all',
-                editable: false,
-                queryMode: 'local',
-                store: 'POS.store.combo.LevelUser',
-                displayField: 'val',
-                valueField: 'val',
-                value: 'Pegawai',
-                forceSelection: true,
+                name: 'role_id',
+                afterLabelTextTpl: REQUIRED,
+                allowBlank: false,
                 width: 150
             },{
                 xtype: 'textfield',
                 fieldLabel: 'User ID',
                 name: 'user',
                 reference: 'user',
-                afterLabelTextTpl: REQ,
+                afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
-                maskRe: MR1,
+                maskRe: MASK_RE_1,
                 maxLength: 30,
                 width: 250
             },{
@@ -52,24 +46,24 @@ Ext.define('POS.view.user.Add' ,{
             },{
                 xtype: 'textfield',
                 fieldLabel: 'Nama',
-                name: 'nama',
-                afterLabelTextTpl: REQ,
+                name: 'name',
+                afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
-                maskRe: MR0,
+                maskRe: MASK_RE_0,
                 maxLength: 30,
                 width: 250
             },{
                 xtype: 'textfield',
                 fieldLabel: 'Alamat',
-                name: 'alamat',
-                maskRe: MR0,
+                name: 'address',
+                maskRe: MASK_RE_0,
                 maxLength: 30,
                 width: 350
             },{
                 xtype: 'textfield',
                 fieldLabel: 'Telp',
-                name: 'telp',
-                maskRe: MR0,
+                name: 'phone',
+                maskRe: MASK_RE_0,
                 maxLength: 15,
                 width: 350
             }]

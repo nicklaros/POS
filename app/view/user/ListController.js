@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.ListController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.listuser',
+    alias: 'controller.list-user',
 
     requires: [
         'Ext.fn.Util'
@@ -26,7 +26,7 @@ Ext.define('POS.view.user.ListController', {
         },
         'button[reference=add]': {
             click: function(){
-                Ext.fn.App.window('adduser')
+                Ext.fn.App.window('add-user')
             }
         },
         'button[reference=edit]': {
@@ -45,8 +45,9 @@ Ext.define('POS.view.user.ListController', {
                         if (btn == 'yes'){
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('user/resetPassword', {id: rec.get('id')});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('user/resetPassword', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
                                         Ext.fn.App.notification('Berhasil', 'Password berhasil direset, selanjutnya user tersebut bisa masuk dengan password yang sama dengan User Id nya');
@@ -80,8 +81,9 @@ Ext.define('POS.view.user.ListController', {
 
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('user/destroy', {id: id});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('user/destroy', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
                                         POS.app.getStore('POS.store.User').load();
@@ -100,7 +102,7 @@ Ext.define('POS.view.user.ListController', {
         },
         'button[reference=search]': {
             click: function(){
-                Ext.fn.App.window('searchuser');
+                Ext.fn.App.window('search-user');
             }
         },
         'button[reference=reset]': {
@@ -113,7 +115,7 @@ Ext.define('POS.view.user.ListController', {
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edituser');
+        var edit = Ext.fn.App.window('edit-user');
         edit.getController().load(rec.get('id'));
     }
 });

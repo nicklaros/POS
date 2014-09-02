@@ -7,7 +7,7 @@ Ext.define('POS.store.Stock', {
     pageSize: 100,
 
     sorters: [{
-        property: 'nama',
+        property: 'product',
         direction: 'ASC'
     }],
 

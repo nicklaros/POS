@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.adduser',
+    alias: 'controller.add-user',
 
     requires: [
         'Ext.fn.Util'
@@ -35,8 +35,9 @@ Ext.define('POS.view.user.AddController', {
 
             Ext.fn.App.setLoading(true);
             Ext.ws.Main.send('user/create', values);
-            Ext.fn.WebSocket.monitor(
+            var monitor = Ext.fn.WebSocket.monitor(
                 Ext.ws.Main.on('user/create', function(websocket, data){
+                    clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();

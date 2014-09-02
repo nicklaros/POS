@@ -1,6 +1,6 @@
 Ext.define('POS.view.user.SearchController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.searchuser',
+    alias: 'controller.search-user',
 
     control: {
         '#': {
@@ -9,9 +9,9 @@ Ext.define('POS.view.user.SearchController', {
 
                 this.lookupReference('form').getForm().setValues(params);
 
-                var nama = this.lookupReference('nama');
+                var name = this.lookupReference('name');
                 setTimeout(function(){
-                    nama.focus()
+                    name.focus()
                 }, 10);
             }
         },

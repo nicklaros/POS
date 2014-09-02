@@ -1,12 +1,15 @@
 Ext.define('POS.view.stock.Edit' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.editstock',
-    id: 'editstock',
-    controller: 'editstock',
+    alias : 'widget.edit-stock',
+    id: 'edit-stock',
+    controller: 'edit-stock',
 
     requires: [
-        'Ext.tpl.combo.Produk',
-        'POS.store.combo.Barang',
+        'POS.custom.field.ComboProduct',
+        'POS.custom.field.ComboUnit',
+        'POS.custom.field.Discount',
+        'POS.custom.field.Price',
+        'POS.custom.field.Stock',
         'POS.view.stock.EditController'
     ],
 
@@ -28,62 +31,40 @@ Ext.define('POS.view.stock.Edit' ,{
                 xtype: 'hidden',
                 name: 'id'
             },{
-                xtype: 'combo',
+                xtype: 'combo-product',
                 fieldLabel: 'Ketik nama / kode barang',
-                name: 'barang',
-                reference: 'barang',
-                afterLabelTextTpl: REQ,
+                name: 'product_id',
+                reference: 'product',
+                afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
-                anyMatch: true,
-                displayField: 'nama',
-                forceSelection: true,
-                hideTrigger: true,
-                listConfig: {
-                    itemTpl: Ext.create('Ext.tpl.combo.Produk')
-                },
-                matchFieldWidth: true,
-                minChars: 1,
-                queryDelay: 10,
-                queryMode: 'remote',
-                store: 'POS.store.combo.Barang',
-                typeAhead: true,
-                typeAheadDelay: 100,
-                valueField: 'id',
-                width: 500
+                width: 350
             },{
                 xtype: 'container',
                 anchor: '100%',
                 layout: 'hbox',
-                margin: '10 0 10 0',
-                padding: 10,
+                margin: '0 0 10 0',
                 items:[{
-                    xtype: 'numberfield',
-                    fieldLabel: 'Harga Beli',
-                    name: 'hrg_beli',
-                    minValue: 0,
-                    value: 0,
-                    step: 1000,
-                    width: 150
-                },{
-                    xtype: 'numberfield',
+                    xtype: 'field-stock',
                     fieldLabel: 'Jumlah Stock',
-                    name: 'jumlah_stock',
-                    minValue: 0,
-                    value: 1,
-                    step: 10,
-                    margin: '0 0 0 20',
+                    name: 'amount',
+                    saveOnEnter: true,
                     width: 100
                 },{
-                    xtype: 'numberfield',
-                    fieldLabel: 'Diskon (%)',
-                    name: 'diskon',
-                    minValue: 0,
-                    maxValue: 100,
-                    value: 0,
-                    step: 5,
+                    xtype: 'combo-unit',
+                    fieldLabel: 'Satuan',
+                    name: 'unit_id',
+                    reference: 'unit',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
                     margin: '0 0 0 20',
-                    width:150
+                    width: 150
                 }]
+            },{
+                xtype: 'field-price',
+                fieldLabel: 'Harga Beli',
+                name: 'buy',
+                saveOnEnter: true,
+                width: 150
             },{
                 xtype: 'fieldset',
                 title: 'Harga Jual',
@@ -92,32 +73,32 @@ Ext.define('POS.view.stock.Edit' ,{
                 margin: '10 0 10 0',
                 padding: 10,
                 items:[{
-                    xtype: 'numberfield',
+                    xtype: 'field-price',
                     fieldLabel: 'Biasa',
-                    name: 'hrg_jual_biasa',
-                    minValue: 0,
-                    value: 0,
-                    step: 1000,
+                    name: 'sell_public',
+                    saveOnEnter: true,
                     width: 150
                 },{
-                    xtype: 'numberfield',
+                    xtype: 'field-price',
                     fieldLabel: 'Grosir',
-                    name: 'hrg_jual_grosir',
-                    minValue: 0,
-                    value: 0,
-                    step: 1000,
+                    name: 'sell_distributor',
+                    saveOnEnter: true,
                     margin: '0 0 0 20',
                     width: 150
                 },{
-                    xtype: 'numberfield',
+                    xtype: 'field-price',
                     fieldLabel: 'Lain',
-                    name: 'hrg_jual_lain',
-                    minValue: 0,
-                    value: 0,
-                    step: 1000,
+                    name: 'sell_misc',
+                    saveOnEnter: true,
                     margin: '0 0 0 20',
                     width: 150
                 }]
+            },{
+                xtype: 'field-discount',
+                fieldLabel: 'Diskon (%)',
+                name: 'discount',
+                saveOnEnter: true,
+                width:150
             }]
         }];
 

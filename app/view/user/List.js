@@ -1,7 +1,7 @@
 Ext.define('POS.view.user.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.listuser',
-    controller: 'listuser',
+    alias : 'widget.list-user',
+    controller: 'list-user',
 
     requires: [
         'POS.store.User',
@@ -14,22 +14,26 @@ Ext.define('POS.view.user.List' ,{
     autoScroll: true,
     columnLines: true,
     closable: true,
-    selType: 'checkboxmodel',
+    multiColumnSort: true,
+    selModel : {
+        selType   : 'checkboxmodel',
+        checkOnly : true
+    },
     stripeRows: true,
 
     initComponent: function() {
         this.title = '<i class="fa fa-user glyph"></i> User';
 
-        var store = 'POS.store.User';
+        var store = POS.app.getStore('POS.store.User');
         this.store = store;
 
         this.columns = [
             {header: 'id', dataIndex:'id', hidden:true},
-            {header: 'Level', dataIndex: 'level', width:75},
+            {header: 'Jabatan', dataIndex: 'role', width:100},
             {header: 'User ID', dataIndex: 'user', width:100},
-            {header: 'Nama', dataIndex: 'nama', width:150},
-            {header: 'Alamat', dataIndex: 'alamat', width:175},
-            {header: 'Telp', dataIndex: 'telp', width:150}
+            {header: 'Nama', dataIndex: 'name', width:150},
+            {header: 'Alamat', dataIndex: 'address', width:175},
+            {header: 'Telp', dataIndex: 'phone', width:150}
         ];
 
         this.dockedItems = [{
