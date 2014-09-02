@@ -64,6 +64,19 @@ Ext.define('Ext.fn.Util', {
             }
         });
 
+        POS.app.getStore('POS.store.combo.Unit').setProxy({
+            type: 'websocket',
+            storeId: 'combo-unit',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/unit'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
         POS.app.getStore('POS.store.Stock').setProxy({
             type: 'websocket',
             storeId: 'stock',

@@ -45,8 +45,9 @@ Ext.define('POS.view.user.ListController', {
                         if (btn == 'yes'){
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('user/resetPassword', {id: rec.get('id')});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('user/resetPassword', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
                                         Ext.fn.App.notification('Berhasil', 'Password berhasil direset, selanjutnya user tersebut bisa masuk dengan password yang sama dengan User Id nya');
@@ -80,8 +81,9 @@ Ext.define('POS.view.user.ListController', {
 
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('user/destroy', {id: id});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('user/destroy', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
                                         POS.app.getStore('POS.store.User').load();

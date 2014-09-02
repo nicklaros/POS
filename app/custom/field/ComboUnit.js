@@ -1,25 +1,24 @@
-Ext.define('POS.custom.field.ComboProduct', {
+Ext.define('POS.custom.field.ComboUnit', {
     extend: 'Ext.ux.form.field.ClearCombo',
-    alias: 'widget.combo-product',
+    alias: 'widget.combo-unit',
 
     requires: [
-        'Ext.tpl.combo.Product',
-        'POS.store.combo.Product'
+        'POS.store.combo.Unit'
     ],
 
     displayField: 'name',
     valueField: 'id',
 
     anyMatch: true,
-    autoSelect: false,
+    autoSelect: true,
     enableKeyEvents: true,
     forceSelection: true,
-    hideTrigger: true,
+    hideTrigger: false,
     matchFieldWidth: true,
     minChars: 1,
-    queryDelay: 200,
+    queryDelay: 50,
     queryMode: 'remote',
-    typeAhead: false,
+    typeAhead: true,
     typeAheadDelay: 250,
     listeners: {
         keydown: function(field){
@@ -30,11 +29,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     },
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Product');
-
-        this.listConfig = {
-            itemTpl: new Ext.tpl.combo.Product
-        };
+        this.store = POS.app.getStore('POS.store.combo.Unit');
 
         this.callParent(arguments);
     }

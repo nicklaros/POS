@@ -11,7 +11,7 @@ Ext.define('POS.view.stock.AddController', {
                 }, 10);
             }
         },
-        'numberfield': {
+        'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.save();
             }
@@ -35,8 +35,9 @@ Ext.define('POS.view.stock.AddController', {
 
             Ext.fn.App.setLoading(true);
             Ext.ws.Main.send('stock/create', values);
-            Ext.fn.WebSocket.monitor(
+            var monitor = Ext.fn.WebSocket.monitor(
                 Ext.ws.Main.on('stock/create', function(websocket, data){
+                    clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();

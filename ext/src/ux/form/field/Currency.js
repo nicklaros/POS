@@ -1,24 +1,39 @@
 /*
- * GNU General Public License Usage
- * This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+ * MIT License
  *
- * http://www.gnu.org/licenses/lgpl.html
+ * Copyright (C) 2014 Nick Laros
  *
- * @description: This class provide aditional format to numbers by extending Ext.form.field.Number
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
+ * (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
  *
- * @author: Greivin Britton
- * @email: brittongr@gmail.com
- * @version: 2 compatible with ExtJS 4
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @description: Extension to display currency in a field
+ *
+ * @author: Nick Laros
+ * @email: nicklaros@gmail.com
+ * @version: 5 - for ExtJS version 5
  */
-Ext.define('Ext.ux.form.field.Numeric',
+Ext.define('Ext.ux.form.field.Currency',
 {
-    extend: 'Ext.form.field.Number',//Extending the NumberField
-    alias: 'widget.numericfield',//Defining the xtype,
-    currencySymbol: null,
-    useThousandSeparator: true,
-    thousandSeparator: ',',
+    extend: 'Ext.form.field.Text',
+    alias: 'widget.currencyfield',
+    
     alwaysDisplayDecimals: false,
     fieldStyle: 'text-align: right;',
+    maskRe: /[0-9]/,
+    symbol: '$',
+    thousandSeparator: ',',
+    useThousandSeparator: true,
+    value: 0,
+    
     initComponent: function(){
         if (this.useThousandSeparator && this.decimalSeparator == ',' && this.thousandSeparator == ',')
             this.thousandSeparator = '.';
@@ -28,11 +43,19 @@ Ext.define('Ext.ux.form.field.Numeric',
        
         this.callParent(arguments);
     },
+    
+    /**
+     * Override setValue.
+     */
     setValue: function(value){
-        Ext.ux.form.field.Numeric.superclass.setValue.call(this, value != null ? value.toString().replace('.', this.decimalSeparator) : value);
+        Ext.form.field.Text.superclass.setValue.call(this, value != null ? value.toString().replace('.', this.decimalSeparator) : value);
        
         this.setRawValue(this.getFormattedValue(this.getValue()));
     },
+    
+    /**
+     * Get value after format added.
+     */
     getFormattedValue: function(value){
         if (Ext.isEmpty(value) || !this.hasFormat())
             return value;
@@ -68,18 +91,20 @@ Ext.define('Ext.ux.form.field.Numeric',
                 value = whole + (ps[1] ? this.decimalSeparator + ps[1] : '');
             }
            
-            return Ext.String.format('{0}{1}{2}', (neg ? '-' : ''), (Ext.isEmpty(this.currencySymbol) ? '' : this.currencySymbol + ' '), value);
+            return Ext.String.format('{0}{1}{2}', (neg ? '-' : ''), (Ext.isEmpty(this.symbol) ? '' : this.symbol + ' '), value);
         }
     },
+    
     /**
      * overrides parseValue to remove the format applied by this class
      */
     parseValue: function(value){
         //Replace the currency symbol and thousand separator
-        return Ext.ux.form.field.Numeric.superclass.parseValue.call(this, this.removeFormat(value));
+        return Ext.form.field.Text.superclass.parseValue.call(this, this.removeFormat(value));
     },
+    
     /**
-     * Remove only the format added by this class to let the superclass validate with it's rules.
+     * Internal method to remove format added by this class
      * @param {Object} value
      */
     removeFormat: function(value){
@@ -87,32 +112,54 @@ Ext.define('Ext.ux.form.field.Numeric',
             return value;
         else
         {
-            value = value.toString().replace(this.currencySymbol + ' ', '');
+            value = value.toString().replace(this.symbol + ' ', '');
            
             value = this.useThousandSeparator ? value.replace(new RegExp('[' + this.thousandSeparator + ']', 'g'), '') : value;
            
             return value;
         }
     },
+    
     /**
      * Remove the format before validating the the value.
      * @param {Number} value
      */
     getErrors: function(value){
-        return Ext.ux.form.field.Numeric.superclass.getErrors.call(this, this.removeFormat(value));
+        return Ext.form.field.Text.superclass.getErrors.call(this, this.removeFormat(value));
     },
-    hasFormat: function(){
-        return this.decimalSeparator != '.' || (this.useThousandSeparator == true && this.getRawValue() != null) || !Ext.isEmpty(this.currencySymbol) || this.alwaysDisplayDecimals;
-    },
+    
     /**
-     * Display the numeric value with the fixed decimal precision and without the format using the setRawValue, don't need to do a setValue because we don't want a double
-     * formatting and process of the value because beforeBlur perform a getRawValue and then a setValue.
+     * Check whether field has format.
+     */
+    hasFormat: function(){
+        return this.decimalSeparator != '.' || (this.useThousandSeparator == true && this.getRawValue() != null) || !Ext.isEmpty(this.symbol) || this.alwaysDisplayDecimals;
+    },
+    
+    /**
+     * Remove field format.
      */
     onFocus: function(){
-        this.setRawValue(this.removeFormat(this.getRawValue()));
+        var value = this.removeFormat(this.getRawValue());
+        
+        this.setRawValue(value == 0 ? '' : value);
        
         this.callParent(arguments);
     },
+    
+    /**
+     * Reformat field.
+     */
+    onBlur: function(){
+        var value = this.getValue().toString().replace(/\D/g,'');
+
+        this.setRawValue(this.getFormattedValue(value == '' ? 0 : value));
+       
+        this.callParent(arguments);
+    },
+        
+    /**
+     * Get pure value without added format.
+     */
     getSubmitValue: function() {
         return this.removeFormat(this.getValue());
     }

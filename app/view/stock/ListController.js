@@ -49,11 +49,12 @@ Ext.define('POS.view.stock.ListController', {
 
                             Ext.fn.App.setLoading(true);
                             Ext.ws.Main.send('stock/destroy', {id: id});
-                            Ext.fn.WebSocket.monitor(
+                            var monitor = Ext.fn.WebSocket.monitor(
                                 Ext.ws.Main.on('stock/destroy', function(websocket, data){
+                                    clearTimeout(monitor);
                                     Ext.fn.App.setLoading(false);
                                     if (data.success){
-                                        POS.app.getStore('POS.store.User').load();
+                                        POS.app.getStore('POS.store.Stock').load();
                                     }else{
                                         Ext.fn.App.notification('Ups', data.errmsg);
                                     }

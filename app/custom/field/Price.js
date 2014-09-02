@@ -1,11 +1,7 @@
 Ext.define('POS.custom.field.Price', {
-    extend: 'Ext.ux.form.field.Numeric',
+    extend: 'Ext.ux.form.field.Currency',
     alias: 'widget.field-price',
 
-    currencySymbol: 'Rp',
-    thousandSeparator: '.',
-
-    minValue: 0,
-    step: 1000,
-    value: 0
+    symbol: 'Rp',
+    thousandSeparator: '.'
 });

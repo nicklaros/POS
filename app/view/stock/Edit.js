@@ -6,8 +6,10 @@ Ext.define('POS.view.stock.Edit' ,{
 
     requires: [
         'POS.custom.field.ComboProduct',
+        'POS.custom.field.ComboUnit',
         'POS.custom.field.Discount',
         'POS.custom.field.Price',
+        'POS.custom.field.Stock',
         'POS.view.stock.EditController'
     ],
 
@@ -35,33 +37,34 @@ Ext.define('POS.view.stock.Edit' ,{
                 reference: 'product',
                 afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
-                width: 500
+                width: 350
             },{
                 xtype: 'container',
                 anchor: '100%',
                 layout: 'hbox',
                 margin: '0 0 10 0',
                 items:[{
-                    xtype: 'field-price',
-                    fieldLabel: 'Harga Beli',
-                    name: 'buy',
-                    width: 150
-                },{
-                    xtype: 'numberfield',
+                    xtype: 'field-stock',
                     fieldLabel: 'Jumlah Stock',
                     name: 'amount',
-                    minValue: 0,
-                    value: 1,
-                    step: 10,
-                    margin: '0 0 0 20',
+                    saveOnEnter: true,
                     width: 100
                 },{
-                    xtype: 'field-discount',
-                    fieldLabel: 'Diskon (%)',
-                    name: 'discount',
+                    xtype: 'combo-unit',
+                    fieldLabel: 'Satuan',
+                    name: 'unit_id',
+                    reference: 'unit',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
                     margin: '0 0 0 20',
-                    width:150
+                    width: 150
                 }]
+            },{
+                xtype: 'field-price',
+                fieldLabel: 'Harga Beli',
+                name: 'buy',
+                saveOnEnter: true,
+                width: 150
             },{
                 xtype: 'fieldset',
                 title: 'Harga Jual',
@@ -73,20 +76,29 @@ Ext.define('POS.view.stock.Edit' ,{
                     xtype: 'field-price',
                     fieldLabel: 'Biasa',
                     name: 'sell_public',
+                    saveOnEnter: true,
                     width: 150
                 },{
                     xtype: 'field-price',
                     fieldLabel: 'Grosir',
                     name: 'sell_distributor',
+                    saveOnEnter: true,
                     margin: '0 0 0 20',
                     width: 150
                 },{
                     xtype: 'field-price',
                     fieldLabel: 'Lain',
                     name: 'sell_misc',
+                    saveOnEnter: true,
                     margin: '0 0 0 20',
                     width: 150
                 }]
+            },{
+                xtype: 'field-discount',
+                fieldLabel: 'Diskon (%)',
+                name: 'discount',
+                saveOnEnter: true,
+                width:150
             }]
         }];
 
