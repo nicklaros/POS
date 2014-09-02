@@ -1,40 +1,34 @@
-Ext.define('POS.view.user.List' ,{
+Ext.define('POS.view.product.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.list-user',
-    controller: 'list-user',
+    alias : 'widget.list-product',
+    controller: 'list-product',
 
     requires: [
+        'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.store.User',
-        'POS.view.user.Add',
-        'POS.view.user.Edit',
-        'POS.view.user.Search',
-        'POS.view.user.ListController'
+        'POS.store.Product',
+        'POS.view.product.Add',
+        'POS.view.product.Edit',
+        'POS.view.product.ListController',
+        'POS.view.product.Search'
     ],
 
     autoScroll: true,
     columnLines: true,
     closable: true,
-    multiColumnSort: true,
-    selModel : {
-        selType   : 'checkboxmodel',
-        checkOnly : true
-    },
+    selType: 'checkboxmodel',
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-user glyph"></i> User';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Product';
 
-        var store = POS.app.getStore('POS.store.User');
+        var store = POS.app.getStore('POS.store.Product');
         this.store = store;
 
         this.columns = [
             {header: 'id', dataIndex:'id', hidden:true},
-            {header: 'Jabatan', dataIndex: 'role', width:100},
-            {header: 'User ID', dataIndex: 'user', width:100},
-            {header: 'Nama', dataIndex: 'name', width:150},
-            {header: 'Alamat', dataIndex: 'address', width:175},
-            {header: 'Telp', dataIndex: 'phone', width:150}
+            {header: 'Kode', dataIndex: 'code', width: 120},
+            {header: 'Produk', dataIndex: 'name', width: 350}
         ];
 
         this.dockedItems = [{
@@ -49,11 +43,6 @@ Ext.define('POS.view.user.List' ,{
                 text: '<i class="fa fa-edit glyph"></i> Ubah',
                 reference: 'edit',
                 handler: 'edit',
-                disabled: true
-            },{
-                text:'<i class="fa fa-key glyph"></i> Reset Password',
-                reference: 'resetPassword',
-                handler: 'resetPassword',
                 disabled: true
             },{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',

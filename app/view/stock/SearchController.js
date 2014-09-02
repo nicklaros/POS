@@ -14,6 +14,11 @@ Ext.define('POS.view.stock.SearchController', {
                     product.focus()
                 }, 10);
             }
+        },
+        'textfield[searchOnEnter = true]': {
+            specialkey: function(f, e){
+                if(e.getKey() == e.ENTER) this.search();
+            }
         }
     },
 
@@ -31,9 +36,5 @@ Ext.define('POS.view.stock.SearchController', {
 
         POS.app.getStore('POS.store.Stock').search(params);
         panel.close();
-    },
-
-    specialkey: function(f, e){
-        if(e.getKey() == e.ENTER) this.search();
     }
 });

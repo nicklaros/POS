@@ -1,11 +1,11 @@
-Ext.define('POS.view.user.SearchController', {
+Ext.define('POS.view.product.SearchController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.search-user',
+    alias: 'controller.search-product',
 
     control: {
         '#': {
             boxready: function(panel){
-                var params = POS.app.getStore('POS.store.User').getProxy().extraParams;
+                var params = POS.app.getStore('POS.store.Product').getProxy().extraParams;
 
                 this.lookupReference('form').getForm().setValues(params);
 
@@ -34,7 +34,7 @@ Ext.define('POS.view.user.SearchController', {
             if (params[i] === null || params[i] === "") delete params[i];
         }
 
-        POS.app.getStore('POS.store.User').search(params);
+        POS.app.getStore('POS.store.Product').search(params);
         panel.close();
     }
 });

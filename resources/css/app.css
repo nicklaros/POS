@@ -116,7 +116,7 @@ html{
     line-height: 1;
 }
 .glyph{
-    font-size:18px;
+    font-size:18px !important;
     margin-right: 5px;
 }
 .harga{
@@ -184,7 +184,7 @@ html{
     color: #e6e6e6;
 }
 .main-nav-icon{
-    font-size:18px;
+    font-size: 18px !important;
     width: 25px;
     text-align: center;
 }

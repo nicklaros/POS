@@ -53,8 +53,8 @@ Ext.define('Ext.fn.App', {
         });
     },
 
-    mnListPenjualan: function(){
-        this.newTab('listpenjualan');
+    mnListProduct: function(){
+        this.newTab('list-product');
     },
 
     mnListStock: function(){

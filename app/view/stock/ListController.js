@@ -21,63 +21,46 @@ Ext.define('POS.view.stock.ListController', {
             celldblclick: function(){
                 this.edit();
             }
-        },
-        'button[reference=add]': {
-            click: function(){
-                Ext.fn.App.window('add-stock')
-            }
-        },
-        'button[reference=edit]': {
-            click: function(){
-                this.edit();
-            }
-        },
-        'button[reference=delete]': {
-            click: function(){
-                var sm  = this.getView().getSelectionModel(),
-                    sel = sm.getSelection(),
-                    smCount = sm.getCount();
-                Ext.Msg.confirm(
-                    '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
-                    '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
-                    function(btn){
-                        if (btn == 'yes'){
-                            var id = [];
-                            for(i=0;i<smCount;i++){
-                                id.push(sel[i].get('id'));
-                            }
-
-                            Ext.fn.App.setLoading(true);
-                            Ext.ws.Main.send('stock/destroy', {id: id});
-                            var monitor = Ext.fn.WebSocket.monitor(
-                                Ext.ws.Main.on('stock/destroy', function(websocket, data){
-                                    clearTimeout(monitor);
-                                    Ext.fn.App.setLoading(false);
-                                    if (data.success){
-                                        POS.app.getStore('POS.store.Stock').load();
-                                    }else{
-                                        Ext.fn.App.notification('Ups', data.errmsg);
-                                    }
-                                }, this, {
-                                    single: true,
-                                    destroyable: true
-                                })
-                            );
-                        }
-                    }
-                );
-            }
-        },
-        'button[reference=search]': {
-            click: function(){
-                Ext.fn.App.window('search-stock');
-            }
-        },
-        'button[reference=reset]': {
-            click: function(){
-                this.getView().getStore().search({});
-            }
         }
+    },
+    
+    add: function(){
+        Ext.fn.App.window('add-stock')
+    },
+    
+    delete: function(){
+        var sm  = this.getView().getSelectionModel(),
+            sel = sm.getSelection(),
+            smCount = sm.getCount();
+        Ext.Msg.confirm(
+            '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
+            '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
+            function(btn){
+                if (btn == 'yes'){
+                    var id = [];
+                    for(i=0;i<smCount;i++){
+                        id.push(sel[i].get('id'));
+                    }
+
+                    Ext.fn.App.setLoading(true);
+                    Ext.ws.Main.send('stock/destroy', {id: id});
+                    var monitor = Ext.fn.WebSocket.monitor(
+                        Ext.ws.Main.on('stock/destroy', function(websocket, data){
+                            clearTimeout(monitor);
+                            Ext.fn.App.setLoading(false);
+                            if (data.success){
+                                POS.app.getStore('POS.store.Stock').load();
+                            }else{
+                                Ext.fn.App.notification('Ups', data.errmsg);
+                            }
+                        }, this, {
+                            single: true,
+                            destroyable: true
+                        })
+                    );
+                }
+            }
+        );
     },
 
     edit: function(){
@@ -85,5 +68,13 @@ Ext.define('POS.view.stock.ListController', {
 
         var edit = Ext.fn.App.window('edit-stock');
         edit.getController().load(rec.get('id'));
+    },
+    
+    search: function(){
+        Ext.fn.App.window('search-stock');
+    },
+    
+    reset: function(){
+        this.getView().getStore().search({});
     }
 });

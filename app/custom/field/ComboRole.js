@@ -1,5 +1,5 @@
 Ext.define('POS.custom.field.ComboRole', {
-    extend: 'Ext.form.field.ComboBox',
+    extend: 'Ext.ux.form.field.ClearCombo',
     alias: 'widget.combo-role',
 
     requires: [

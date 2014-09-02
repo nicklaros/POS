@@ -5,6 +5,7 @@ Ext.define('POS.view.stock.List' ,{
 
     requires: [
         'Ext.fn.Render',
+        'Ext.ux.container.ButtonSegment',
         'POS.store.Stock',
         'POS.view.stock.Add',
         'POS.view.stock.Edit',
@@ -48,21 +49,27 @@ Ext.define('POS.view.stock.List' ,{
             ui: 'footer',
             items: [{
                 text: '<i class="fa fa-plus-square glyph"></i> Tambah',
-                reference: 'add'
+                reference: 'add',
+                handler: 'add'
             },{
                 text: '<i class="fa fa-edit glyph"></i> Ubah',
                 reference: 'edit',
+                handler: 'edit',
                 disabled: true
             },{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                 reference: 'delete',
+                handler: 'delete',
                 disabled: true
             },{
-                text: '<i class="fa fa-search glyph"></i> Cari',
-                reference: 'search'
-            },{
-                text: '<i class="fa fa-undo glyph"></i> Reset Pencarian',
-                reference: 'reset'
+                xtype: 'buttonsegment',
+                items: [{
+                    text: '<i class="fa fa-search glyph"></i> Cari',
+                    handler: 'search'
+                },{
+                    text: '<i class="fa fa-undo glyph"></i>',
+                    handler: 'reset'
+                }]
             }]
         },{
             xtype: 'pagingtoolbar',
