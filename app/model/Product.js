@@ -4,7 +4,6 @@ Ext.define('POS.model.Product', {
     fields: [
         {name: 'id', type: 'int'},
         {name: 'code', type: 'string'},
-        {name: 'name', type: 'string'},
-        {name: 'category', type: 'string'}
+        {name: 'name', type: 'string'}
     ]
 });

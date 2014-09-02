@@ -29,16 +29,15 @@ Ext.define('POS.view.user.Search' ,{
                 name: 'name',
                 reference: 'name',
                 emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
+                selectOnFocus: true,
                 anchor: '100%'
             },{
                 xtype: 'combo-role',
                 fieldLabel: 'Level',
-                name: 'role',
+                name: 'role_id',
                 emptyText: EMPTY_TEXT_0,
-                anchor: '100%',
-                listeners: {
-                    change: 'levelChange'
-                }
+                anchor: '100%'
             }]
         }];
 

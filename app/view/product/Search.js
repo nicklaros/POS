@@ -1,11 +1,11 @@
-Ext.define('POS.view.stock.Search' ,{
+Ext.define('POS.view.product.Search' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.search-stock',
-    id: 'search-stock',
-    controller: 'search-stock',
+    alias : 'widget.search-product',
+    id: 'search-product',
+    controller: 'search-product',
 
     requires: [
-        'POS.view.stock.SearchController'
+        'POS.view.product.SearchController'
     ],
 
     autoShow: true,
@@ -15,7 +15,7 @@ Ext.define('POS.view.stock.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-align-left glyph"></i> Pencarian Stock';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Product';
 
         this.items = [{
             xtype: 'form',
@@ -24,8 +24,8 @@ Ext.define('POS.view.stock.Search' ,{
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Nama Produk',
-                name: 'product',
-                reference: 'product',
+                name: 'name',
+                reference: 'name',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

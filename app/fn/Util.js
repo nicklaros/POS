@@ -77,6 +77,19 @@ Ext.define('Ext.fn.Util', {
             }
         });
 
+        POS.app.getStore('POS.store.Product').setProxy({
+            type: 'websocket',
+            storeId: 'product',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'product/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
         POS.app.getStore('POS.store.Stock').setProxy({
             type: 'websocket',
             storeId: 'stock',
