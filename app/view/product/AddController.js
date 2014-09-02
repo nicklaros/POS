@@ -1,13 +1,13 @@
-Ext.define('POS.view.stock.AddController', {
+Ext.define('POS.view.product.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-stock',
+    alias: 'controller.add-product',
 
     control: {
         '#': {
             boxready: function(){
-                var product = this.lookupReference('product');
+                var code = this.lookupReference('code');
                 setTimeout(function(){
-                    product.focus();
+                    code.focus();
                 }, 10);
             }
         },
@@ -16,10 +16,6 @@ Ext.define('POS.view.stock.AddController', {
                 if(e.getKey() == e.ENTER) this.save();
             }
         }
-    },
-
-    comboChange: function(combo){
-        if (combo.getValue() == null) combo.reset();
     },
 
     close: function(){
@@ -34,14 +30,14 @@ Ext.define('POS.view.stock.AddController', {
             var values = form.getValues();
 
             Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('stock/create', values);
+            Ext.ws.Main.send('product/create', values);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('stock/create', function(websocket, data){
+                Ext.ws.Main.on('product/create', function(websocket, data){
                     clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Stock').load();
+                        POS.app.getStore('POS.store.Product').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

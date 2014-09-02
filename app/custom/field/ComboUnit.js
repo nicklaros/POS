@@ -13,7 +13,7 @@ Ext.define('POS.custom.field.ComboUnit', {
     autoSelect: true,
     enableKeyEvents: true,
     forceSelection: true,
-    hideTrigger: false,
+    hideTrigger: true,
     matchFieldWidth: true,
     minChars: 1,
     queryDelay: 50,

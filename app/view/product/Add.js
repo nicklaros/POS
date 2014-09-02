@@ -1,100 +1,42 @@
-Ext.define('POS.view.stock.Add' ,{
+Ext.define('POS.view.product.Add' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-stock',
-    id: 'add-stock',
-    controller: 'add-stock',
+    alias : 'widget.add-product',
+    id: 'add-product',
+    controller: 'add-product',
 
     requires: [
-        'POS.custom.field.ComboProduct',
-        'POS.custom.field.ComboUnit',
-        'POS.custom.field.Discount',
-        'POS.custom.field.Price',
-        'POS.custom.field.Stock',
-        'POS.view.stock.AddController'
+        'POS.custom.field.ProductCode',
+        'POS.custom.field.ProductName',
+        'POS.view.product.AddController'
     ],
 
     autoShow: true,
     constrain: true,
     layout: 'anchor',
     resizable: false,
-    width: 600,
+    width: 350,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-tasks glyph"></i> Tambah Data Stock';
+        this.title = '<i class="fa fa-tasks glyph"></i> Tambah Data Product';
 
         this.items = [{
             xtype: 'form',
             monitorValid: true,
             bodyPadding: 10,
             items: [{
-                xtype: 'combo-product',
-                fieldLabel: 'Ketik nama / kode barang',
-                name: 'product_id',
-                reference: 'product',
-                afterLabelTextTpl: REQUIRED,
-                allowBlank: false,
-                width: 350
-            },{
-                xtype: 'container',
-                anchor: '100%',
-                layout: 'hbox',
-                margin: '0 0 10 0',
-                items:[{
-                    xtype: 'field-stock',
-                    fieldLabel: 'Jumlah Stock',
-                    name: 'amount',
-                    saveOnEnter: true,
-                    width: 100
-                },{
-                    xtype: 'combo-unit',
-                    fieldLabel: 'Satuan',
-                    name: 'unit_id',
-                    reference: 'unit',
-                    afterLabelTextTpl: REQUIRED,
-                    allowBlank: false,
-                    margin: '0 0 0 20',
-                    width: 150
-                }]
-            },{
-                xtype: 'field-price',
-                fieldLabel: 'Harga Beli',
-                name: 'buy',
+                xtype: 'field-product-code',
+                fieldLabel: 'Kode produk',
+                name: 'code',
+                reference: 'code',
                 saveOnEnter: true,
                 width: 150
             },{
-                xtype: 'fieldset',
-                title: 'Harga Jual',
-                anchor: '100%',
-                layout: 'hbox',
-                margin: '10 0 10 0',
-                padding: 10,
-                items:[{
-                    xtype: 'field-price',
-                    fieldLabel: 'Biasa',
-                    name: 'sell_public',
-                    saveOnEnter: true,
-                    width: 150
-                },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Grosir',
-                    name: 'sell_distributor',
-                    saveOnEnter: true,
-                    margin: '0 0 0 20',
-                    width: 150
-                },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Lain',
-                    name: 'sell_misc',
-                    saveOnEnter: true,
-                    margin: '0 0 0 20',
-                    width: 150
-                }]
-            },{
-                xtype: 'field-discount',
-                fieldLabel: 'Diskon (%)',
-                name: 'discount',
+                xtype: 'field-product-name',
+                fieldLabel: 'Nama produk',
+                name: 'name',
+                reference: 'name',
                 saveOnEnter: true,
-                width:150
+                anchor: '100%'
             }]
         }];
 

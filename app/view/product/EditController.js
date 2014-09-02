@@ -1,6 +1,6 @@
-Ext.define('POS.view.stock.EditController', {
+Ext.define('POS.view.product.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edit-stock',
+    alias: 'controller.edit-product',
 
     control: {
         'textfield[saveOnEnter = true]': {
@@ -19,25 +19,15 @@ Ext.define('POS.view.stock.EditController', {
             form = this.lookupReference('form');
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('stock/loadFormEdit', {id: id});
+        Ext.ws.Main.send('product/loadFormEdit', {id: id});
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('stock/loadFormEdit', function(websocket, result){
+            Ext.ws.Main.on('product/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
-                    var product = new POS.model.Product;
-                    product.set('id', result.data.product_id);
-                    product.set('name', result.data.product);
-                    result.data.product_id = product;
-                
-                    var unit = new POS.model.Unit;
-                    unit.set('id', result.data.unit_id);
-                    unit.set('name', result.data.unit);
-                    result.data.unit_id = unit;
-                
                     form.getForm().setValues(result.data);
                     
-                    this.lookupReference('product').focus();
+                    this.lookupReference('name').focus();
                 }else{
                     panel.close();
                     Ext.fn.App.notification('Ups', result.errmsg);
@@ -58,14 +48,14 @@ Ext.define('POS.view.stock.EditController', {
             var values = form.getValues();
 
             Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('stock/update', values);
+            Ext.ws.Main.send('product/update', values);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('stock/update', function(websocket, data){
+                Ext.ws.Main.on('product/update', function(websocket, data){
                     clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Stock').load();
+                        POS.app.getStore('POS.store.Product').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

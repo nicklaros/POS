@@ -7,6 +7,8 @@ Ext.define('POS.view.product.List' ,{
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Product',
+        'POS.view.product.Add',
+        'POS.view.product.Edit',
         'POS.view.product.ListController',
         'POS.view.product.Search'
     ],
