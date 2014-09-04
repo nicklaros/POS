@@ -20,15 +20,35 @@ Ext.define('Ext.fn.App', {
         //Ext.fn.Util.keyMap();
     },
 
-    mnHalamanDepan: function(){
+    mnChangeBiodata: function(){
+        Ext.widget('ubah-biodata');
+    },
+
+    mnChangePassword: function(){
+        Ext.widget('ubah-password');
+    },
+
+    mnDashboard: function(){
         Ext.ComponentQuery.query('app-tab')[0].setActiveTab(0);
     },
 
-    mnInfoDeveloper: function(){
+    mnDeveloperInfo: function(){
         Ext.widget('about-dev');
     },
 
-    mnKeluar: function(){
+    mnListProduct: function(){
+        this.newTab('list-product');
+    },
+
+    mnListStock: function(){
+        this.newTab('list-stock');
+    },
+
+    mnListUser: function(){
+        this.newTab('list-user');
+    },
+
+    mnLogout: function(){
         Mains.logout(function(result){
             if (result.success){
                 var appTab = Ext.ComponentQuery.query('app-tab')[0],
@@ -51,31 +71,6 @@ Ext.define('Ext.fn.App', {
                 console.log('Login error');
             }
         });
-    },
-
-    mnListProduct: function(){
-        this.newTab('list-product');
-    },
-
-    mnListStock: function(){
-        this.newTab('list-stock');
-    },
-
-    mnListUser: function(){
-        this.newTab('list-user');
-    },
-
-    mnUbahBiodata: function(){
-        Ext.widget('ubah-biodata');
-    },
-
-    mnUbahFoto: function(){
-        Ext.widget('ubah-foto');
-        //smk3.app.getController('Pegawai').loadFormUbahFoto(smk3_.currentUser.id);
-    },
-
-    mnUbahPassword: function(){
-        Ext.widget('ubah-password');
     },
 
     newTab: function(alias, state){

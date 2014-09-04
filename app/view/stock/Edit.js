@@ -20,7 +20,7 @@ Ext.define('POS.view.stock.Edit' ,{
     width: 600,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-stock glyph"></i> Ubah Stock';
+        this.title = '<i class="fa fa-tasks glyph"></i> Ubah Stock';
 
         this.items = [{
             xtype: 'form',
