@@ -51,12 +51,51 @@ Ext.define('Ext.fn.Util', {
     },
 
     applyProxy: function(){
+        POS.app.getStore('POS.store.combo.Cashier').setProxy({
+            type: 'websocket',
+            storeId: 'combo-cashier',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/cashier'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+        
+        POS.app.getStore('POS.store.combo.Customer').setProxy({
+            type: 'websocket',
+            storeId: 'combo-customer',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/customer'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+        
         POS.app.getStore('POS.store.combo.Product').setProxy({
             type: 'websocket',
             storeId: 'combo-product',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/product'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
+        POS.app.getStore('POS.store.combo.Stock').setProxy({
+            type: 'websocket',
+            storeId: 'combo-stock',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/stock'
             },
             reader: {
                 type: 'json',
@@ -83,6 +122,32 @@ Ext.define('Ext.fn.Util', {
             websocket: Ext.ws.Main,
             api: {
                 read: 'product/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
+        POS.app.getStore('POS.store.Sales').setProxy({
+            type: 'websocket',
+            storeId: 'sales',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'sales/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
+        POS.app.getStore('POS.store.SalesDetail').setProxy({
+            type: 'websocket',
+            storeId: 'sales-detail',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'salesdetail/read'
             },
             reader: {
                 type: 'json',

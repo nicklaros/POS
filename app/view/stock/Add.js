@@ -9,7 +9,7 @@ Ext.define('POS.view.stock.Add' ,{
         'POS.custom.field.ComboUnit',
         'POS.custom.field.Discount',
         'POS.custom.field.Price',
-        'POS.custom.field.Stock',
+        'POS.custom.field.StockAmount',
         'POS.view.stock.AddController'
     ],
 
@@ -40,7 +40,7 @@ Ext.define('POS.view.stock.Add' ,{
                 layout: 'hbox',
                 margin: '0 0 10 0',
                 items:[{
-                    xtype: 'field-stock',
+                    xtype: 'field-stock-amount',
                     fieldLabel: 'Jumlah Stock',
                     name: 'amount',
                     saveOnEnter: true,

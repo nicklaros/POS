@@ -1,10 +1,6 @@
-Ext.define('POS.view.stock.ListController', {
+Ext.define('POS.view.sales.ListController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.list-stock',
-
-    requires: [
-        'Ext.fn.Util'
-    ],
+    alias: 'controller.list-sales',
 
     control: {
         '#': {
@@ -25,7 +21,7 @@ Ext.define('POS.view.stock.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-stock')
+        Ext.fn.App.window('add-sales');
     },
     
     delete: function(){
@@ -43,13 +39,13 @@ Ext.define('POS.view.stock.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('stock/destroy', {id: id});
+                    Ext.ws.Main.send('sales/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('stock/destroy', function(websocket, data){
+                        Ext.ws.Main.on('sales/destroy', function(websocket, data){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
                             if (data.success){
-                                POS.app.getStore('POS.store.Stock').load();
+                                POS.app.getStore('POS.store.Sales').load();
                             }else{
                                 Ext.fn.App.notification('Ups', data.errmsg);
                             }
@@ -66,12 +62,12 @@ Ext.define('POS.view.stock.ListController', {
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-stock');
+        var edit = Ext.fn.App.window('edit-sales');
         edit.getController().load(rec.get('id'));
     },
     
     search: function(){
-        Ext.fn.App.window('search-stock');
+        Ext.fn.App.window('search-sales');
     },
     
     reset: function(){

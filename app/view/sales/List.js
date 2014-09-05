@@ -1,16 +1,14 @@
-Ext.define('POS.view.stock.List' ,{
+Ext.define('POS.view.sales.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.list-stock',
-    controller: 'list-stock',
+    alias : 'widget.list-sales',
+    controller: 'list-sales',
 
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.store.Stock',
-        'POS.view.stock.Add',
-        'POS.view.stock.Edit',
-        'POS.view.stock.ListController',
-        'POS.view.stock.Search'
+        'POS.store.Sales',
+        'POS.view.sales.Add',
+        'POS.view.sales.ListController'
     ],
 
     autoScroll: true,
@@ -20,27 +18,20 @@ Ext.define('POS.view.stock.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-tasks glyph"></i> Stock';
+        this.title = '<i class="fa fa-tasks glyph"></i> Penjualan';
 
-        var store = POS.app.getStore('POS.store.Stock');
+        var store = POS.app.getStore('POS.store.Sales');
         this.store = store;
 
         this.columns = [
-            {header: 'id', dataIndex:'id', hidden:true},
-            {header: 'Kode', dataIndex: 'code', width: 120},
-            {header: 'Produk', dataIndex: 'product', width: 275},
-            {header: 'Satuan', dataIndex: 'unit', width: 100},
-            {header: 'Stock', dataIndex: 'amount', width: 70, align: 'right'},
-            {header: 'Harga<br />Beli', dataIndex: 'buy', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-            {
-                text: 'Harga Jual',
-                columns:[
-                    {header: 'Biasa', dataIndex: 'sell_public', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Grosir', dataIndex: 'sell_distributor', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Lain', dataIndex: 'sell_misc', width: 100, renderer: Ext.fn.Render.currency, align: 'right'}
-                ]
-            },
-            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'}
+            {header: 'Nomor', dataIndex:'id', width: 75},
+            {header: 'Tanggal', dataIndex: 'date', width: 120, renderer: Ext.fn.Render.date},
+            {header: 'Pelanggan', dataIndex: 'customer', width: 150},
+            {header: 'Total', dataIndex: 'total_price', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Dibayar', dataIndex: 'paid', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kembali', dataIndex: 'balance', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kasir', dataIndex: 'cashier', width: 120},
+            {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
 
         this.dockedItems = [{

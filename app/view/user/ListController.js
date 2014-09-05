@@ -9,7 +9,7 @@ Ext.define('POS.view.user.ListController', {
     control: {
         '#': {
             boxready: function(panel){
-                this.getView().getStore().search({});
+                
             },
             selectionchange: function(sm, selected){
                 var btnEdit = this.lookupReference('edit'),

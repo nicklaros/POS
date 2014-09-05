@@ -37,15 +37,23 @@ Ext.define('Ext.fn.App', {
     },
 
     mnListProduct: function(){
-        this.newTab('list-product');
+        var panel = this.newTab('list-product');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListSales: function(){
+        var panel = this.newTab('list-sales');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
     mnListStock: function(){
-        this.newTab('list-stock');
+        var panel = this.newTab('list-stock');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
     mnListUser: function(){
-        this.newTab('list-user');
+        var panel = this.newTab('list-user');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
     mnLogout: function(){
@@ -80,14 +88,17 @@ Ext.define('Ext.fn.App', {
 
         state = (typeof(state) === 'undefined' ? 1 : state)
         if(
-            (state == 0) ||
+            (state == 0) 
+            ||
             ( (state == 1) && (main.get('state') == 1) )
         ){
             if(!panel){
-                tab.add({xtype:alias}).show();
+                var panel = tab.add({xtype:alias});
+                panel.show();
             }else{
                 tab.setActiveTab(panel);
             }
+            return panel;
         }else{
             Ext.Msg.alert('Akses ditolak', E0);
         }
