@@ -1,15 +1,19 @@
-Ext.define('POS.view.sales.AddDetail' ,{
+Ext.define('POS.view.sales.EditDetail' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-sales-detail',
-    id: 'add-sales-detail',
-    controller: 'add-sales-detail',
+    alias : 'widget.edit-sales-detail',
+    id: 'edit-sales-detail',
+    controller: 'edit-sales-detail',
+    viewModel: {
+        type: 'edit-sales-detail'
+    },
 
     requires: [
         'POS.custom.field.ComboStock',
         'POS.custom.field.StockAmount',
         'POS.custom.field.ComboSellType',
         'POS.custom.field.Price',
-        'POS.view.sales.AddDetailController'
+        'POS.view.sales.EditDetailController',
+        'POS.view.sales.EditDetailModel'
     ],
 
 	autoScroll: true,
@@ -17,7 +21,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
     bodyStyle: {
         'background-color': '#e9eaed',
         border: '0 !important',
-        padding: '25px'
+        pediting: '25px'
     },
     constrain: true,
     layout: 'anchor',
@@ -29,7 +33,6 @@ Ext.define('POS.view.sales.AddDetail' ,{
 
         this.items = [{
             xtype: 'form',
-            reference: 'form',
             layout: 'vbox',
             bodyStyle: {
                 'background-color': '#e9eaed'
@@ -44,7 +47,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
                 layout: 'hbox',
                 cls: 'panel',
                 margin: '0 0 10 0',
-                padding: 30,
+                pediting: 30,
                 width: 900,
                 items: [{
                     xtype: 'combo-stock',
@@ -113,20 +116,29 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     items:[{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Biasa',
-                        name: 'sell_public',
+                        name: 'stock_sell_public',
+                        bind: {
+                            value: '{sell_public}'
+                        },
                         saveOnEnter: true,
                         width: 150
                     },{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Grosir',
-                        name: 'sell_distributor',
+                        name: 'stock_sell_distributor',
+                        bind: {
+                            value: '{sell_distributor}'
+                        },
                         saveOnEnter: true,
                         margin: '0 0 0 50',
                         width: 150
                     },{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Lain',
-                        name: 'sell_misc',
+                        name: 'stock_sell_misc',
+                        bind: {
+                            value: '{sell_misc}'
+                        },
                         saveOnEnter: true,
                         margin: '0 0 0 50',
                         width: 150
@@ -139,27 +151,24 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     items:[{
                         xtype: 'field-price',
                         fieldLabel: 'Harga Beli',
-                        name: 'buy',
+                        name: 'stock_buy',
+                        bind: {
+                            value: '{buy}'
+                        },
                         saveOnEnter: true,
                         width: 150
                     },{
                         xtype: 'field-discount',
                         fieldLabel: 'Diskon (%)',
-                        name: 'discount',
+                        name: 'stock_discount',
+                        bind: {
+                            value: '{discount}'
+                        },
                         saveOnEnter: true,
                         margin: '0 0 0 50',
                         width:150
                     }]
                 }]
-            },{
-                xtype: 'hidden',
-                name: 'product_name'
-            },{
-                xtype: 'hidden',
-                name: 'unit_id'
-            },{
-                xtype: 'hidden',
-                name: 'unit_name'
             }]
         }];
 

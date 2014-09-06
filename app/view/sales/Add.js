@@ -10,7 +10,8 @@ Ext.define('POS.view.sales.Add' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
-        'POS.view.sales.AddController'
+        'POS.view.sales.AddController',
+        'POS.view.sales.AddDetail'
     ],
 
 	autoScroll: true,
@@ -39,7 +40,7 @@ Ext.define('POS.view.sales.Add' ,{
             items: [{
                 xtype: 'container',
                 cls: 'panel',
-                margin: '0 0 20 0',
+                margin: '0 0 10 0',
                 width: 900,
                 items: [{
                     xtype: 'form',
@@ -113,6 +114,19 @@ Ext.define('POS.view.sales.Add' ,{
                     }]
                 }]
             },{
+                xtype: 'toolbar',
+                ui: 'footer',
+                margin: '0 0 30 0',
+                width: 900,
+                items: ['->',
+                {
+                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    handler: 'save'
+                },{
+                    text: '<i class="fa fa-undo glyph"></i> Batal',
+                    handler: 'close'
+                }]
+            },{
                 xtype: 'container',
                 cls: 'panel',
                 width: 900,
@@ -122,10 +136,10 @@ Ext.define('POS.view.sales.Add' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',
+                    reference: 'grid-sales-detail',
                     dockedItems: [{
                         xtype: 'toolbar',
                         dock: 'top',
-                        ui: 'footer',
                         items: [{
                             text: '<i class="fa fa-plus-square glyph"></i> Tambah',
                             reference: 'add',
@@ -143,19 +157,6 @@ Ext.define('POS.view.sales.Add' ,{
                         }]
                     }]
                 }]
-            }]
-        }];
-
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'top',
-            ui: 'footer',
-            items: [{
-                text: '<i class="fa fa-save glyph"></i> Simpan',
-                handler: 'save'
-            },{
-                text: '<i class="fa fa-undo glyph"></i> Batal',
-                handler: 'close'
             }]
         }];
 

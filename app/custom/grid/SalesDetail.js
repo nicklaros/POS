@@ -12,9 +12,9 @@ Ext.define('POS.custom.grid.SalesDetail', {
     minHeight: 150,
     
     columns: [
-        {header: 'Produk', dataIndex: 'product', width: 300},
+        {header: 'Produk', dataIndex: 'product_name', width: 300},
         {header: 'Jumlah', dataIndex: 'amount', width: 90, align: 'right'},
-        {header: 'Unit', dataIndex: 'unit', width: 90},
+        {header: 'Unit', dataIndex: 'unit_name', width: 90},
         {
             text: 'Harga',
             columns:[

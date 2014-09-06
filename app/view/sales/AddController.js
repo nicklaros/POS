@@ -5,21 +5,45 @@ Ext.define('POS.view.sales.AddController', {
     control: {
         '#': {
             boxready: function(){
-                var customer = this.lookupReference('customer');
+                var add = this.lookupReference('add');
                 setTimeout(function(){
-                    customer.focus();
+                    add.focus();
                 }, 10);
             }
         },
         'textfield[saveOnEnter = true]': {
-            specialkey: function(f, e){
+            specialkey: function(field, e){
                 if(e.getKey() == e.ENTER) this.save();
             }
+        },
+        'grid-sales-detail': {
+            selectionchange: function(sm, selected){
+                var btnEdit = this.lookupReference('edit'),
+                    btnDelete = this.lookupReference('delete');
+
+                btnEdit.setDisabled(selected.length !== 1);
+                btnDelete.setDisabled(selected.length === 0);
+            },
+            celldblclick: function(){
+                this.edit();
+            }
         }
+    },
+    
+    add: function(){
+        Ext.fn.App.window('add-sales-detail');
     },
 
     close: function(){
         this.getView().close();
+    },
+
+    edit: function(){
+        var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('add-sales-detail');
+        edit.isEdit = true;
+        edit.getController().load(rec);
     },
 
     save: function(){
@@ -39,7 +63,9 @@ Ext.define('POS.view.sales.AddController', {
                         panel.close();
                         POS.app.getStore('POS.store.Sales').load();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        setTimeout(function(){
+                            Ext.fn.App.notification('Ups', data.errmsg);
+                        }, 10);
                     }
                 }, this, {
                     single: true,

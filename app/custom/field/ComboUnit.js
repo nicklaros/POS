@@ -21,13 +21,6 @@ Ext.define('POS.custom.field.ComboUnit', {
     triggerAction: 'query',
     typeAhead: true,
     typeAheadDelay: 250,
-    listeners: {
-        keydown: function(field){
-            if (Ext.isEmpty(field.getRawValue())) {
-                field.reset();
-            }
-        }
-    },
 
     initComponent: function(){
         this.store = POS.app.getStore('POS.store.combo.Unit');

@@ -35,7 +35,9 @@ Ext.define('Ext.fn.WebSocket', {
             if (this.observable.hasListener(this.args[0])){
                 Ext.fn.App.setLoading(false);
                 this.destroy();
-                Ext.fn.App.notification('Ups', 'Gagal menghubungi server pemrosesan data...');
+                setTimeout(function(){
+                    Ext.fn.App.notification('Ups', 'Gagal menghubungi server pemrosesan data...');
+                }, 10);                
                 if (panel = Ext.getCmp(this.panel.id)) panel.close();
             }
         }, 10000, listener);
