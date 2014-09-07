@@ -8,7 +8,7 @@ Ext.define('POS.custom.field.ComboStock', {
     ],
 
     displayField: 'product_name',
-    valueField: 'id',
+    valueField: 'stock_id',
 
     anyMatch: true,
     autoSelect: true,

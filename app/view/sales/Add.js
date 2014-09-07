@@ -58,7 +58,7 @@ Ext.define('POS.view.sales.Add' ,{
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
                             value: new Date(),
-                            width: 150
+                            width: 130
                         },{
                             xtype: 'combo-customer',
                             fieldLabel: 'Pelanggan',
@@ -93,12 +93,15 @@ Ext.define('POS.view.sales.Add' ,{
                             xtype: 'field-price',
                             fieldLabel: 'Harga Total',
                             name: 'total_price',
+                            reference: 'total_price',
+                            readOnly: true,
                             saveOnEnter: true,
                             width: 150
                         },{
                             xtype: 'field-price',
                             fieldLabel: 'Dibayar',
                             name: 'paid',
+                            reference: 'paid',
                             saveOnEnter: true,
                             margin: '0 0 0 20',
                             width: 150
@@ -106,6 +109,7 @@ Ext.define('POS.view.sales.Add' ,{
                             xtype: 'field-price',
                             fieldLabel: 'Sisa',
                             name: 'balance',
+                            reference: 'balance',
                             raedOnly: true,
                             saveOnEnter: true,
                             margin: '0 0 0 20',

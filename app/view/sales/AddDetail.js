@@ -22,6 +22,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
     constrain: true,
     layout: 'anchor',
     maximized: true,
+    modal: true,
     resizable: false,
 
     initComponent: function(){
@@ -67,12 +68,12 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     margin: '0 0 0 50',
                     width: 75
                 },{
-                    xtype: 'label',
-                    bind: {
-                        text: '{unit_name}'
-                    },
-                    text: 'Unit',
-                    margin: '30 0 0 10'
+                    xtype: 'textfield',
+                    fieldLabel: 'Unit',
+                    name: 'unit_name',
+                    readOnly: true,
+                    tabOnEnter: true,
+                    width: 75
                 },{
                     xtype: 'combo-sell-type',
                     fieldLabel: 'Tipe',
@@ -157,9 +158,6 @@ Ext.define('POS.view.sales.AddDetail' ,{
             },{
                 xtype: 'hidden',
                 name: 'unit_id'
-            },{
-                xtype: 'hidden',
-                name: 'unit_name'
             }]
         }];
 

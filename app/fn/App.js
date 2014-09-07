@@ -104,22 +104,27 @@ Ext.define('Ext.fn.App', {
         }
     },
 
-    notify: function(title, message){
-        return this.notification(title, message);
+    notify: function(title, message, manager, icon){
+        return this.notification(title, message, manager, icon);
     },
 
-    notification: function(title, message, icon){
-        Ext.create('widget.uxNotification', {
-            title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
-            position: 'br',
-            cls: 'ux-notification-light',
-            html: message,
-            autoCloseDelay: 4000,
-            slideBackDuration: 500,
-            slideInAnimation: 'bounceOut',
-            slideBackAnimation: 'easeIn',
-            maxWidth: 350
-        }).show();
+    notification: function(title, message, manager, icon){
+        setTimeout(function(){
+            Ext.create('widget.uxNotification', {
+                title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
+                autoCloseDelay: 5000,
+                cls: 'ux-notification-light',
+                hideDuration: 50,
+                html: message,
+                manager: (manager || Ext.getBody()),
+                position: 'br',
+                slideBackAnimation: 'bounceOut',
+                slideBackDuration: 500,
+                slideInAnimation: 'bounceOut',
+                slideInDuration: 1000,
+                maxWidth: 350
+            }).show();
+        }, 10);
     },
 
     setLoading: function(bool){

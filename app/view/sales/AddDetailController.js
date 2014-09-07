@@ -79,6 +79,8 @@ Ext.define('POS.view.sales.AddDetailController', {
             }
 
             panel.close();
+            
+            Ext.ComponentQuery.query('add-sales')[0].getController().setTotalPrice();
         }
     }
 });

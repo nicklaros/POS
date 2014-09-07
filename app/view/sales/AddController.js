@@ -4,11 +4,33 @@ Ext.define('POS.view.sales.AddController', {
 
     control: {
         '#': {
-            boxready: function(){
+            boxready: function(panel){
+                var customer = Ext.create('POS.model.Customer');                
+                customer.set('id', 0);
+                customer.set('name', '-');
+                
+                this.lookupReference('customer').setValue(customer);
+                
+                var cashier = Ext.create('POS.model.Cashier');
+                cashier.set('id', Ext.main.ViewModel.data.current_user.id);
+                cashier.set('name', Ext.main.ViewModel.data.current_user.name);
+                
+                this.lookupReference('cashier').setValue(cashier);   
+
+                this.keyMap(panel);
+            
                 var add = this.lookupReference('add');
                 setTimeout(function(){
                     add.focus();
                 }, 10);
+            },
+            close: function(){
+                POS.app.getStore('POS.store.SalesDetail').removeAll(true);
+            }
+        },
+        'textfield[name = paid]': {
+            change: function(){
+                this.setBalance();
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -37,6 +59,27 @@ Ext.define('POS.view.sales.AddController', {
     close: function(){
         this.getView().close();
     },
+    
+    delete: function(){
+        var grid = this.lookupReference('grid-sales-detail'),
+            store = grid.getStore(),
+            sm  = grid.getSelectionModel(),
+            sel = sm.getSelection(),
+            smCount = sm.getCount();
+            
+        Ext.Msg.confirm(
+            '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
+            '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
+            function(btn){
+                if (btn == 'yes'){
+                    var id = [];
+                    for(i=0;i<smCount;i++){
+                        store.remove(sel[i]);
+                    }
+                }
+            }
+        );
+    },
 
     edit: function(){
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
@@ -44,6 +87,26 @@ Ext.define('POS.view.sales.AddController', {
         var edit = Ext.fn.App.window('add-sales-detail');
         edit.isEdit = true;
         edit.getController().load(rec);
+    },
+    
+    keyMap: function(panel){
+        var me = this;
+        
+        new Ext.util.KeyMap({
+            target: panel.getEl(),
+            binding: [{
+                key: 112, // F1
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    me.add(); 
+                }
+            },{
+                key: 113, // F2
+                fn: function(){ 
+                    me.lookupReference('paid').focus(true);
+                }
+            }]
+        });
     },
 
     save: function(){
@@ -63,9 +126,7 @@ Ext.define('POS.view.sales.AddController', {
                         panel.close();
                         POS.app.getStore('POS.store.Sales').load();
                     }else{
-                        setTimeout(function(){
-                            Ext.fn.App.notification('Ups', data.errmsg);
-                        }, 10);
+                        Ext.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,
@@ -73,5 +134,28 @@ Ext.define('POS.view.sales.AddController', {
                 })
             );
         }
+    },
+    
+    setBalance: function(){
+        var totalPrice  = this.lookupReference('total_price'),
+            paid        = this.lookupReference('paid'),
+            balance     = this.lookupReference('balance'),
+            result      = paid.getSubmitValue() - totalPrice.getSubmitValue();
+        
+        balance.setValue(result);
+        
+        balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
+    },
+    
+    setTotalPrice: function(){
+        var totalPrice = this.lookupReference('total_price');
+        
+        totalPrice.setValue(this.sumTotalPrice());
+        
+        this.setBalance()
+    },
+
+    sumTotalPrice: function(){
+        return POS.app.getStore('POS.store.SalesDetail').sum('total_price');
     }
 });
