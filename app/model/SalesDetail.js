@@ -10,6 +10,7 @@ Ext.define('POS.model.SalesDetail', {
         {name: 'unit_id', type: 'int'},
         {name: 'unit_name', type: 'string'},
         {name: 'unit_price', type: 'int'},
+        {name: 'total_buy_price', type: 'int'},
         {name: 'total_price_wo_discount', type: 'int'},
         {name: 'total_price', type: 'int'},
         {name: 'buy', type: 'int'},

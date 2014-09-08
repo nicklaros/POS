@@ -24,13 +24,13 @@ Ext.define('POS.view.sales.List' ,{
         this.store = store;
 
         this.columns = [
-            {header: 'Nomor', dataIndex:'id', width: 75},
-            {header: 'Tanggal', dataIndex: 'date', width: 120, renderer: Ext.fn.Render.date},
-            {header: 'Pelanggan', dataIndex: 'customer', width: 150},
+            {header: 'Nota', dataIndex:'id', width: 75},
+            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
+            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
             {header: 'Total', dataIndex: 'total_price', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Kembali', dataIndex: 'balance', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kasir', dataIndex: 'cashier', width: 120},
+            {header: 'Kasir', dataIndex: 'cashier_name', width: 120},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
 
@@ -50,7 +50,7 @@ Ext.define('POS.view.sales.List' ,{
             },{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                 reference: 'delete',
-                handler: 'delete',
+                handler: 'remove',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

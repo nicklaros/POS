@@ -64,6 +64,7 @@ Ext.define('POS.view.sales.AddDetailController', {
             }
             
             values.stock_id = values.stock;
+            values.total_buy_price = values.amount * values.buy;
             values.total_price_wo_discount = values.amount * values.unit_price;
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             

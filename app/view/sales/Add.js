@@ -115,6 +115,10 @@ Ext.define('POS.view.sales.Add' ,{
                             margin: '0 0 0 20',
                             width: 150
                         }]
+                    },{
+                        xtype: 'hidden',
+                        name: 'buy_price',
+                        reference: 'buy_price'
                     }]
                 }]
             },{
@@ -156,7 +160,7 @@ Ext.define('POS.view.sales.Add' ,{
                         },{
                             text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                             reference: 'delete',
-                            handler: 'delete',
+                            handler: 'remove',
                             disabled: true
                         }]
                     }]

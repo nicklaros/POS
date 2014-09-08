@@ -28,7 +28,7 @@ Ext.define('POS.view.stock.ListController', {
         Ext.fn.App.window('add-stock')
     },
     
-    delete: function(){
+    remove: function(){
         var sm  = this.getView().getSelectionModel(),
             sel = sm.getSelection(),
             smCount = sm.getCount();
