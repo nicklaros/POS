@@ -16,8 +16,6 @@ Ext.define('Ext.fn.App', {
         }
 
         console.log('Application successfully initiated.');
-
-        //Ext.fn.Util.keyMap();
     },
 
     mnChangeBiodata: function(){

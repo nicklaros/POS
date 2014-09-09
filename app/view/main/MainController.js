@@ -38,7 +38,11 @@ Ext.define('POS.view.main.MainController', {
                     if (Ext.isEmpty(Ext.ComponentQuery.query('list-sales')[0])) {
                         // if list-sales is not open then open it
                         Ext.fn.App.mnListSales();
-                    } else if (Ext.isEmpty(Ext.ComponentQuery.query('add-sales')[0])) {
+                    } else if (
+                        Ext.isEmpty(Ext.ComponentQuery.query('add-sales')[0])
+                        &&
+                        Ext.isEmpty(Ext.ComponentQuery.query('edit-sales')[0])
+                    ) {
                         // if list-sales opened but add-sales is not open then open it
                         Ext.fn.App.window('add-sales');
                     }

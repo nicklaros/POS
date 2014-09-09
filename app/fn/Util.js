@@ -182,25 +182,6 @@ Ext.define('Ext.fn.Util', {
         });
     },
 
-    keyMap: function(){
-        new Ext.util.KeyMap({
-            target : Ext.getDoc(),
-            binding: [{
-                key: 112,
-                fn: function(){
-                    Ext.fn.App.notify('ahhh', 'F1')
-                },
-                defaultEventAction: "preventDefault"
-            },{
-                key: 113,
-                fn: function(){
-                    Ext.fn.App.notify('ahhh', 'F2')
-                },
-                defaultEventAction: "preventDefault"
-            }]
-        });
-    },
-
     overrides: function(){
         setTimeout(function(){
             Ext.ComponentQuery.query('app-tab')[0].doLayout();
