@@ -47,7 +47,7 @@ Ext.define('POS.view.product.List' ,{
             },{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                 reference: 'delete',
-                handler: 'delete',
+                handler: 'remove',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

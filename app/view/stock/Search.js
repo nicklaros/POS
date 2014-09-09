@@ -15,7 +15,7 @@ Ext.define('POS.view.stock.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-align-left glyph"></i> Pencarian Stock';
+        this.title = '<i class="fa fa-tasks glyph"></i> Pencarian Stock';
 
         this.items = [{
             xtype: 'form',

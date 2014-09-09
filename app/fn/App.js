@@ -16,19 +16,45 @@ Ext.define('Ext.fn.App', {
         }
 
         console.log('Application successfully initiated.');
-
-        //Ext.fn.Util.keyMap();
     },
 
-    mnHalamanDepan: function(){
+    mnChangeBiodata: function(){
+        Ext.widget('ubah-biodata');
+    },
+
+    mnChangePassword: function(){
+        Ext.widget('ubah-password');
+    },
+
+    mnDashboard: function(){
         Ext.ComponentQuery.query('app-tab')[0].setActiveTab(0);
     },
 
-    mnInfoDeveloper: function(){
+    mnDeveloperInfo: function(){
         Ext.widget('about-dev');
     },
 
-    mnKeluar: function(){
+    mnListProduct: function(){
+        var panel = this.newTab('list-product');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListSales: function(){
+        var panel = this.newTab('list-sales');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListStock: function(){
+        var panel = this.newTab('list-stock');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListUser: function(){
+        var panel = this.newTab('list-user');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnLogout: function(){
         Mains.logout(function(result){
             if (result.success){
                 var appTab = Ext.ComponentQuery.query('app-tab')[0],
@@ -53,31 +79,6 @@ Ext.define('Ext.fn.App', {
         });
     },
 
-    mnListProduct: function(){
-        this.newTab('list-product');
-    },
-
-    mnListStock: function(){
-        this.newTab('list-stock');
-    },
-
-    mnListUser: function(){
-        this.newTab('list-user');
-    },
-
-    mnUbahBiodata: function(){
-        Ext.widget('ubah-biodata');
-    },
-
-    mnUbahFoto: function(){
-        Ext.widget('ubah-foto');
-        //smk3.app.getController('Pegawai').loadFormUbahFoto(smk3_.currentUser.id);
-    },
-
-    mnUbahPassword: function(){
-        Ext.widget('ubah-password');
-    },
-
     newTab: function(alias, state){
         var main = Ext.ComponentQuery.query('app-main')[0].getViewModel(),
             tab = Ext.ComponentQuery.query('app-tab')[0],
@@ -85,35 +86,47 @@ Ext.define('Ext.fn.App', {
 
         state = (typeof(state) === 'undefined' ? 1 : state)
         if(
-            (state == 0) ||
+            (state == 0) 
+            ||
             ( (state == 1) && (main.get('state') == 1) )
         ){
             if(!panel){
-                tab.add({xtype:alias}).show();
+                var panel = tab.add({xtype:alias});
+                panel.show();
             }else{
                 tab.setActiveTab(panel);
             }
+            return panel;
         }else{
             Ext.Msg.alert('Akses ditolak', E0);
         }
     },
 
-    notify: function(title, message){
-        return this.notification(title, message);
+    notify: function(title, message, manager, icon){
+        return this.notification(title, message, manager, icon);
     },
 
-    notification: function(title, message, icon){
-        Ext.create('widget.uxNotification', {
-            title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
-            position: 'br',
-            cls: 'ux-notification-light',
-            html: message,
-            autoCloseDelay: 4000,
-            slideBackDuration: 500,
-            slideInAnimation: 'bounceOut',
-            slideBackAnimation: 'easeIn',
-            maxWidth: 350
-        }).show();
+    notification: function(title, message, manager, icon){
+        setTimeout(function(){
+            Ext.create('widget.uxNotification', {
+                title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
+                autoCloseDelay: 5000,
+                cls: 'ux-notification-light',
+                hideDuration: 50,
+                html: message,
+                manager: (manager || Ext.getBody()),
+                position: 'br',
+                slideBackAnimation: 'bounceOut',
+                slideBackDuration: 500,
+                slideInAnimation: 'bounceOut',
+                slideInDuration: 1000,
+                maxWidth: 350
+            }).show();
+        }, 10);
+    },
+
+    printNotaSales: function(id){
+        window.open("remote/print/nota-sales.php?id=" + id, "_blank");
     },
 
     setLoading: function(bool){

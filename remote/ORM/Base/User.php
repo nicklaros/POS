@@ -89,7 +89,7 @@ abstract class User implements ActiveRecordInterface
     /**
      * @var        ChildRole
      */
-    protected $aUserRoleId;
+    protected $aRole;
 
     /**
      * @var        ChildUserDetail one-to-one related ChildUserDetail object
@@ -451,8 +451,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aUserRoleId !== null && $this->role_id !== $this->aUserRoleId->getId()) {
-            $this->aUserRoleId = null;
+        if ($this->aRole !== null && $this->role_id !== $this->aRole->getId()) {
+            $this->aRole = null;
         }
     } // ensureConsistency
 
@@ -533,8 +533,8 @@ abstract class User implements ActiveRecordInterface
             $this->modifiedColumns[UserTableMap::COL_ROLE_ID] = true;
         }
 
-        if ($this->aUserRoleId !== null && $this->aUserRoleId->getId() !== $v) {
-            $this->aUserRoleId = null;
+        if ($this->aRole !== null && $this->aRole->getId() !== $v) {
+            $this->aRole = null;
         }
 
         return $this;
@@ -597,7 +597,7 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aUserRoleId = null;
+            $this->aRole = null;
             $this->singleDetail = null;
 
         } // if (deep)
@@ -704,11 +704,11 @@ abstract class User implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aUserRoleId !== null) {
-                if ($this->aUserRoleId->isModified() || $this->aUserRoleId->isNew()) {
-                    $affectedRows += $this->aUserRoleId->save($con);
+            if ($this->aRole !== null) {
+                if ($this->aRole->isModified() || $this->aRole->isNew()) {
+                    $affectedRows += $this->aRole->save($con);
                 }
-                $this->setUserRoleId($this->aUserRoleId);
+                $this->setRole($this->aRole);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -913,8 +913,8 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aUserRoleId) {
-                $result['UserRoleId'] = $this->aUserRoleId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aRole) {
+                $result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->singleDetail) {
                 $result['Detail'] = $this->singleDetail->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
@@ -1197,7 +1197,7 @@ abstract class User implements ActiveRecordInterface
      * @return $this|\ORM\User The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setUserRoleId(ChildRole $v = null)
+    public function setRole(ChildRole $v = null)
     {
         if ($v === null) {
             $this->setRoleId(NULL);
@@ -1205,12 +1205,12 @@ abstract class User implements ActiveRecordInterface
             $this->setRoleId($v->getId());
         }
 
-        $this->aUserRoleId = $v;
+        $this->aRole = $v;
 
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildRole object, it will not be re-added.
         if ($v !== null) {
-            $v->addUserRoleId($this);
+            $v->addUser($this);
         }
 
 
@@ -1225,20 +1225,20 @@ abstract class User implements ActiveRecordInterface
      * @return ChildRole The associated ChildRole object.
      * @throws PropelException
      */
-    public function getUserRoleId(ConnectionInterface $con = null)
+    public function getRole(ConnectionInterface $con = null)
     {
-        if ($this->aUserRoleId === null && (($this->role_id !== "" && $this->role_id !== null))) {
-            $this->aUserRoleId = ChildRoleQuery::create()->findPk($this->role_id, $con);
+        if ($this->aRole === null && (($this->role_id !== "" && $this->role_id !== null))) {
+            $this->aRole = ChildRoleQuery::create()->findPk($this->role_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUserRoleId->addUserRoleIds($this);
+                $this->aRole->addUsers($this);
              */
         }
 
-        return $this->aUserRoleId;
+        return $this->aRole;
     }
 
 
@@ -1297,8 +1297,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aUserRoleId) {
-            $this->aUserRoleId->removeUserRoleId($this);
+        if (null !== $this->aRole) {
+            $this->aRole->removeUser($this);
         }
         $this->id = null;
         $this->user = null;
@@ -1329,7 +1329,7 @@ abstract class User implements ActiveRecordInterface
         } // if ($deep)
 
         $this->singleDetail = null;
-        $this->aUserRoleId = null;
+        $this->aRole = null;
     }
 
     /**

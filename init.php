@@ -5,9 +5,9 @@ use ORM\OptionQuery;
 use ORM\UserQuery;
 use Propel\Runtime\Propel;
 
-require 'vendor/autoload.php';
-require 'remote/propel-config.php';
-require 'remote/session.php';
+require '/vendor/autoload.php';
+require '/remote/propel-config.php';
+require '/remote/session.php';
 
 $con = Propel::getConnection('pos');
 $con->beginTransaction();

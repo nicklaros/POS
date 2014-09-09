@@ -75,6 +75,12 @@ abstract class Product implements ActiveRecordInterface
     protected $name;
 
     /**
+     * The value for the status field.
+     * @var        string
+     */
+    protected $status;
+
+    /**
      * @var        ObjectCollection|ChildStock[] Collection to store aggregation of ChildStock objects.
      */
     protected $collStocks;
@@ -342,6 +348,16 @@ abstract class Product implements ActiveRecordInterface
     }
 
     /**
+     * Get the [status] column value.
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -385,6 +401,9 @@ abstract class Product implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProductTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ProductTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -393,7 +412,7 @@ abstract class Product implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = ProductTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = ProductTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Product'), 0, $e);
@@ -476,6 +495,26 @@ abstract class Product implements ActiveRecordInterface
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [status] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\Product The current object (for fluent API support)
+     */
+    public function setStatus($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->status !== $v) {
+            $this->status = $v;
+            $this->modifiedColumns[ProductTableMap::COL_STATUS] = true;
+        }
+
+        return $this;
+    } // setStatus()
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -678,6 +717,9 @@ abstract class Product implements ActiveRecordInterface
         if ($this->isColumnModified(ProductTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
         }
+        if ($this->isColumnModified(ProductTableMap::COL_STATUS)) {
+            $modifiedColumns[':p' . $index++]  = 'STATUS';
+        }
 
         $sql = sprintf(
             'INSERT INTO product (%s) VALUES (%s)',
@@ -697,6 +739,9 @@ abstract class Product implements ActiveRecordInterface
                         break;
                     case 'NAME':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'STATUS':
+                        $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -769,6 +814,9 @@ abstract class Product implements ActiveRecordInterface
             case 2:
                 return $this->getName();
                 break;
+            case 3:
+                return $this->getStatus();
+                break;
             default:
                 return null;
                 break;
@@ -801,6 +849,7 @@ abstract class Product implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getCode(),
             $keys[2] => $this->getName(),
+            $keys[3] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -854,6 +903,9 @@ abstract class Product implements ActiveRecordInterface
             case 2:
                 $this->setName($value);
                 break;
+            case 3:
+                $this->setStatus($value);
+                break;
         } // switch()
 
         return $this;
@@ -888,6 +940,9 @@ abstract class Product implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setName($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setStatus($arr[$keys[3]]);
         }
     }
 
@@ -932,6 +987,9 @@ abstract class Product implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProductTableMap::COL_NAME)) {
             $criteria->add(ProductTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(ProductTableMap::COL_STATUS)) {
+            $criteria->add(ProductTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -1021,6 +1079,7 @@ abstract class Product implements ActiveRecordInterface
     {
         $copyObj->setCode($this->getCode());
         $copyObj->setName($this->getName());
+        $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1297,6 +1356,31 @@ abstract class Product implements ActiveRecordInterface
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related Stocks from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildStock[] List of ChildStock objects
+     */
+    public function getStocksJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildStockQuery::create(null, $criteria);
+        $query->joinWith('Unit', $joinBehavior);
+
+        return $this->getStocks($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1307,6 +1391,7 @@ abstract class Product implements ActiveRecordInterface
         $this->id = null;
         $this->code = null;
         $this->name = null;
+        $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

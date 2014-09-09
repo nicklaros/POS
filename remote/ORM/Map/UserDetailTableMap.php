@@ -155,6 +155,7 @@ class UserDetailTableMap extends TableMap
     {
         $this->addRelation('User', '\\ORM\\User', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
         $this->addRelation('History', '\\ORM\\RowHistory', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'NO ACTION', 'RESTRICT', 'Histories');
+        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::ONE_TO_MANY, array('id' => 'cashier_id', ), 'NO ACTION', 'RESTRICT', 'Saless');
     } // buildRelations()
 
     /**

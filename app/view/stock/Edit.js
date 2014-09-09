@@ -9,7 +9,7 @@ Ext.define('POS.view.stock.Edit' ,{
         'POS.custom.field.ComboUnit',
         'POS.custom.field.Discount',
         'POS.custom.field.Price',
-        'POS.custom.field.Stock',
+        'POS.custom.field.StockAmount',
         'POS.view.stock.EditController'
     ],
 
@@ -20,7 +20,7 @@ Ext.define('POS.view.stock.Edit' ,{
     width: 600,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-stock glyph"></i> Ubah Stock';
+        this.title = '<i class="fa fa-tasks glyph"></i> Ubah Stock';
 
         this.items = [{
             xtype: 'form',
@@ -44,7 +44,7 @@ Ext.define('POS.view.stock.Edit' ,{
                 layout: 'hbox',
                 margin: '0 0 10 0',
                 items:[{
-                    xtype: 'field-stock',
+                    xtype: 'field-stock-amount',
                     fieldLabel: 'Jumlah Stock',
                     name: 'amount',
                     saveOnEnter: true,

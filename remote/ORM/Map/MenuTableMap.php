@@ -169,7 +169,7 @@ class MenuTableMap extends TableMap
         $this->addColumn('TEXT', 'Text', 'CHAR', false, 128, null);
         $this->addColumn('ACTION', 'Action', 'CHAR', false, 32, null);
         $this->addColumn('STATE', 'State', 'BOOLEAN', false, 1, null);
-        $this->addColumn('STATUS', 'Status', 'VARCHAR', false, null, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', false, null, null);
     } // initialize()
 
     /**

@@ -151,7 +151,7 @@ class UserTableMap extends TableMap
         $this->addColumn('USER', 'User', 'CHAR', true, 128, null);
         $this->addColumn('PASSWORD', 'Password', 'CHAR', true, 128, null);
         $this->addForeignKey('ROLE_ID', 'RoleId', 'BIGINT', 'role', 'ID', true, 20, null);
-        $this->addColumn('STATUS', 'Status', 'VARCHAR', true, null, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
     /**
@@ -159,7 +159,7 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('UserRoleId', '\\ORM\\Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('Role', '\\ORM\\Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'NO ACTION', 'RESTRICT');
         $this->addRelation('Detail', '\\ORM\\UserDetail', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
     } // buildRelations()
     /**

@@ -17,7 +17,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     hideTrigger: true,
     matchFieldWidth: true,
     minChars: 1,
-    queryDelay: 200,
+    queryDelay: 50,
     queryMode: 'remote',
     triggerAction: 'query',
     typeAhead: false,

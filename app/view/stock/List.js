@@ -40,7 +40,7 @@ Ext.define('POS.view.stock.List' ,{
                     {header: 'Lain', dataIndex: 'sell_misc', width: 100, renderer: Ext.fn.Render.currency, align: 'right'}
                 ]
             },
-            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.diskon, align: 'right'}
+            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'}
         ];
 
         this.dockedItems = [{
@@ -59,7 +59,7 @@ Ext.define('POS.view.stock.List' ,{
             },{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                 reference: 'delete',
-                handler: 'delete',
+                handler: 'remove',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

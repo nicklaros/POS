@@ -8,9 +8,6 @@ Ext.define('POS.view.product.ListController', {
 
     control: {
         '#': {
-            boxready: function(panel){
-                this.getView().getStore().search({});
-            },
             selectionchange: function(sm, selected){
                 var btnEdit = this.lookupReference('edit'),
                     btnDelete = this.lookupReference('delete');
@@ -28,7 +25,7 @@ Ext.define('POS.view.product.ListController', {
         Ext.fn.App.window('add-product');
     },
     
-    delete: function(){
+    remove: function(){
         var sm  = this.getView().getSelectionModel(),
             sel = sm.getSelection(),
             smCount = sm.getCount();

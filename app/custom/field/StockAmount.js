@@ -1,6 +1,6 @@
-Ext.define('POS.custom.field.Stock', {
+Ext.define('POS.custom.field.StockAmount', {
     extend: 'Ext.form.field.Number',
-    alias: 'widget.field-stock',
+    alias: 'widget.field-stock-amount',
 
     fieldStyle: 'text-align: right;',
     minValue: 0,

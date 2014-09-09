@@ -42,7 +42,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserDetailQuery rightJoinHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the History relation
  * @method     ChildUserDetailQuery innerJoinHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the History relation
  *
- * @method     \ORM\UserQuery|\ORM\RowHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserDetailQuery leftJoinSales($relationAlias = null) Adds a LEFT JOIN clause to the query using the Sales relation
+ * @method     ChildUserDetailQuery rightJoinSales($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Sales relation
+ * @method     ChildUserDetailQuery innerJoinSales($relationAlias = null) Adds a INNER JOIN clause to the query using the Sales relation
+ *
+ * @method     \ORM\UserQuery|\ORM\RowHistoryQuery|\ORM\SalesQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUserDetail findOne(ConnectionInterface $con = null) Return the first ChildUserDetail matching the query
  * @method     ChildUserDetail findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserDetail matching the query, or a new ChildUserDetail object populated from the query conditions when no match is found
@@ -512,6 +516,79 @@ abstract class UserDetailQuery extends ModelCriteria
         return $this
             ->joinHistory($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'History', '\ORM\RowHistoryQuery');
+    }
+
+    /**
+     * Filter the query by a related \ORM\Sales object
+     *
+     * @param \ORM\Sales|ObjectCollection $sales  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserDetailQuery The current query, for fluid interface
+     */
+    public function filterBySales($sales, $comparison = null)
+    {
+        if ($sales instanceof \ORM\Sales) {
+            return $this
+                ->addUsingAlias(UserDetailTableMap::COL_ID, $sales->getCashierId(), $comparison);
+        } elseif ($sales instanceof ObjectCollection) {
+            return $this
+                ->useSalesQuery()
+                ->filterByPrimaryKeys($sales->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySales() only accepts arguments of type \ORM\Sales or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Sales relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserDetailQuery The current query, for fluid interface
+     */
+    public function joinSales($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Sales');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Sales');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Sales relation Sales object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\SalesQuery A secondary query class using the current class as primary query
+     */
+    public function useSalesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinSales($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Sales', '\ORM\SalesQuery');
     }
 
     /**
