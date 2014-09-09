@@ -23,10 +23,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProductQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildProductQuery orderByCode($order = Criteria::ASC) Order by the code column
  * @method     ChildProductQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildProductQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildProductQuery groupById() Group by the id column
  * @method     ChildProductQuery groupByCode() Group by the code column
  * @method     ChildProductQuery groupByName() Group by the name column
+ * @method     ChildProductQuery groupByStatus() Group by the status column
  *
  * @method     ChildProductQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildProductQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -44,11 +46,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProduct findOneById(string $id) Return the first ChildProduct filtered by the id column
  * @method     ChildProduct findOneByCode(string $code) Return the first ChildProduct filtered by the code column
  * @method     ChildProduct findOneByName(string $name) Return the first ChildProduct filtered by the name column
+ * @method     ChildProduct findOneByStatus(string $status) Return the first ChildProduct filtered by the status column
  *
  * @method     ChildProduct[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildProduct objects based on current ModelCriteria
  * @method     ChildProduct[]|ObjectCollection findById(string $id) Return ChildProduct objects filtered by the id column
  * @method     ChildProduct[]|ObjectCollection findByCode(string $code) Return ChildProduct objects filtered by the code column
  * @method     ChildProduct[]|ObjectCollection findByName(string $name) Return ChildProduct objects filtered by the name column
+ * @method     ChildProduct[]|ObjectCollection findByStatus(string $status) Return ChildProduct objects filtered by the status column
  * @method     ChildProduct[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -138,7 +142,7 @@ abstract class ProductQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, CODE, NAME FROM product WHERE ID = :p0';
+        $sql = 'SELECT ID, CODE, NAME, STATUS FROM product WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -325,6 +329,35 @@ abstract class ProductQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ProductTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the status column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatus('fooValue');   // WHERE status = 'fooValue'
+     * $query->filterByStatus('%fooValue%'); // WHERE status LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $status The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildProductQuery The current query, for fluid interface
+     */
+    public function filterByStatus($status = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($status)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $status)) {
+                $status = str_replace('*', '%', $status);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ProductTableMap::COL_STATUS, $status, $comparison);
     }
 
     /**

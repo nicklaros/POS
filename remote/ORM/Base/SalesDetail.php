@@ -4,21 +4,19 @@ namespace ORM\Base;
 
 use \Exception;
 use \PDO;
-use ORM\Product as ChildProduct;
-use ORM\ProductQuery as ChildProductQuery;
-use ORM\SalesDetail as ChildSalesDetail;
+use ORM\Sales as ChildSales;
 use ORM\SalesDetailQuery as ChildSalesDetailQuery;
+use ORM\SalesQuery as ChildSalesQuery;
 use ORM\Stock as ChildStock;
 use ORM\StockQuery as ChildStockQuery;
 use ORM\Unit as ChildUnit;
 use ORM\UnitQuery as ChildUnitQuery;
-use ORM\Map\StockTableMap;
+use ORM\Map\SalesDetailTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -26,12 +24,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
-abstract class Stock implements ActiveRecordInterface
+abstract class SalesDetail implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\ORM\\Map\\StockTableMap';
+    const TABLE_MAP = '\\ORM\\Map\\SalesDetailTableMap';
 
 
     /**
@@ -67,14 +65,26 @@ abstract class Stock implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the product_id field.
+     * The value for the sales_id field.
      * @var        string
      */
-    protected $product_id;
+    protected $sales_id;
+
+    /**
+     * The value for the type field.
+     * @var        string
+     */
+    protected $type;
+
+    /**
+     * The value for the stock_id field.
+     * @var        string
+     */
+    protected $stock_id;
 
     /**
      * The value for the amount field.
-     * @var        string
+     * @var        int
      */
     protected $amount;
 
@@ -83,6 +93,24 @@ abstract class Stock implements ActiveRecordInterface
      * @var        string
      */
     protected $unit_id;
+
+    /**
+     * The value for the unit_price field.
+     * @var        int
+     */
+    protected $unit_price;
+
+    /**
+     * The value for the discount field.
+     * @var        int
+     */
+    protected $discount;
+
+    /**
+     * The value for the total_price field.
+     * @var        int
+     */
+    protected $total_price;
 
     /**
      * The value for the buy field.
@@ -109,32 +137,25 @@ abstract class Stock implements ActiveRecordInterface
     protected $sell_misc;
 
     /**
-     * The value for the discount field.
-     * @var        int
-     */
-    protected $discount;
-
-    /**
      * The value for the status field.
      * @var        string
      */
     protected $status;
 
     /**
-     * @var        ChildProduct
+     * @var        ChildSales
      */
-    protected $aProduct;
+    protected $aSales;
+
+    /**
+     * @var        ChildStock
+     */
+    protected $aStock;
 
     /**
      * @var        ChildUnit
      */
     protected $aUnit;
-
-    /**
-     * @var        ObjectCollection|ChildSalesDetail[] Collection to store aggregation of ChildSalesDetail objects.
-     */
-    protected $collSaless;
-    protected $collSalessPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -145,13 +166,7 @@ abstract class Stock implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildSalesDetail[]
-     */
-    protected $salessScheduledForDeletion = null;
-
-    /**
-     * Initializes internal state of ORM\Base\Stock object.
+     * Initializes internal state of ORM\Base\SalesDetail object.
      */
     public function __construct()
     {
@@ -246,9 +261,9 @@ abstract class Stock implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Stock</code> instance.  If
-     * <code>obj</code> is an instance of <code>Stock</code>, delegates to
-     * <code>equals(Stock)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>SalesDetail</code> instance.  If
+     * <code>obj</code> is an instance of <code>SalesDetail</code>, delegates to
+     * <code>equals(SalesDetail)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -314,7 +329,7 @@ abstract class Stock implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Stock The current object, for fluid interface
+     * @return $this|SalesDetail The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -378,19 +393,39 @@ abstract class Stock implements ActiveRecordInterface
     }
 
     /**
-     * Get the [product_id] column value.
+     * Get the [sales_id] column value.
      *
      * @return string
      */
-    public function getProductId()
+    public function getSalesId()
     {
-        return $this->product_id;
+        return $this->sales_id;
+    }
+
+    /**
+     * Get the [type] column value.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get the [stock_id] column value.
+     *
+     * @return string
+     */
+    public function getStockId()
+    {
+        return $this->stock_id;
     }
 
     /**
      * Get the [amount] column value.
      *
-     * @return string
+     * @return int
      */
     public function getAmount()
     {
@@ -405,6 +440,36 @@ abstract class Stock implements ActiveRecordInterface
     public function getUnitId()
     {
         return $this->unit_id;
+    }
+
+    /**
+     * Get the [unit_price] column value.
+     *
+     * @return int
+     */
+    public function getUnitPrice()
+    {
+        return $this->unit_price;
+    }
+
+    /**
+     * Get the [discount] column value.
+     *
+     * @return int
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * Get the [total_price] column value.
+     *
+     * @return int
+     */
+    public function getTotalPrice()
+    {
+        return $this->total_price;
     }
 
     /**
@@ -445,16 +510,6 @@ abstract class Stock implements ActiveRecordInterface
     public function getSellMisc()
     {
         return $this->sell_misc;
-    }
-
-    /**
-     * Get the [discount] column value.
-     *
-     * @return int
-     */
-    public function getDiscount()
-    {
-        return $this->discount;
     }
 
     /**
@@ -503,34 +558,46 @@ abstract class Stock implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : StockTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SalesDetailTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : StockTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->product_id = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SalesDetailTableMap::translateFieldName('SalesId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sales_id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StockTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->amount = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SalesDetailTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StockTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SalesDetailTableMap::translateFieldName('StockId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->stock_id = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SalesDetailTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->amount = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SalesDetailTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StockTableMap::translateFieldName('Buy', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->buy = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SalesDetailTableMap::translateFieldName('UnitPrice', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->unit_price = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StockTableMap::translateFieldName('SellPublic', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->sell_public = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StockTableMap::translateFieldName('SellDistributor', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->sell_distributor = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StockTableMap::translateFieldName('SellMisc', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->sell_misc = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StockTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SalesDetailTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->discount = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StockTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SalesDetailTableMap::translateFieldName('TotalPrice', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->total_price = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SalesDetailTableMap::translateFieldName('Buy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->buy = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SalesDetailTableMap::translateFieldName('SellPublic', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sell_public = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SalesDetailTableMap::translateFieldName('SellDistributor', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sell_distributor = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SalesDetailTableMap::translateFieldName('SellMisc', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->sell_misc = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SalesDetailTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -540,10 +607,10 @@ abstract class Stock implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = StockTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = SalesDetailTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Stock'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\SalesDetail'), 0, $e);
         }
     }
 
@@ -562,8 +629,11 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aProduct !== null && $this->product_id !== $this->aProduct->getId()) {
-            $this->aProduct = null;
+        if ($this->aSales !== null && $this->sales_id !== $this->aSales->getId()) {
+            $this->aSales = null;
+        }
+        if ($this->aStock !== null && $this->stock_id !== $this->aStock->getId()) {
+            $this->aStock = null;
         }
         if ($this->aUnit !== null && $this->unit_id !== $this->aUnit->getId()) {
             $this->aUnit = null;
@@ -574,7 +644,7 @@ abstract class Stock implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -584,51 +654,95 @@ abstract class Stock implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[StockTableMap::COL_ID] = true;
+            $this->modifiedColumns[SalesDetailTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [product_id] column.
+     * Set the value of [sales_id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
-    public function setProductId($v)
+    public function setSalesId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->product_id !== $v) {
-            $this->product_id = $v;
-            $this->modifiedColumns[StockTableMap::COL_PRODUCT_ID] = true;
+        if ($this->sales_id !== $v) {
+            $this->sales_id = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_SALES_ID] = true;
         }
 
-        if ($this->aProduct !== null && $this->aProduct->getId() !== $v) {
-            $this->aProduct = null;
+        if ($this->aSales !== null && $this->aSales->getId() !== $v) {
+            $this->aSales = null;
         }
 
         return $this;
-    } // setProductId()
+    } // setSalesId()
+
+    /**
+     * Set the value of [type] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setType($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_TYPE] = true;
+        }
+
+        return $this;
+    } // setType()
+
+    /**
+     * Set the value of [stock_id] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setStockId($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->stock_id !== $v) {
+            $this->stock_id = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_STOCK_ID] = true;
+        }
+
+        if ($this->aStock !== null && $this->aStock->getId() !== $v) {
+            $this->aStock = null;
+        }
+
+        return $this;
+    } // setStockId()
 
     /**
      * Set the value of [amount] column.
      *
-     * @param  string $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setAmount($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
         if ($this->amount !== $v) {
             $this->amount = $v;
-            $this->modifiedColumns[StockTableMap::COL_AMOUNT] = true;
+            $this->modifiedColumns[SalesDetailTableMap::COL_AMOUNT] = true;
         }
 
         return $this;
@@ -638,7 +752,7 @@ abstract class Stock implements ActiveRecordInterface
      * Set the value of [unit_id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setUnitId($v)
     {
@@ -648,7 +762,7 @@ abstract class Stock implements ActiveRecordInterface
 
         if ($this->unit_id !== $v) {
             $this->unit_id = $v;
-            $this->modifiedColumns[StockTableMap::COL_UNIT_ID] = true;
+            $this->modifiedColumns[SalesDetailTableMap::COL_UNIT_ID] = true;
         }
 
         if ($this->aUnit !== null && $this->aUnit->getId() !== $v) {
@@ -659,90 +773,30 @@ abstract class Stock implements ActiveRecordInterface
     } // setUnitId()
 
     /**
-     * Set the value of [buy] column.
+     * Set the value of [unit_price] column.
      *
      * @param  int $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
-    public function setBuy($v)
+    public function setUnitPrice($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->buy !== $v) {
-            $this->buy = $v;
-            $this->modifiedColumns[StockTableMap::COL_BUY] = true;
+        if ($this->unit_price !== $v) {
+            $this->unit_price = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_UNIT_PRICE] = true;
         }
 
         return $this;
-    } // setBuy()
-
-    /**
-     * Set the value of [sell_public] column.
-     *
-     * @param  int $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
-     */
-    public function setSellPublic($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->sell_public !== $v) {
-            $this->sell_public = $v;
-            $this->modifiedColumns[StockTableMap::COL_SELL_PUBLIC] = true;
-        }
-
-        return $this;
-    } // setSellPublic()
-
-    /**
-     * Set the value of [sell_distributor] column.
-     *
-     * @param  int $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
-     */
-    public function setSellDistributor($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->sell_distributor !== $v) {
-            $this->sell_distributor = $v;
-            $this->modifiedColumns[StockTableMap::COL_SELL_DISTRIBUTOR] = true;
-        }
-
-        return $this;
-    } // setSellDistributor()
-
-    /**
-     * Set the value of [sell_misc] column.
-     *
-     * @param  int $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
-     */
-    public function setSellMisc($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->sell_misc !== $v) {
-            $this->sell_misc = $v;
-            $this->modifiedColumns[StockTableMap::COL_SELL_MISC] = true;
-        }
-
-        return $this;
-    } // setSellMisc()
+    } // setUnitPrice()
 
     /**
      * Set the value of [discount] column.
      *
      * @param  int $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setDiscount($v)
     {
@@ -752,17 +806,117 @@ abstract class Stock implements ActiveRecordInterface
 
         if ($this->discount !== $v) {
             $this->discount = $v;
-            $this->modifiedColumns[StockTableMap::COL_DISCOUNT] = true;
+            $this->modifiedColumns[SalesDetailTableMap::COL_DISCOUNT] = true;
         }
 
         return $this;
     } // setDiscount()
 
     /**
+     * Set the value of [total_price] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setTotalPrice($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->total_price !== $v) {
+            $this->total_price = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_TOTAL_PRICE] = true;
+        }
+
+        return $this;
+    } // setTotalPrice()
+
+    /**
+     * Set the value of [buy] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setBuy($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->buy !== $v) {
+            $this->buy = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_BUY] = true;
+        }
+
+        return $this;
+    } // setBuy()
+
+    /**
+     * Set the value of [sell_public] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setSellPublic($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->sell_public !== $v) {
+            $this->sell_public = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_SELL_PUBLIC] = true;
+        }
+
+        return $this;
+    } // setSellPublic()
+
+    /**
+     * Set the value of [sell_distributor] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setSellDistributor($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->sell_distributor !== $v) {
+            $this->sell_distributor = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_SELL_DISTRIBUTOR] = true;
+        }
+
+        return $this;
+    } // setSellDistributor()
+
+    /**
+     * Set the value of [sell_misc] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     */
+    public function setSellMisc($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->sell_misc !== $v) {
+            $this->sell_misc = $v;
+            $this->modifiedColumns[SalesDetailTableMap::COL_SELL_MISC] = true;
+        }
+
+        return $this;
+    } // setSellMisc()
+
+    /**
      * Set the value of [status] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setStatus($v)
     {
@@ -772,7 +926,7 @@ abstract class Stock implements ActiveRecordInterface
 
         if ($this->status !== $v) {
             $this->status = $v;
-            $this->modifiedColumns[StockTableMap::COL_STATUS] = true;
+            $this->modifiedColumns[SalesDetailTableMap::COL_STATUS] = true;
         }
 
         return $this;
@@ -799,13 +953,13 @@ abstract class Stock implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(StockTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(SalesDetailTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildStockQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildSalesDetailQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -815,10 +969,9 @@ abstract class Stock implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aProduct = null;
+            $this->aSales = null;
+            $this->aStock = null;
             $this->aUnit = null;
-            $this->collSaless = null;
-
         } // if (deep)
     }
 
@@ -828,8 +981,8 @@ abstract class Stock implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Stock::setDeleted()
-     * @see Stock::isDeleted()
+     * @see SalesDetail::setDeleted()
+     * @see SalesDetail::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -838,11 +991,11 @@ abstract class Stock implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(StockTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesDetailTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildStockQuery::create()
+            $deleteQuery = ChildSalesDetailQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -873,7 +1026,7 @@ abstract class Stock implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(StockTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesDetailTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -892,7 +1045,7 @@ abstract class Stock implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                StockTableMap::addInstanceToPool($this);
+                SalesDetailTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -923,11 +1076,18 @@ abstract class Stock implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aProduct !== null) {
-                if ($this->aProduct->isModified() || $this->aProduct->isNew()) {
-                    $affectedRows += $this->aProduct->save($con);
+            if ($this->aSales !== null) {
+                if ($this->aSales->isModified() || $this->aSales->isNew()) {
+                    $affectedRows += $this->aSales->save($con);
                 }
-                $this->setProduct($this->aProduct);
+                $this->setSales($this->aSales);
+            }
+
+            if ($this->aStock !== null) {
+                if ($this->aStock->isModified() || $this->aStock->isNew()) {
+                    $affectedRows += $this->aStock->save($con);
+                }
+                $this->setStock($this->aStock);
             }
 
             if ($this->aUnit !== null) {
@@ -946,24 +1106,6 @@ abstract class Stock implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->salessScheduledForDeletion !== null) {
-                if (!$this->salessScheduledForDeletion->isEmpty()) {
-                    foreach ($this->salessScheduledForDeletion as $sales) {
-                        // need to save related object because we set the relation to null
-                        $sales->save($con);
-                    }
-                    $this->salessScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSaless !== null) {
-                foreach ($this->collSaless as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -986,45 +1128,57 @@ abstract class Stock implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[StockTableMap::COL_ID] = true;
+        $this->modifiedColumns[SalesDetailTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . StockTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SalesDetailTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(StockTableMap::COL_ID)) {
+        if ($this->isColumnModified(SalesDetailTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(StockTableMap::COL_PRODUCT_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'PRODUCT_ID';
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SALES_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'SALES_ID';
         }
-        if ($this->isColumnModified(StockTableMap::COL_AMOUNT)) {
+        if ($this->isColumnModified(SalesDetailTableMap::COL_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'TYPE';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_STOCK_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'STOCK_ID';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'AMOUNT';
         }
-        if ($this->isColumnModified(StockTableMap::COL_UNIT_ID)) {
+        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'UNIT_ID';
         }
-        if ($this->isColumnModified(StockTableMap::COL_BUY)) {
-            $modifiedColumns[':p' . $index++]  = 'BUY';
+        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_PRICE)) {
+            $modifiedColumns[':p' . $index++]  = 'UNIT_PRICE';
         }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_PUBLIC)) {
-            $modifiedColumns[':p' . $index++]  = 'SELL_PUBLIC';
-        }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_DISTRIBUTOR)) {
-            $modifiedColumns[':p' . $index++]  = 'SELL_DISTRIBUTOR';
-        }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_MISC)) {
-            $modifiedColumns[':p' . $index++]  = 'SELL_MISC';
-        }
-        if ($this->isColumnModified(StockTableMap::COL_DISCOUNT)) {
+        if ($this->isColumnModified(SalesDetailTableMap::COL_DISCOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'DISCOUNT';
         }
-        if ($this->isColumnModified(StockTableMap::COL_STATUS)) {
+        if ($this->isColumnModified(SalesDetailTableMap::COL_TOTAL_PRICE)) {
+            $modifiedColumns[':p' . $index++]  = 'TOTAL_PRICE';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_BUY)) {
+            $modifiedColumns[':p' . $index++]  = 'BUY';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_PUBLIC)) {
+            $modifiedColumns[':p' . $index++]  = 'SELL_PUBLIC';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_DISTRIBUTOR)) {
+            $modifiedColumns[':p' . $index++]  = 'SELL_DISTRIBUTOR';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_MISC)) {
+            $modifiedColumns[':p' . $index++]  = 'SELL_MISC';
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'STATUS';
         }
 
         $sql = sprintf(
-            'INSERT INTO stock (%s) VALUES (%s)',
+            'INSERT INTO sales_detail (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1036,14 +1190,29 @@ abstract class Stock implements ActiveRecordInterface
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'PRODUCT_ID':
-                        $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
+                    case 'SALES_ID':
+                        $stmt->bindValue($identifier, $this->sales_id, PDO::PARAM_INT);
+                        break;
+                    case 'TYPE':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
+                    case 'STOCK_ID':
+                        $stmt->bindValue($identifier, $this->stock_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
                         $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
                         break;
                     case 'UNIT_ID':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
+                        break;
+                    case 'UNIT_PRICE':
+                        $stmt->bindValue($identifier, $this->unit_price, PDO::PARAM_INT);
+                        break;
+                    case 'DISCOUNT':
+                        $stmt->bindValue($identifier, $this->discount, PDO::PARAM_INT);
+                        break;
+                    case 'TOTAL_PRICE':
+                        $stmt->bindValue($identifier, $this->total_price, PDO::PARAM_INT);
                         break;
                     case 'BUY':
                         $stmt->bindValue($identifier, $this->buy, PDO::PARAM_INT);
@@ -1056,9 +1225,6 @@ abstract class Stock implements ActiveRecordInterface
                         break;
                     case 'SELL_MISC':
                         $stmt->bindValue($identifier, $this->sell_misc, PDO::PARAM_INT);
-                        break;
-                    case 'DISCOUNT':
-                        $stmt->bindValue($identifier, $this->discount, PDO::PARAM_INT);
                         break;
                     case 'STATUS':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -1109,7 +1275,7 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = StockTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = SalesDetailTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1129,30 +1295,42 @@ abstract class Stock implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getProductId();
+                return $this->getSalesId();
                 break;
             case 2:
-                return $this->getAmount();
+                return $this->getType();
                 break;
             case 3:
-                return $this->getUnitId();
+                return $this->getStockId();
                 break;
             case 4:
-                return $this->getBuy();
+                return $this->getAmount();
                 break;
             case 5:
-                return $this->getSellPublic();
+                return $this->getUnitId();
                 break;
             case 6:
-                return $this->getSellDistributor();
+                return $this->getUnitPrice();
                 break;
             case 7:
-                return $this->getSellMisc();
-                break;
-            case 8:
                 return $this->getDiscount();
                 break;
+            case 8:
+                return $this->getTotalPrice();
+                break;
             case 9:
+                return $this->getBuy();
+                break;
+            case 10:
+                return $this->getSellPublic();
+                break;
+            case 11:
+                return $this->getSellDistributor();
+                break;
+            case 12:
+                return $this->getSellMisc();
+                break;
+            case 13:
                 return $this->getStatus();
                 break;
             default:
@@ -1178,22 +1356,26 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Stock'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['SalesDetail'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Stock'][$this->getPrimaryKey()] = true;
-        $keys = StockTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['SalesDetail'][$this->getPrimaryKey()] = true;
+        $keys = SalesDetailTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getProductId(),
-            $keys[2] => $this->getAmount(),
-            $keys[3] => $this->getUnitId(),
-            $keys[4] => $this->getBuy(),
-            $keys[5] => $this->getSellPublic(),
-            $keys[6] => $this->getSellDistributor(),
-            $keys[7] => $this->getSellMisc(),
-            $keys[8] => $this->getDiscount(),
-            $keys[9] => $this->getStatus(),
+            $keys[1] => $this->getSalesId(),
+            $keys[2] => $this->getType(),
+            $keys[3] => $this->getStockId(),
+            $keys[4] => $this->getAmount(),
+            $keys[5] => $this->getUnitId(),
+            $keys[6] => $this->getUnitPrice(),
+            $keys[7] => $this->getDiscount(),
+            $keys[8] => $this->getTotalPrice(),
+            $keys[9] => $this->getBuy(),
+            $keys[10] => $this->getSellPublic(),
+            $keys[11] => $this->getSellDistributor(),
+            $keys[12] => $this->getSellMisc(),
+            $keys[13] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1201,14 +1383,14 @@ abstract class Stock implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aProduct) {
-                $result['Product'] = $this->aProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aSales) {
+                $result['Sales'] = $this->aSales->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aStock) {
+                $result['Stock'] = $this->aStock->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aUnit) {
                 $result['Unit'] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collSaless) {
-                $result['Saless'] = $this->collSaless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1224,11 +1406,11 @@ abstract class Stock implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\ORM\Stock
+     * @return $this|\ORM\SalesDetail
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = StockTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = SalesDetailTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1239,7 +1421,7 @@ abstract class Stock implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\ORM\Stock
+     * @return $this|\ORM\SalesDetail
      */
     public function setByPosition($pos, $value)
     {
@@ -1248,30 +1430,42 @@ abstract class Stock implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setProductId($value);
+                $this->setSalesId($value);
                 break;
             case 2:
-                $this->setAmount($value);
+                $this->setType($value);
                 break;
             case 3:
-                $this->setUnitId($value);
+                $this->setStockId($value);
                 break;
             case 4:
-                $this->setBuy($value);
+                $this->setAmount($value);
                 break;
             case 5:
-                $this->setSellPublic($value);
+                $this->setUnitId($value);
                 break;
             case 6:
-                $this->setSellDistributor($value);
+                $this->setUnitPrice($value);
                 break;
             case 7:
-                $this->setSellMisc($value);
-                break;
-            case 8:
                 $this->setDiscount($value);
                 break;
+            case 8:
+                $this->setTotalPrice($value);
+                break;
             case 9:
+                $this->setBuy($value);
+                break;
+            case 10:
+                $this->setSellPublic($value);
+                break;
+            case 11:
+                $this->setSellDistributor($value);
+                break;
+            case 12:
+                $this->setSellMisc($value);
+                break;
+            case 13:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -1298,37 +1492,49 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = StockTableMap::getFieldNames($keyType);
+        $keys = SalesDetailTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setProductId($arr[$keys[1]]);
+            $this->setSalesId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setAmount($arr[$keys[2]]);
+            $this->setType($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setUnitId($arr[$keys[3]]);
+            $this->setStockId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setBuy($arr[$keys[4]]);
+            $this->setAmount($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setSellPublic($arr[$keys[5]]);
+            $this->setUnitId($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setSellDistributor($arr[$keys[6]]);
+            $this->setUnitPrice($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setSellMisc($arr[$keys[7]]);
+            $this->setDiscount($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setDiscount($arr[$keys[8]]);
+            $this->setTotalPrice($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setStatus($arr[$keys[9]]);
+            $this->setBuy($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setSellPublic($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setSellDistributor($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setSellMisc($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setStatus($arr[$keys[13]]);
         }
     }
 
@@ -1343,7 +1549,7 @@ abstract class Stock implements ActiveRecordInterface
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
      *
-     * @return $this|\ORM\Stock The current object, for fluid interface
+     * @return $this|\ORM\SalesDetail The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -1363,37 +1569,49 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(StockTableMap::DATABASE_NAME);
+        $criteria = new Criteria(SalesDetailTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(StockTableMap::COL_ID)) {
-            $criteria->add(StockTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_ID)) {
+            $criteria->add(SalesDetailTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(StockTableMap::COL_PRODUCT_ID)) {
-            $criteria->add(StockTableMap::COL_PRODUCT_ID, $this->product_id);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SALES_ID)) {
+            $criteria->add(SalesDetailTableMap::COL_SALES_ID, $this->sales_id);
         }
-        if ($this->isColumnModified(StockTableMap::COL_AMOUNT)) {
-            $criteria->add(StockTableMap::COL_AMOUNT, $this->amount);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_TYPE)) {
+            $criteria->add(SalesDetailTableMap::COL_TYPE, $this->type);
         }
-        if ($this->isColumnModified(StockTableMap::COL_UNIT_ID)) {
-            $criteria->add(StockTableMap::COL_UNIT_ID, $this->unit_id);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_STOCK_ID)) {
+            $criteria->add(SalesDetailTableMap::COL_STOCK_ID, $this->stock_id);
         }
-        if ($this->isColumnModified(StockTableMap::COL_BUY)) {
-            $criteria->add(StockTableMap::COL_BUY, $this->buy);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_AMOUNT)) {
+            $criteria->add(SalesDetailTableMap::COL_AMOUNT, $this->amount);
         }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_PUBLIC)) {
-            $criteria->add(StockTableMap::COL_SELL_PUBLIC, $this->sell_public);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_ID)) {
+            $criteria->add(SalesDetailTableMap::COL_UNIT_ID, $this->unit_id);
         }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_DISTRIBUTOR)) {
-            $criteria->add(StockTableMap::COL_SELL_DISTRIBUTOR, $this->sell_distributor);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_PRICE)) {
+            $criteria->add(SalesDetailTableMap::COL_UNIT_PRICE, $this->unit_price);
         }
-        if ($this->isColumnModified(StockTableMap::COL_SELL_MISC)) {
-            $criteria->add(StockTableMap::COL_SELL_MISC, $this->sell_misc);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_DISCOUNT)) {
+            $criteria->add(SalesDetailTableMap::COL_DISCOUNT, $this->discount);
         }
-        if ($this->isColumnModified(StockTableMap::COL_DISCOUNT)) {
-            $criteria->add(StockTableMap::COL_DISCOUNT, $this->discount);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_TOTAL_PRICE)) {
+            $criteria->add(SalesDetailTableMap::COL_TOTAL_PRICE, $this->total_price);
         }
-        if ($this->isColumnModified(StockTableMap::COL_STATUS)) {
-            $criteria->add(StockTableMap::COL_STATUS, $this->status);
+        if ($this->isColumnModified(SalesDetailTableMap::COL_BUY)) {
+            $criteria->add(SalesDetailTableMap::COL_BUY, $this->buy);
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_PUBLIC)) {
+            $criteria->add(SalesDetailTableMap::COL_SELL_PUBLIC, $this->sell_public);
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_DISTRIBUTOR)) {
+            $criteria->add(SalesDetailTableMap::COL_SELL_DISTRIBUTOR, $this->sell_distributor);
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_SELL_MISC)) {
+            $criteria->add(SalesDetailTableMap::COL_SELL_MISC, $this->sell_misc);
+        }
+        if ($this->isColumnModified(SalesDetailTableMap::COL_STATUS)) {
+            $criteria->add(SalesDetailTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -1411,8 +1629,8 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(StockTableMap::DATABASE_NAME);
-        $criteria->add(StockTableMap::COL_ID, $this->id);
+        $criteria = new Criteria(SalesDetailTableMap::DATABASE_NAME);
+        $criteria->add(SalesDetailTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1474,36 +1692,26 @@ abstract class Stock implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \ORM\Stock (or compatible) type.
+     * @param      object $copyObj An object of \ORM\SalesDetail (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setProductId($this->getProductId());
+        $copyObj->setSalesId($this->getSalesId());
+        $copyObj->setType($this->getType());
+        $copyObj->setStockId($this->getStockId());
         $copyObj->setAmount($this->getAmount());
         $copyObj->setUnitId($this->getUnitId());
+        $copyObj->setUnitPrice($this->getUnitPrice());
+        $copyObj->setDiscount($this->getDiscount());
+        $copyObj->setTotalPrice($this->getTotalPrice());
         $copyObj->setBuy($this->getBuy());
         $copyObj->setSellPublic($this->getSellPublic());
         $copyObj->setSellDistributor($this->getSellDistributor());
         $copyObj->setSellMisc($this->getSellMisc());
-        $copyObj->setDiscount($this->getDiscount());
         $copyObj->setStatus($this->getStatus());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getSaless() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSales($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1519,7 +1727,7 @@ abstract class Stock implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \ORM\Stock Clone of current object.
+     * @return \ORM\SalesDetail Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1533,26 +1741,26 @@ abstract class Stock implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildProduct object.
+     * Declares an association between this object and a ChildSales object.
      *
-     * @param  ChildProduct $v
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @param  ChildSales $v
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setProduct(ChildProduct $v = null)
+    public function setSales(ChildSales $v = null)
     {
         if ($v === null) {
-            $this->setProductId(NULL);
+            $this->setSalesId(NULL);
         } else {
-            $this->setProductId($v->getId());
+            $this->setSalesId($v->getId());
         }
 
-        $this->aProduct = $v;
+        $this->aSales = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildProduct object, it will not be re-added.
+        // If this object has already been added to the ChildSales object, it will not be re-added.
         if ($v !== null) {
-            $v->addStock($this);
+            $v->addDetail($this);
         }
 
 
@@ -1561,33 +1769,84 @@ abstract class Stock implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildProduct object
+     * Get the associated ChildSales object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildProduct The associated ChildProduct object.
+     * @return ChildSales The associated ChildSales object.
      * @throws PropelException
      */
-    public function getProduct(ConnectionInterface $con = null)
+    public function getSales(ConnectionInterface $con = null)
     {
-        if ($this->aProduct === null && (($this->product_id !== "" && $this->product_id !== null))) {
-            $this->aProduct = ChildProductQuery::create()->findPk($this->product_id, $con);
+        if ($this->aSales === null && (($this->sales_id !== "" && $this->sales_id !== null))) {
+            $this->aSales = ChildSalesQuery::create()->findPk($this->sales_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aProduct->addStocks($this);
+                $this->aSales->addDetails($this);
              */
         }
 
-        return $this->aProduct;
+        return $this->aSales;
+    }
+
+    /**
+     * Declares an association between this object and a ChildStock object.
+     *
+     * @param  ChildStock $v
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setStock(ChildStock $v = null)
+    {
+        if ($v === null) {
+            $this->setStockId(NULL);
+        } else {
+            $this->setStockId($v->getId());
+        }
+
+        $this->aStock = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildStock object, it will not be re-added.
+        if ($v !== null) {
+            $v->addSales($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildStock object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildStock The associated ChildStock object.
+     * @throws PropelException
+     */
+    public function getStock(ConnectionInterface $con = null)
+    {
+        if ($this->aStock === null && (($this->stock_id !== "" && $this->stock_id !== null))) {
+            $this->aStock = ChildStockQuery::create()->findPk($this->stock_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aStock->addSaless($this);
+             */
+        }
+
+        return $this->aStock;
     }
 
     /**
      * Declares an association between this object and a ChildUnit object.
      *
      * @param  ChildUnit $v
-     * @return $this|\ORM\Stock The current object (for fluent API support)
+     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      * @throws PropelException
      */
     public function setUnit(ChildUnit $v = null)
@@ -1603,7 +1862,7 @@ abstract class Stock implements ActiveRecordInterface
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the ChildUnit object, it will not be re-added.
         if ($v !== null) {
-            $v->addStock($this);
+            $v->addSales($this);
         }
 
 
@@ -1627,295 +1886,11 @@ abstract class Stock implements ActiveRecordInterface
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUnit->addStocks($this);
+                $this->aUnit->addSaless($this);
              */
         }
 
         return $this->aUnit;
-    }
-
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Sales' == $relationName) {
-            return $this->initSaless();
-        }
-    }
-
-    /**
-     * Clears out the collSaless collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addSaless()
-     */
-    public function clearSaless()
-    {
-        $this->collSaless = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collSaless collection loaded partially.
-     */
-    public function resetPartialSaless($v = true)
-    {
-        $this->collSalessPartial = $v;
-    }
-
-    /**
-     * Initializes the collSaless collection.
-     *
-     * By default this just sets the collSaless collection to an empty array (like clearcollSaless());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSaless($overrideExisting = true)
-    {
-        if (null !== $this->collSaless && !$overrideExisting) {
-            return;
-        }
-        $this->collSaless = new ObjectCollection();
-        $this->collSaless->setModel('\ORM\SalesDetail');
-    }
-
-    /**
-     * Gets an array of ChildSalesDetail objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildStock is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSalesDetail[] List of ChildSalesDetail objects
-     * @throws PropelException
-     */
-    public function getSaless(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSalessPartial && !$this->isNew();
-        if (null === $this->collSaless || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSaless) {
-                // return empty collection
-                $this->initSaless();
-            } else {
-                $collSaless = ChildSalesDetailQuery::create(null, $criteria)
-                    ->filterByStock($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSalessPartial && count($collSaless)) {
-                        $this->initSaless(false);
-
-                        foreach ($collSaless as $obj) {
-                            if (false == $this->collSaless->contains($obj)) {
-                                $this->collSaless->append($obj);
-                            }
-                        }
-
-                        $this->collSalessPartial = true;
-                    }
-
-                    return $collSaless;
-                }
-
-                if ($partial && $this->collSaless) {
-                    foreach ($this->collSaless as $obj) {
-                        if ($obj->isNew()) {
-                            $collSaless[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSaless = $collSaless;
-                $this->collSalessPartial = false;
-            }
-        }
-
-        return $this->collSaless;
-    }
-
-    /**
-     * Sets a collection of ChildSalesDetail objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $saless A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildStock The current object (for fluent API support)
-     */
-    public function setSaless(Collection $saless, ConnectionInterface $con = null)
-    {
-        /** @var ChildSalesDetail[] $salessToDelete */
-        $salessToDelete = $this->getSaless(new Criteria(), $con)->diff($saless);
-
-
-        $this->salessScheduledForDeletion = $salessToDelete;
-
-        foreach ($salessToDelete as $salesRemoved) {
-            $salesRemoved->setStock(null);
-        }
-
-        $this->collSaless = null;
-        foreach ($saless as $sales) {
-            $this->addSales($sales);
-        }
-
-        $this->collSaless = $saless;
-        $this->collSalessPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related SalesDetail objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related SalesDetail objects.
-     * @throws PropelException
-     */
-    public function countSaless(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collSalessPartial && !$this->isNew();
-        if (null === $this->collSaless || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSaless) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSaless());
-            }
-
-            $query = ChildSalesDetailQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByStock($this)
-                ->count($con);
-        }
-
-        return count($this->collSaless);
-    }
-
-    /**
-     * Method called to associate a ChildSalesDetail object to this object
-     * through the ChildSalesDetail foreign key attribute.
-     *
-     * @param  ChildSalesDetail $l ChildSalesDetail
-     * @return $this|\ORM\Stock The current object (for fluent API support)
-     */
-    public function addSales(ChildSalesDetail $l)
-    {
-        if ($this->collSaless === null) {
-            $this->initSaless();
-            $this->collSalessPartial = true;
-        }
-
-        if (!$this->collSaless->contains($l)) {
-            $this->doAddSales($l);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildSalesDetail $sales The ChildSalesDetail object to add.
-     */
-    protected function doAddSales(ChildSalesDetail $sales)
-    {
-        $this->collSaless[]= $sales;
-        $sales->setStock($this);
-    }
-
-    /**
-     * @param  ChildSalesDetail $sales The ChildSalesDetail object to remove.
-     * @return $this|ChildStock The current object (for fluent API support)
-     */
-    public function removeSales(ChildSalesDetail $sales)
-    {
-        if ($this->getSaless()->contains($sales)) {
-            $pos = $this->collSaless->search($sales);
-            $this->collSaless->remove($pos);
-            if (null === $this->salessScheduledForDeletion) {
-                $this->salessScheduledForDeletion = clone $this->collSaless;
-                $this->salessScheduledForDeletion->clear();
-            }
-            $this->salessScheduledForDeletion[]= $sales;
-            $sales->setStock(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Stock is new, it will return
-     * an empty collection; or if this Stock has previously
-     * been saved, it will retrieve related Saless from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Stock.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSalesDetail[] List of ChildSalesDetail objects
-     */
-    public function getSalessJoinSales(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSalesDetailQuery::create(null, $criteria);
-        $query->joinWith('Sales', $joinBehavior);
-
-        return $this->getSaless($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Stock is new, it will return
-     * an empty collection; or if this Stock has previously
-     * been saved, it will retrieve related Saless from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Stock.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSalesDetail[] List of ChildSalesDetail objects
-     */
-    public function getSalessJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSalesDetailQuery::create(null, $criteria);
-        $query->joinWith('Unit', $joinBehavior);
-
-        return $this->getSaless($query, $con);
     }
 
     /**
@@ -1925,21 +1900,28 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aProduct) {
-            $this->aProduct->removeStock($this);
+        if (null !== $this->aSales) {
+            $this->aSales->removeDetail($this);
+        }
+        if (null !== $this->aStock) {
+            $this->aStock->removeSales($this);
         }
         if (null !== $this->aUnit) {
-            $this->aUnit->removeStock($this);
+            $this->aUnit->removeSales($this);
         }
         $this->id = null;
-        $this->product_id = null;
+        $this->sales_id = null;
+        $this->type = null;
+        $this->stock_id = null;
         $this->amount = null;
         $this->unit_id = null;
+        $this->unit_price = null;
+        $this->discount = null;
+        $this->total_price = null;
         $this->buy = null;
         $this->sell_public = null;
         $this->sell_distributor = null;
         $this->sell_misc = null;
-        $this->discount = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1959,15 +1941,10 @@ abstract class Stock implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collSaless) {
-                foreach ($this->collSaless as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collSaless = null;
-        $this->aProduct = null;
+        $this->aSales = null;
+        $this->aStock = null;
         $this->aUnit = null;
     }
 
@@ -1978,7 +1955,7 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(StockTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(SalesDetailTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

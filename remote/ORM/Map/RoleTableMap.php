@@ -142,7 +142,7 @@ class RoleTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Permission', '\\ORM\\RolePermission', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
-        $this->addRelation('UserRoleId', '\\ORM\\User', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), 'NO ACTION', 'RESTRICT', 'UserRoleIds');
+        $this->addRelation('User', '\\ORM\\User', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), 'NO ACTION', 'RESTRICT', 'Users');
     } // buildRelations()
     /**
      * Method to invalidate the instance pool of all tables related to role     * by a foreign key with ON DELETE CASCADE

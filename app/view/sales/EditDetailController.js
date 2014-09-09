@@ -1,14 +1,15 @@
-Ext.define('POS.view.sales.AddDetailController', {
+Ext.define('POS.view.sales.EditDetailController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-sales-detail',
+    alias: 'controller.edit-sales-detail',
 
     control: {
         '#': {
-            boxready: function(){
+            boxready: function(panel){
                 var stock = this.lookupReference('stock');
+                
                 setTimeout(function(){
                     stock.focus();
-                }, 10);
+                }, 9);
             }
         },
         'textfield[tabOnEnter = true]': {
@@ -39,6 +40,12 @@ Ext.define('POS.view.sales.AddDetailController', {
         record.set('stock', stock);
         
         form.getForm().setValues(record.getData());
+        
+        var amount = this.reference('amount');
+        
+        setTimeout(function(){
+            amount.focus();
+        }, 10);
     },
     
     productSelect: function(combo, record){
@@ -72,18 +79,18 @@ Ext.define('POS.view.sales.AddDetailController', {
             
             if (!panel.isEdit) {            
                 var store = POS.app.getStore('POS.store.SalesDetail'),
-                    rec = Ext.create('POS.model.SalesDetail');
+                    rec = Ext.create('POS.model.SalesDetail', values);
                     
-                rec.set(values);
                 store.add(rec);
             }else{
                 var rec = Ext.ComponentQuery.query('grid-sales-detail')[0].getSelectionModel().getSelection()[0];
+                
                 rec.set(values);
             }
 
             panel.close();
             
-            Ext.ComponentQuery.query('add-sales')[0].getController().setTotalPrice();
+            Ext.ComponentQuery.query('edit-sales')[0].getController().setTotalPrice();
         }
     }
 });

@@ -2,8 +2,8 @@
 
 namespace ORM\Map;
 
-use ORM\Menu;
-use ORM\MenuQuery;
+use ORM\SalesDetail;
+use ORM\SalesDetailQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'menu' table.
+ * This class defines the structure of the 'sales_detail' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class MenuTableMap extends TableMap
+class SalesDetailTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class MenuTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'ORM.Map.MenuTableMap';
+    const CLASS_NAME = 'ORM.Map.SalesDetailTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class MenuTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'menu';
+    const TABLE_NAME = 'sales_detail';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\ORM\\Menu';
+    const OM_CLASS = '\\ORM\\SalesDetail';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'ORM.Menu';
+    const CLASS_DEFAULT = 'ORM.SalesDetail';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 14;
 
     /**
      * The number of lazy-loaded columns
@@ -69,47 +69,77 @@ class MenuTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 14;
 
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'menu.ID';
+    const COL_ID = 'sales_detail.ID';
 
     /**
-     * the column name for the SUB field
+     * the column name for the SALES_ID field
      */
-    const COL_SUB = 'menu.SUB';
+    const COL_SALES_ID = 'sales_detail.SALES_ID';
 
     /**
-     * the column name for the ORDER field
+     * the column name for the TYPE field
      */
-    const COL_ORDER = 'menu.ORDER';
+    const COL_TYPE = 'sales_detail.TYPE';
 
     /**
-     * the column name for the ICON field
+     * the column name for the STOCK_ID field
      */
-    const COL_ICON = 'menu.ICON';
+    const COL_STOCK_ID = 'sales_detail.STOCK_ID';
 
     /**
-     * the column name for the TEXT field
+     * the column name for the AMOUNT field
      */
-    const COL_TEXT = 'menu.TEXT';
+    const COL_AMOUNT = 'sales_detail.AMOUNT';
 
     /**
-     * the column name for the ACTION field
+     * the column name for the UNIT_ID field
      */
-    const COL_ACTION = 'menu.ACTION';
+    const COL_UNIT_ID = 'sales_detail.UNIT_ID';
 
     /**
-     * the column name for the STATE field
+     * the column name for the UNIT_PRICE field
      */
-    const COL_STATE = 'menu.STATE';
+    const COL_UNIT_PRICE = 'sales_detail.UNIT_PRICE';
+
+    /**
+     * the column name for the DISCOUNT field
+     */
+    const COL_DISCOUNT = 'sales_detail.DISCOUNT';
+
+    /**
+     * the column name for the TOTAL_PRICE field
+     */
+    const COL_TOTAL_PRICE = 'sales_detail.TOTAL_PRICE';
+
+    /**
+     * the column name for the BUY field
+     */
+    const COL_BUY = 'sales_detail.BUY';
+
+    /**
+     * the column name for the SELL_PUBLIC field
+     */
+    const COL_SELL_PUBLIC = 'sales_detail.SELL_PUBLIC';
+
+    /**
+     * the column name for the SELL_DISTRIBUTOR field
+     */
+    const COL_SELL_DISTRIBUTOR = 'sales_detail.SELL_DISTRIBUTOR';
+
+    /**
+     * the column name for the SELL_MISC field
+     */
+    const COL_SELL_MISC = 'sales_detail.SELL_MISC';
 
     /**
      * the column name for the STATUS field
      */
-    const COL_STATUS = 'menu.STATUS';
+    const COL_STATUS = 'sales_detail.STATUS';
 
     /**
      * The default string format for model objects of the related table
@@ -123,12 +153,12 @@ class MenuTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Sub', 'Order', 'Icon', 'Text', 'Action', 'State', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'sub', 'order', 'icon', 'text', 'action', 'state', 'status', ),
-        self::TYPE_COLNAME       => array(MenuTableMap::COL_ID, MenuTableMap::COL_SUB, MenuTableMap::COL_ORDER, MenuTableMap::COL_ICON, MenuTableMap::COL_TEXT, MenuTableMap::COL_ACTION, MenuTableMap::COL_STATE, MenuTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SUB', 'COL_ORDER', 'COL_ICON', 'COL_TEXT', 'COL_ACTION', 'COL_STATE', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'sub', 'order', 'icon', 'text', 'action', 'state', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id', 'SalesId', 'Type', 'StockId', 'Amount', 'UnitId', 'UnitPrice', 'Discount', 'TotalPrice', 'Buy', 'SellPublic', 'SellDistributor', 'SellMisc', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'salesId', 'type', 'stockId', 'amount', 'unitId', 'unitPrice', 'discount', 'totalPrice', 'buy', 'sellPublic', 'sellDistributor', 'sellMisc', 'status', ),
+        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID, SalesDetailTableMap::COL_SALES_ID, SalesDetailTableMap::COL_TYPE, SalesDetailTableMap::COL_STOCK_ID, SalesDetailTableMap::COL_AMOUNT, SalesDetailTableMap::COL_UNIT_ID, SalesDetailTableMap::COL_UNIT_PRICE, SalesDetailTableMap::COL_DISCOUNT, SalesDetailTableMap::COL_TOTAL_PRICE, SalesDetailTableMap::COL_BUY, SalesDetailTableMap::COL_SELL_PUBLIC, SalesDetailTableMap::COL_SELL_DISTRIBUTOR, SalesDetailTableMap::COL_SELL_MISC, SalesDetailTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SALES_ID', 'COL_TYPE', 'COL_STOCK_ID', 'COL_AMOUNT', 'COL_UNIT_ID', 'COL_UNIT_PRICE', 'COL_DISCOUNT', 'COL_TOTAL_PRICE', 'COL_BUY', 'COL_SELL_PUBLIC', 'COL_SELL_DISTRIBUTOR', 'COL_SELL_MISC', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'sales_id', 'type', 'stock_id', 'amount', 'unit_id', 'unit_price', 'discount', 'total_price', 'buy', 'sell_public', 'sell_distributor', 'sell_misc', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -138,12 +168,12 @@ class MenuTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Sub' => 1, 'Order' => 2, 'Icon' => 3, 'Text' => 4, 'Action' => 5, 'State' => 6, 'Status' => 7, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'sub' => 1, 'order' => 2, 'icon' => 3, 'text' => 4, 'action' => 5, 'state' => 6, 'status' => 7, ),
-        self::TYPE_COLNAME       => array(MenuTableMap::COL_ID => 0, MenuTableMap::COL_SUB => 1, MenuTableMap::COL_ORDER => 2, MenuTableMap::COL_ICON => 3, MenuTableMap::COL_TEXT => 4, MenuTableMap::COL_ACTION => 5, MenuTableMap::COL_STATE => 6, MenuTableMap::COL_STATUS => 7, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SUB' => 1, 'COL_ORDER' => 2, 'COL_ICON' => 3, 'COL_TEXT' => 4, 'COL_ACTION' => 5, 'COL_STATE' => 6, 'COL_STATUS' => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'sub' => 1, 'order' => 2, 'icon' => 3, 'text' => 4, 'action' => 5, 'state' => 6, 'status' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SalesId' => 1, 'Type' => 2, 'StockId' => 3, 'Amount' => 4, 'UnitId' => 5, 'UnitPrice' => 6, 'Discount' => 7, 'TotalPrice' => 8, 'Buy' => 9, 'SellPublic' => 10, 'SellDistributor' => 11, 'SellMisc' => 12, 'Status' => 13, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'salesId' => 1, 'type' => 2, 'stockId' => 3, 'amount' => 4, 'unitId' => 5, 'unitPrice' => 6, 'discount' => 7, 'totalPrice' => 8, 'buy' => 9, 'sellPublic' => 10, 'sellDistributor' => 11, 'sellMisc' => 12, 'status' => 13, ),
+        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID => 0, SalesDetailTableMap::COL_SALES_ID => 1, SalesDetailTableMap::COL_TYPE => 2, SalesDetailTableMap::COL_STOCK_ID => 3, SalesDetailTableMap::COL_AMOUNT => 4, SalesDetailTableMap::COL_UNIT_ID => 5, SalesDetailTableMap::COL_UNIT_PRICE => 6, SalesDetailTableMap::COL_DISCOUNT => 7, SalesDetailTableMap::COL_TOTAL_PRICE => 8, SalesDetailTableMap::COL_BUY => 9, SalesDetailTableMap::COL_SELL_PUBLIC => 10, SalesDetailTableMap::COL_SELL_DISTRIBUTOR => 11, SalesDetailTableMap::COL_SELL_MISC => 12, SalesDetailTableMap::COL_STATUS => 13, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SALES_ID' => 1, 'COL_TYPE' => 2, 'COL_STOCK_ID' => 3, 'COL_AMOUNT' => 4, 'COL_UNIT_ID' => 5, 'COL_UNIT_PRICE' => 6, 'COL_DISCOUNT' => 7, 'COL_TOTAL_PRICE' => 8, 'COL_BUY' => 9, 'COL_SELL_PUBLIC' => 10, 'COL_SELL_DISTRIBUTOR' => 11, 'COL_SELL_MISC' => 12, 'COL_STATUS' => 13, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'sales_id' => 1, 'type' => 2, 'stock_id' => 3, 'amount' => 4, 'unit_id' => 5, 'unit_price' => 6, 'discount' => 7, 'total_price' => 8, 'buy' => 9, 'sell_public' => 10, 'sell_distributor' => 11, 'sell_misc' => 12, 'status' => 13, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
     );
 
     /**
@@ -156,20 +186,26 @@ class MenuTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('menu');
-        $this->setPhpName('Menu');
-        $this->setClassName('\\ORM\\Menu');
+        $this->setName('sales_detail');
+        $this->setPhpName('SalesDetail');
+        $this->setClassName('\\ORM\\SalesDetail');
         $this->setPackage('ORM');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
-        $this->addColumn('SUB', 'Sub', 'CHAR', false, 32, null);
-        $this->addColumn('ORDER', 'Order', 'TINYINT', false, 3, null);
-        $this->addColumn('ICON', 'Icon', 'CHAR', false, 32, null);
-        $this->addColumn('TEXT', 'Text', 'CHAR', false, 128, null);
-        $this->addColumn('ACTION', 'Action', 'CHAR', false, 32, null);
-        $this->addColumn('STATE', 'State', 'BOOLEAN', false, 1, null);
-        $this->addColumn('STATUS', 'Status', 'CHAR', false, null, null);
+        $this->addForeignKey('SALES_ID', 'SalesId', 'BIGINT', 'sales', 'ID', false, 20, null);
+        $this->addColumn('TYPE', 'Type', 'CHAR', false, null, null);
+        $this->addForeignKey('STOCK_ID', 'StockId', 'BIGINT', 'stock', 'ID', false, 20, null);
+        $this->addColumn('AMOUNT', 'Amount', 'TINYINT', false, 3, null);
+        $this->addForeignKey('UNIT_ID', 'UnitId', 'BIGINT', 'unit', 'ID', false, 20, null);
+        $this->addColumn('UNIT_PRICE', 'UnitPrice', 'INTEGER', false, 10, null);
+        $this->addColumn('DISCOUNT', 'Discount', 'TINYINT', false, 3, null);
+        $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);
+        $this->addColumn('BUY', 'Buy', 'INTEGER', false, 10, null);
+        $this->addColumn('SELL_PUBLIC', 'SellPublic', 'INTEGER', false, 10, null);
+        $this->addColumn('SELL_DISTRIBUTOR', 'SellDistributor', 'INTEGER', false, 10, null);
+        $this->addColumn('SELL_MISC', 'SellMisc', 'INTEGER', false, 10, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
     /**
@@ -177,6 +213,9 @@ class MenuTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::MANY_TO_ONE, array('sales_id' => 'id', ), 'CASCADE', 'RESTRICT');
+        $this->addRelation('Stock', '\\ORM\\Stock', RelationMap::MANY_TO_ONE, array('stock_id' => 'id', ), 'RESTRICT', 'RESTRICT');
+        $this->addRelation('Unit', '\\ORM\\Unit', RelationMap::MANY_TO_ONE, array('unit_id' => 'id', ), 'NO ACTION', 'RESTRICT');
     } // buildRelations()
 
     /**
@@ -236,7 +275,7 @@ class MenuTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? MenuTableMap::CLASS_DEFAULT : MenuTableMap::OM_CLASS;
+        return $withPrefix ? SalesDetailTableMap::CLASS_DEFAULT : SalesDetailTableMap::OM_CLASS;
     }
 
     /**
@@ -250,22 +289,22 @@ class MenuTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Menu object, last column rank)
+     * @return array           (SalesDetail object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = MenuTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = MenuTableMap::getInstanceFromPool($key))) {
+        $key = SalesDetailTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = SalesDetailTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + MenuTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + SalesDetailTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = MenuTableMap::OM_CLASS;
-            /** @var Menu $obj */
+            $cls = SalesDetailTableMap::OM_CLASS;
+            /** @var SalesDetail $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            MenuTableMap::addInstanceToPool($obj, $key);
+            SalesDetailTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -288,18 +327,18 @@ class MenuTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = MenuTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = MenuTableMap::getInstanceFromPool($key))) {
+            $key = SalesDetailTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = SalesDetailTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Menu $obj */
+                /** @var SalesDetail $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                MenuTableMap::addInstanceToPool($obj, $key);
+                SalesDetailTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -320,22 +359,34 @@ class MenuTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(MenuTableMap::COL_ID);
-            $criteria->addSelectColumn(MenuTableMap::COL_SUB);
-            $criteria->addSelectColumn(MenuTableMap::COL_ORDER);
-            $criteria->addSelectColumn(MenuTableMap::COL_ICON);
-            $criteria->addSelectColumn(MenuTableMap::COL_TEXT);
-            $criteria->addSelectColumn(MenuTableMap::COL_ACTION);
-            $criteria->addSelectColumn(MenuTableMap::COL_STATE);
-            $criteria->addSelectColumn(MenuTableMap::COL_STATUS);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_ID);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_SALES_ID);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_TYPE);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_STOCK_ID);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_UNIT_ID);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_UNIT_PRICE);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_DISCOUNT);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_TOTAL_PRICE);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_BUY);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_SELL_PUBLIC);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_SELL_DISTRIBUTOR);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_SELL_MISC);
+            $criteria->addSelectColumn(SalesDetailTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.SUB');
-            $criteria->addSelectColumn($alias . '.ORDER');
-            $criteria->addSelectColumn($alias . '.ICON');
-            $criteria->addSelectColumn($alias . '.TEXT');
-            $criteria->addSelectColumn($alias . '.ACTION');
-            $criteria->addSelectColumn($alias . '.STATE');
+            $criteria->addSelectColumn($alias . '.SALES_ID');
+            $criteria->addSelectColumn($alias . '.TYPE');
+            $criteria->addSelectColumn($alias . '.STOCK_ID');
+            $criteria->addSelectColumn($alias . '.AMOUNT');
+            $criteria->addSelectColumn($alias . '.UNIT_ID');
+            $criteria->addSelectColumn($alias . '.UNIT_PRICE');
+            $criteria->addSelectColumn($alias . '.DISCOUNT');
+            $criteria->addSelectColumn($alias . '.TOTAL_PRICE');
+            $criteria->addSelectColumn($alias . '.BUY');
+            $criteria->addSelectColumn($alias . '.SELL_PUBLIC');
+            $criteria->addSelectColumn($alias . '.SELL_DISTRIBUTOR');
+            $criteria->addSelectColumn($alias . '.SELL_MISC');
             $criteria->addSelectColumn($alias . '.STATUS');
         }
     }
@@ -349,7 +400,7 @@ class MenuTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(MenuTableMap::DATABASE_NAME)->getTable(MenuTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(SalesDetailTableMap::DATABASE_NAME)->getTable(SalesDetailTableMap::TABLE_NAME);
     }
 
     /**
@@ -357,16 +408,16 @@ class MenuTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(MenuTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(MenuTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new MenuTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(SalesDetailTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(SalesDetailTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new SalesDetailTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Menu or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a SalesDetail or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Menu object or primary key or array of primary keys
+     * @param mixed               $values Criteria or SalesDetail object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -377,27 +428,27 @@ class MenuTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MenuTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesDetailTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \ORM\Menu) { // it's a model object
+        } elseif ($values instanceof \ORM\SalesDetail) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(MenuTableMap::DATABASE_NAME);
-            $criteria->add(MenuTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(SalesDetailTableMap::DATABASE_NAME);
+            $criteria->add(SalesDetailTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = MenuQuery::create()->mergeWith($criteria);
+        $query = SalesDetailQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            MenuTableMap::clearInstancePool();
+            SalesDetailTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                MenuTableMap::removeInstanceFromPool($singleval);
+                SalesDetailTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -405,20 +456,20 @@ class MenuTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the menu table.
+     * Deletes all rows from the sales_detail table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return MenuQuery::create()->doDeleteAll($con);
+        return SalesDetailQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Menu or Criteria object.
+     * Performs an INSERT on the database, given a SalesDetail or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Menu object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or SalesDetail object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -427,18 +478,22 @@ class MenuTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MenuTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesDetailTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Menu object
+            $criteria = $criteria->buildCriteria(); // build Criteria from SalesDetail object
+        }
+
+        if ($criteria->containsKey(SalesDetailTableMap::COL_ID) && $criteria->keyContainsValue(SalesDetailTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.SalesDetailTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = MenuQuery::create()->mergeWith($criteria);
+        $query = SalesDetailQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -447,7 +502,7 @@ class MenuTableMap extends TableMap
         });
     }
 
-} // MenuTableMap
+} // SalesDetailTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-MenuTableMap::buildTableMap();
+SalesDetailTableMap::buildTableMap();

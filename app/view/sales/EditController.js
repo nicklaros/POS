@@ -1,30 +1,11 @@
-Ext.define('POS.view.sales.AddController', {
+Ext.define('POS.view.sales.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-sales',
+    alias: 'controller.edit-sales',
 
     control: {
         '#': {
             boxready: function(panel){
-                var customer = Ext.create('POS.model.Customer', {
-                    id: 0,
-                    name: '-'
-                });
-                
-                this.lookupReference('customer').setValue(customer);
-                
-                var cashier = Ext.create('POS.model.Cashier', {
-                    id: Ext.main.ViewModel.data.current_user.id,
-                    name: Ext.main.ViewModel.data.current_user.name
-                });
-                
-                this.lookupReference('cashier').setValue(cashier);   
-
                 this.keyMap(panel);
-            
-                var add = this.lookupReference('add');
-                setTimeout(function(){
-                    add.focus();
-                }, 10);
             },
             close: function(){
                 POS.app.getStore('POS.store.SalesDetail').removeAll(true);
@@ -53,22 +34,22 @@ Ext.define('POS.view.sales.AddController', {
             }
         }
     },
-    
+
     add: function(){
-        Ext.fn.App.window('add-sales-detail');
+        Ext.fn.App.window('edit-sales-detail');
     },
 
     close: function(){
         this.getView().close();
     },
-    
+
     remove: function(){
         var grid    = this.lookupReference('grid-sales-detail'),
             store   = grid.getStore(),
             sm      = grid.getSelectionModel(),
             sel     = sm.getSelection(),
             smCount = sm.getCount();
-            
+
         Ext.Msg.confirm(
             '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
             '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
@@ -86,29 +67,74 @@ Ext.define('POS.view.sales.AddController', {
     edit: function(){
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('add-sales-detail');
+        var edit = Ext.fn.App.window('edit-sales-detail');
         edit.isEdit = true;
         edit.getController().load(rec);
     },
-    
+
     keyMap: function(panel){
         var me = this;
-        
+
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
                 key: 112, // F1
                 defaultEventAction: 'preventDefault',
-                fn: function(){ 
-                    me.add(); 
+                fn: function(){
+                    me.add();
                 }
             },{
                 key: 113, // F2
-                fn: function(){ 
+                fn: function(){
                     me.lookupReference('paid').focus(true);
                 }
             }]
         });
+    },
+
+    load: function(params){
+        var panel = this.getView(),
+            form = panel.down('form');
+
+        Ext.fn.App.setLoading(true);
+        Ext.ws.Main.send('sales/loadFormEdit', params);
+        var monitor = Ext.fn.WebSocket.monitor(
+            Ext.ws.Main.on('sales/loadFormEdit', function(websocket, result){
+                clearTimeout(monitor);
+                Ext.fn.App.setLoading(false);
+                if (result.success){
+                    var customer = Ext.create('POS.model.Customer', {
+                        id  : result.data.customer_id,
+                        name: result.data.customer_name
+                    });
+
+                    result.data.customer_id = customer;
+
+                    var cashier = Ext.create('POS.model.Cashier', {
+                        id  : result.data.cashier_id,
+                        name: result.data.cashier_name
+                    });
+
+                    result.data.cashier_id = cashier;
+
+                    form.getForm().setValues(result.data);
+
+                    POS.app.getStore('POS.store.SalesDetail').loadData(result.detail);
+
+                    var add = this.lookupReference('add');
+                    setTimeout(function(){
+                        add.focus();
+                    }, 10);
+                }else{
+                    panel.close();
+                    Ext.fn.App.notification('Ups', result.errmsg);
+                }
+            }, this, {
+                single: true,
+                destroyable: true
+            }),
+            panel
+        );
     },
 
     save: function(){
@@ -120,7 +146,13 @@ Ext.define('POS.view.sales.AddController', {
 
             var products = [];
             storeDetail.each(function(rec){
-                products.push(rec.data)
+                products.push(rec.data);
+            });
+
+            // get removed product from sales
+            var removed_id = [];
+            storeDetail.removed.forEach(function(rec){
+                removed_id.push(rec.id);
             });
 
             // make sure there are any product to process sales
@@ -128,11 +160,12 @@ Ext.define('POS.view.sales.AddController', {
                 var values = form.getValues();
 
                 values.products = Ext.encode(products);
+                values.removed_id = removed_id;
 
                 Ext.fn.App.setLoading(true);
-                Ext.ws.Main.send('sales/create', values);
+                Ext.ws.Main.send('sales/update', values);
                 var monitor = Ext.fn.WebSocket.monitor(
-                    Ext.ws.Main.on('sales/create', function(websocket, data){
+                    Ext.ws.Main.on('sales/update', function(websocket, data){
                         clearTimeout(monitor);
                         Ext.fn.App.setLoading(false);
                         if (data.success){
@@ -161,18 +194,18 @@ Ext.define('POS.view.sales.AddController', {
             }
         }
     },
-    
+
     setBalance: function(){
         var totalPrice  = this.lookupReference('total_price'),
             paid        = this.lookupReference('paid'),
             balance     = this.lookupReference('balance'),
             result      = paid.getSubmitValue() - totalPrice.getSubmitValue();
-        
+
         balance.setValue(result);
-        
+
         balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
     },
-    
+
     setTotalPrice: function(){
         var totalPrice = this.lookupReference('total_price');
         totalPrice.setValue(this.sumTotalPrice());

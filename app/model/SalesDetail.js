@@ -16,7 +16,6 @@ Ext.define('POS.model.SalesDetail', {
         {name: 'buy', type: 'int'},
         {name: 'sell_public', type: 'int'},
         {name: 'sell_distributor', type: 'int'},
-        {name: 'sell_misc', type: 'int'},
-        {name: 'status', type: 'string'}
+        {name: 'sell_misc', type: 'int'}
     ]
 });

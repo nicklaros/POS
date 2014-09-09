@@ -4,9 +4,9 @@ namespace ORM\Base;
 
 use \Exception;
 use \PDO;
-use ORM\Role as ChildRole;
-use ORM\RoleQuery as ChildRoleQuery;
-use ORM\Map\RoleTableMap;
+use ORM\Unit as ChildUnit;
+use ORM\UnitQuery as ChildUnitQuery;
+use ORM\Map\UnitTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -16,71 +16,71 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'role' table.
+ * Base class that represents a query for the 'unit' table.
  *
  *
  *
- * @method     ChildRoleQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildRoleQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildUnitQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildUnitQuery orderByName($order = Criteria::ASC) Order by the name column
  *
- * @method     ChildRoleQuery groupById() Group by the id column
- * @method     ChildRoleQuery groupByName() Group by the name column
+ * @method     ChildUnitQuery groupById() Group by the id column
+ * @method     ChildUnitQuery groupByName() Group by the name column
  *
- * @method     ChildRoleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildRoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildRoleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildUnitQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildUnitQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildUnitQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildRoleQuery leftJoinPermission($relationAlias = null) Adds a LEFT JOIN clause to the query using the Permission relation
- * @method     ChildRoleQuery rightJoinPermission($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Permission relation
- * @method     ChildRoleQuery innerJoinPermission($relationAlias = null) Adds a INNER JOIN clause to the query using the Permission relation
+ * @method     ChildUnitQuery leftJoinSales($relationAlias = null) Adds a LEFT JOIN clause to the query using the Sales relation
+ * @method     ChildUnitQuery rightJoinSales($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Sales relation
+ * @method     ChildUnitQuery innerJoinSales($relationAlias = null) Adds a INNER JOIN clause to the query using the Sales relation
  *
- * @method     ChildRoleQuery leftJoinUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the User relation
- * @method     ChildRoleQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
- * @method     ChildRoleQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
+ * @method     ChildUnitQuery leftJoinStock($relationAlias = null) Adds a LEFT JOIN clause to the query using the Stock relation
+ * @method     ChildUnitQuery rightJoinStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stock relation
+ * @method     ChildUnitQuery innerJoinStock($relationAlias = null) Adds a INNER JOIN clause to the query using the Stock relation
  *
- * @method     \ORM\RolePermissionQuery|\ORM\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\SalesDetailQuery|\ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildRole findOne(ConnectionInterface $con = null) Return the first ChildRole matching the query
- * @method     ChildRole findOneOrCreate(ConnectionInterface $con = null) Return the first ChildRole matching the query, or a new ChildRole object populated from the query conditions when no match is found
+ * @method     ChildUnit findOne(ConnectionInterface $con = null) Return the first ChildUnit matching the query
+ * @method     ChildUnit findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUnit matching the query, or a new ChildUnit object populated from the query conditions when no match is found
  *
- * @method     ChildRole findOneById(string $id) Return the first ChildRole filtered by the id column
- * @method     ChildRole findOneByName(string $name) Return the first ChildRole filtered by the name column
+ * @method     ChildUnit findOneById(string $id) Return the first ChildUnit filtered by the id column
+ * @method     ChildUnit findOneByName(string $name) Return the first ChildUnit filtered by the name column
  *
- * @method     ChildRole[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildRole objects based on current ModelCriteria
- * @method     ChildRole[]|ObjectCollection findById(string $id) Return ChildRole objects filtered by the id column
- * @method     ChildRole[]|ObjectCollection findByName(string $name) Return ChildRole objects filtered by the name column
- * @method     ChildRole[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildUnit[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUnit objects based on current ModelCriteria
+ * @method     ChildUnit[]|ObjectCollection findById(string $id) Return ChildUnit objects filtered by the id column
+ * @method     ChildUnit[]|ObjectCollection findByName(string $name) Return ChildUnit objects filtered by the name column
+ * @method     ChildUnit[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class RoleQuery extends ModelCriteria
+abstract class UnitQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \ORM\Base\RoleQuery object.
+     * Initializes internal state of \ORM\Base\UnitQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'pos', $modelName = '\\ORM\\Role', $modelAlias = null)
+    public function __construct($dbName = 'pos', $modelName = '\\ORM\\Unit', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildRoleQuery object.
+     * Returns a new ChildUnitQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildRoleQuery
+     * @return ChildUnitQuery
      */
     public static function create($modelAlias = null, Criteria $criteria = null)
     {
-        if ($criteria instanceof ChildRoleQuery) {
+        if ($criteria instanceof ChildUnitQuery) {
             return $criteria;
         }
-        $query = new ChildRoleQuery();
+        $query = new ChildUnitQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -103,19 +103,19 @@ abstract class RoleQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildRole|array|mixed the result, formatted by the current formatter
+     * @return ChildUnit|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = RoleTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = UnitTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(RoleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UnitTableMap::DATABASE_NAME);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -134,11 +134,11 @@ abstract class RoleQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildRole A model object, or null if the key is not found
+     * @return ChildUnit A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME FROM role WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME FROM unit WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -149,10 +149,10 @@ abstract class RoleQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildRole $obj */
-            $obj = new ChildRole();
+            /** @var ChildUnit $obj */
+            $obj = new ChildUnit();
             $obj->hydrate($row);
-            RoleTableMap::addInstanceToPool($obj, (string) $key);
+            UnitTableMap::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -165,7 +165,7 @@ abstract class RoleQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildRole|array|mixed the result, formatted by the current formatter
+     * @return ChildUnit|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -207,12 +207,12 @@ abstract class RoleQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(RoleTableMap::COL_ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(UnitTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -220,12 +220,12 @@ abstract class RoleQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(RoleTableMap::COL_ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(UnitTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
@@ -244,18 +244,18 @@ abstract class RoleQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(RoleTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(UnitTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(RoleTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(UnitTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -266,7 +266,7 @@ abstract class RoleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RoleTableMap::COL_ID, $id, $comparison);
+        return $this->addUsingAlias(UnitTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -282,7 +282,7 @@ abstract class RoleQuery extends ModelCriteria
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
     public function filterByName($name = null, $comparison = null)
     {
@@ -295,44 +295,44 @@ abstract class RoleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RoleTableMap::COL_NAME, $name, $comparison);
+        return $this->addUsingAlias(UnitTableMap::COL_NAME, $name, $comparison);
     }
 
     /**
-     * Filter the query by a related \ORM\RolePermission object
+     * Filter the query by a related \ORM\SalesDetail object
      *
-     * @param \ORM\RolePermission|ObjectCollection $rolePermission  the related object to use as filter
+     * @param \ORM\SalesDetail|ObjectCollection $salesDetail  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildRoleQuery The current query, for fluid interface
+     * @return ChildUnitQuery The current query, for fluid interface
      */
-    public function filterByPermission($rolePermission, $comparison = null)
+    public function filterBySales($salesDetail, $comparison = null)
     {
-        if ($rolePermission instanceof \ORM\RolePermission) {
+        if ($salesDetail instanceof \ORM\SalesDetail) {
             return $this
-                ->addUsingAlias(RoleTableMap::COL_ID, $rolePermission->getId(), $comparison);
-        } elseif ($rolePermission instanceof ObjectCollection) {
+                ->addUsingAlias(UnitTableMap::COL_ID, $salesDetail->getUnitId(), $comparison);
+        } elseif ($salesDetail instanceof ObjectCollection) {
             return $this
-                ->usePermissionQuery()
-                ->filterByPrimaryKeys($rolePermission->getPrimaryKeys())
+                ->useSalesQuery()
+                ->filterByPrimaryKeys($salesDetail->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByPermission() only accepts arguments of type \ORM\RolePermission or Collection');
+            throw new PropelException('filterBySales() only accepts arguments of type \ORM\SalesDetail or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Permission relation
+     * Adds a JOIN clause to the query using the Sales relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
-    public function joinPermission($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinSales($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Permission');
+        $relationMap = $tableMap->getRelation('Sales');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -347,14 +347,14 @@ abstract class RoleQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Permission');
+            $this->addJoinObject($join, 'Sales');
         }
 
         return $this;
     }
 
     /**
-     * Use the Permission relation RolePermission object
+     * Use the Sales relation SalesDetail object
      *
      * @see useQuery()
      *
@@ -362,50 +362,50 @@ abstract class RoleQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \ORM\RolePermissionQuery A secondary query class using the current class as primary query
+     * @return \ORM\SalesDetailQuery A secondary query class using the current class as primary query
      */
-    public function usePermissionQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useSalesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinPermission($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Permission', '\ORM\RolePermissionQuery');
+            ->joinSales($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Sales', '\ORM\SalesDetailQuery');
     }
 
     /**
-     * Filter the query by a related \ORM\User object
+     * Filter the query by a related \ORM\Stock object
      *
-     * @param \ORM\User|ObjectCollection $user  the related object to use as filter
+     * @param \ORM\Stock|ObjectCollection $stock  the related object to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return ChildRoleQuery The current query, for fluid interface
+     * @return ChildUnitQuery The current query, for fluid interface
      */
-    public function filterByUser($user, $comparison = null)
+    public function filterByStock($stock, $comparison = null)
     {
-        if ($user instanceof \ORM\User) {
+        if ($stock instanceof \ORM\Stock) {
             return $this
-                ->addUsingAlias(RoleTableMap::COL_ID, $user->getRoleId(), $comparison);
-        } elseif ($user instanceof ObjectCollection) {
+                ->addUsingAlias(UnitTableMap::COL_ID, $stock->getUnitId(), $comparison);
+        } elseif ($stock instanceof ObjectCollection) {
             return $this
-                ->useUserQuery()
-                ->filterByPrimaryKeys($user->getPrimaryKeys())
+                ->useStockQuery()
+                ->filterByPrimaryKeys($stock->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByUser() only accepts arguments of type \ORM\User or Collection');
+            throw new PropelException('filterByStock() only accepts arguments of type \ORM\Stock or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the User relation
+     * Adds a JOIN clause to the query using the Stock relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
-    public function joinUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinStock($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('User');
+        $relationMap = $tableMap->getRelation('Stock');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -420,14 +420,14 @@ abstract class RoleQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'User');
+            $this->addJoinObject($join, 'Stock');
         }
 
         return $this;
     }
 
     /**
-     * Use the User relation User object
+     * Use the Stock relation Stock object
      *
      * @see useQuery()
      *
@@ -435,33 +435,33 @@ abstract class RoleQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \ORM\UserQuery A secondary query class using the current class as primary query
+     * @return \ORM\StockQuery A secondary query class using the current class as primary query
      */
-    public function useUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useStockQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinUser($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'User', '\ORM\UserQuery');
+            ->joinStock($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Stock', '\ORM\StockQuery');
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildRole $role Object to remove from the list of results
+     * @param   ChildUnit $unit Object to remove from the list of results
      *
-     * @return $this|ChildRoleQuery The current query, for fluid interface
+     * @return $this|ChildUnitQuery The current query, for fluid interface
      */
-    public function prune($role = null)
+    public function prune($unit = null)
     {
-        if ($role) {
-            $this->addUsingAlias(RoleTableMap::COL_ID, $role->getId(), Criteria::NOT_EQUAL);
+        if ($unit) {
+            $this->addUsingAlias(UnitTableMap::COL_ID, $unit->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
     }
 
     /**
-     * Deletes all rows from the role table.
+     * Deletes all rows from the unit table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -469,7 +469,7 @@ abstract class RoleQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RoleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UnitTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -480,8 +480,8 @@ abstract class RoleQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            RoleTableMap::clearInstancePool();
-            RoleTableMap::clearRelatedInstancePool();
+            UnitTableMap::clearInstancePool();
+            UnitTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -499,26 +499,26 @@ abstract class RoleQuery extends ModelCriteria
     public function delete(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RoleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UnitTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(RoleTableMap::DATABASE_NAME);
+        $criteria->setDbName(UnitTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            RoleTableMap::removeInstanceFromPool($criteria);
+            UnitTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            RoleTableMap::clearRelatedInstancePool();
+            UnitTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
     }
 
-} // RoleQuery
+} // UnitQuery

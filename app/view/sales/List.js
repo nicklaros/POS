@@ -8,6 +8,7 @@ Ext.define('POS.view.sales.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.store.Sales',
         'POS.view.sales.Add',
+        'POS.view.sales.Edit',
         'POS.view.sales.ListController'
     ],
 
@@ -51,6 +52,11 @@ Ext.define('POS.view.sales.List' ,{
                 text: '<i class="fa fa-trash-o glyph"></i> Hapus',
                 reference: 'delete',
                 handler: 'remove',
+                disabled: true
+            },{
+                text: '<i class="fa fa-print glyph"></i> Print',
+                reference: 'print',
+                handler: 'print',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

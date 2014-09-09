@@ -2,8 +2,8 @@
 
 namespace ORM\Map;
 
-use ORM\Menu;
-use ORM\MenuQuery;
+use ORM\Sales;
+use ORM\SalesQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'menu' table.
+ * This class defines the structure of the 'sales' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class MenuTableMap extends TableMap
+class SalesTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class MenuTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'ORM.Map.MenuTableMap';
+    const CLASS_NAME = 'ORM.Map.SalesTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class MenuTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'menu';
+    const TABLE_NAME = 'sales';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\ORM\\Menu';
+    const OM_CLASS = '\\ORM\\Sales';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'ORM.Menu';
+    const CLASS_DEFAULT = 'ORM.Sales';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,47 +69,52 @@ class MenuTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'menu.ID';
+    const COL_ID = 'sales.ID';
 
     /**
-     * the column name for the SUB field
+     * the column name for the DATE field
      */
-    const COL_SUB = 'menu.SUB';
+    const COL_DATE = 'sales.DATE';
 
     /**
-     * the column name for the ORDER field
+     * the column name for the CUSTOMER_ID field
      */
-    const COL_ORDER = 'menu.ORDER';
+    const COL_CUSTOMER_ID = 'sales.CUSTOMER_ID';
 
     /**
-     * the column name for the ICON field
+     * the column name for the BUY_PRICE field
      */
-    const COL_ICON = 'menu.ICON';
+    const COL_BUY_PRICE = 'sales.BUY_PRICE';
 
     /**
-     * the column name for the TEXT field
+     * the column name for the TOTAL_PRICE field
      */
-    const COL_TEXT = 'menu.TEXT';
+    const COL_TOTAL_PRICE = 'sales.TOTAL_PRICE';
 
     /**
-     * the column name for the ACTION field
+     * the column name for the PAID field
      */
-    const COL_ACTION = 'menu.ACTION';
+    const COL_PAID = 'sales.PAID';
 
     /**
-     * the column name for the STATE field
+     * the column name for the CASHIER_ID field
      */
-    const COL_STATE = 'menu.STATE';
+    const COL_CASHIER_ID = 'sales.CASHIER_ID';
+
+    /**
+     * the column name for the NOTE field
+     */
+    const COL_NOTE = 'sales.NOTE';
 
     /**
      * the column name for the STATUS field
      */
-    const COL_STATUS = 'menu.STATUS';
+    const COL_STATUS = 'sales.STATUS';
 
     /**
      * The default string format for model objects of the related table
@@ -123,12 +128,12 @@ class MenuTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Sub', 'Order', 'Icon', 'Text', 'Action', 'State', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'sub', 'order', 'icon', 'text', 'action', 'state', 'status', ),
-        self::TYPE_COLNAME       => array(MenuTableMap::COL_ID, MenuTableMap::COL_SUB, MenuTableMap::COL_ORDER, MenuTableMap::COL_ICON, MenuTableMap::COL_TEXT, MenuTableMap::COL_ACTION, MenuTableMap::COL_STATE, MenuTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SUB', 'COL_ORDER', 'COL_ICON', 'COL_TEXT', 'COL_ACTION', 'COL_STATE', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'sub', 'order', 'icon', 'text', 'action', 'state', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id', 'Date', 'CustomerId', 'BuyPrice', 'TotalPrice', 'Paid', 'CashierId', 'Note', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'date', 'customerId', 'buyPrice', 'totalPrice', 'paid', 'cashierId', 'note', 'status', ),
+        self::TYPE_COLNAME       => array(SalesTableMap::COL_ID, SalesTableMap::COL_DATE, SalesTableMap::COL_CUSTOMER_ID, SalesTableMap::COL_BUY_PRICE, SalesTableMap::COL_TOTAL_PRICE, SalesTableMap::COL_PAID, SalesTableMap::COL_CASHIER_ID, SalesTableMap::COL_NOTE, SalesTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_DATE', 'COL_CUSTOMER_ID', 'COL_BUY_PRICE', 'COL_TOTAL_PRICE', 'COL_PAID', 'COL_CASHIER_ID', 'COL_NOTE', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'date', 'customer_id', 'buy_price', 'total_price', 'paid', 'cashier_id', 'note', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -138,12 +143,12 @@ class MenuTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Sub' => 1, 'Order' => 2, 'Icon' => 3, 'Text' => 4, 'Action' => 5, 'State' => 6, 'Status' => 7, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'sub' => 1, 'order' => 2, 'icon' => 3, 'text' => 4, 'action' => 5, 'state' => 6, 'status' => 7, ),
-        self::TYPE_COLNAME       => array(MenuTableMap::COL_ID => 0, MenuTableMap::COL_SUB => 1, MenuTableMap::COL_ORDER => 2, MenuTableMap::COL_ICON => 3, MenuTableMap::COL_TEXT => 4, MenuTableMap::COL_ACTION => 5, MenuTableMap::COL_STATE => 6, MenuTableMap::COL_STATUS => 7, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SUB' => 1, 'COL_ORDER' => 2, 'COL_ICON' => 3, 'COL_TEXT' => 4, 'COL_ACTION' => 5, 'COL_STATE' => 6, 'COL_STATUS' => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'sub' => 1, 'order' => 2, 'icon' => 3, 'text' => 4, 'action' => 5, 'state' => 6, 'status' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Date' => 1, 'CustomerId' => 2, 'BuyPrice' => 3, 'TotalPrice' => 4, 'Paid' => 5, 'CashierId' => 6, 'Note' => 7, 'Status' => 8, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'date' => 1, 'customerId' => 2, 'buyPrice' => 3, 'totalPrice' => 4, 'paid' => 5, 'cashierId' => 6, 'note' => 7, 'status' => 8, ),
+        self::TYPE_COLNAME       => array(SalesTableMap::COL_ID => 0, SalesTableMap::COL_DATE => 1, SalesTableMap::COL_CUSTOMER_ID => 2, SalesTableMap::COL_BUY_PRICE => 3, SalesTableMap::COL_TOTAL_PRICE => 4, SalesTableMap::COL_PAID => 5, SalesTableMap::COL_CASHIER_ID => 6, SalesTableMap::COL_NOTE => 7, SalesTableMap::COL_STATUS => 8, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_DATE' => 1, 'COL_CUSTOMER_ID' => 2, 'COL_BUY_PRICE' => 3, 'COL_TOTAL_PRICE' => 4, 'COL_PAID' => 5, 'COL_CASHIER_ID' => 6, 'COL_NOTE' => 7, 'COL_STATUS' => 8, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'date' => 1, 'customer_id' => 2, 'buy_price' => 3, 'total_price' => 4, 'paid' => 5, 'cashier_id' => 6, 'note' => 7, 'status' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -156,20 +161,21 @@ class MenuTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('menu');
-        $this->setPhpName('Menu');
-        $this->setClassName('\\ORM\\Menu');
+        $this->setName('sales');
+        $this->setPhpName('Sales');
+        $this->setClassName('\\ORM\\Sales');
         $this->setPackage('ORM');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
-        $this->addColumn('SUB', 'Sub', 'CHAR', false, 32, null);
-        $this->addColumn('ORDER', 'Order', 'TINYINT', false, 3, null);
-        $this->addColumn('ICON', 'Icon', 'CHAR', false, 32, null);
-        $this->addColumn('TEXT', 'Text', 'CHAR', false, 128, null);
-        $this->addColumn('ACTION', 'Action', 'CHAR', false, 32, null);
-        $this->addColumn('STATE', 'State', 'BOOLEAN', false, 1, null);
-        $this->addColumn('STATUS', 'Status', 'CHAR', false, null, null);
+        $this->addColumn('DATE', 'Date', 'DATE', false, null, null);
+        $this->addForeignKey('CUSTOMER_ID', 'CustomerId', 'BIGINT', 'customer', 'ID', false, 20, null);
+        $this->addColumn('BUY_PRICE', 'BuyPrice', 'INTEGER', false, 10, null);
+        $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);
+        $this->addColumn('PAID', 'Paid', 'INTEGER', false, 10, null);
+        $this->addForeignKey('CASHIER_ID', 'CashierId', 'BIGINT', 'user_detail', 'ID', false, 20, null);
+        $this->addColumn('NOTE', 'Note', 'CHAR', false, 32, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
     /**
@@ -177,7 +183,19 @@ class MenuTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Customer', '\\ORM\\Customer', RelationMap::MANY_TO_ONE, array('customer_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('Cashier', '\\ORM\\UserDetail', RelationMap::MANY_TO_ONE, array('cashier_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('Detail', '\\ORM\\SalesDetail', RelationMap::ONE_TO_MANY, array('id' => 'sales_id', ), 'CASCADE', 'RESTRICT', 'Details');
     } // buildRelations()
+    /**
+     * Method to invalidate the instance pool of all tables related to sales     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool()
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        SalesDetailTableMap::clearInstancePool();
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -236,7 +254,7 @@ class MenuTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? MenuTableMap::CLASS_DEFAULT : MenuTableMap::OM_CLASS;
+        return $withPrefix ? SalesTableMap::CLASS_DEFAULT : SalesTableMap::OM_CLASS;
     }
 
     /**
@@ -250,22 +268,22 @@ class MenuTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Menu object, last column rank)
+     * @return array           (Sales object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = MenuTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = MenuTableMap::getInstanceFromPool($key))) {
+        $key = SalesTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = SalesTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + MenuTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + SalesTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = MenuTableMap::OM_CLASS;
-            /** @var Menu $obj */
+            $cls = SalesTableMap::OM_CLASS;
+            /** @var Sales $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            MenuTableMap::addInstanceToPool($obj, $key);
+            SalesTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -288,18 +306,18 @@ class MenuTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = MenuTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = MenuTableMap::getInstanceFromPool($key))) {
+            $key = SalesTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = SalesTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Menu $obj */
+                /** @var Sales $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                MenuTableMap::addInstanceToPool($obj, $key);
+                SalesTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -320,22 +338,24 @@ class MenuTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(MenuTableMap::COL_ID);
-            $criteria->addSelectColumn(MenuTableMap::COL_SUB);
-            $criteria->addSelectColumn(MenuTableMap::COL_ORDER);
-            $criteria->addSelectColumn(MenuTableMap::COL_ICON);
-            $criteria->addSelectColumn(MenuTableMap::COL_TEXT);
-            $criteria->addSelectColumn(MenuTableMap::COL_ACTION);
-            $criteria->addSelectColumn(MenuTableMap::COL_STATE);
-            $criteria->addSelectColumn(MenuTableMap::COL_STATUS);
+            $criteria->addSelectColumn(SalesTableMap::COL_ID);
+            $criteria->addSelectColumn(SalesTableMap::COL_DATE);
+            $criteria->addSelectColumn(SalesTableMap::COL_CUSTOMER_ID);
+            $criteria->addSelectColumn(SalesTableMap::COL_BUY_PRICE);
+            $criteria->addSelectColumn(SalesTableMap::COL_TOTAL_PRICE);
+            $criteria->addSelectColumn(SalesTableMap::COL_PAID);
+            $criteria->addSelectColumn(SalesTableMap::COL_CASHIER_ID);
+            $criteria->addSelectColumn(SalesTableMap::COL_NOTE);
+            $criteria->addSelectColumn(SalesTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.SUB');
-            $criteria->addSelectColumn($alias . '.ORDER');
-            $criteria->addSelectColumn($alias . '.ICON');
-            $criteria->addSelectColumn($alias . '.TEXT');
-            $criteria->addSelectColumn($alias . '.ACTION');
-            $criteria->addSelectColumn($alias . '.STATE');
+            $criteria->addSelectColumn($alias . '.DATE');
+            $criteria->addSelectColumn($alias . '.CUSTOMER_ID');
+            $criteria->addSelectColumn($alias . '.BUY_PRICE');
+            $criteria->addSelectColumn($alias . '.TOTAL_PRICE');
+            $criteria->addSelectColumn($alias . '.PAID');
+            $criteria->addSelectColumn($alias . '.CASHIER_ID');
+            $criteria->addSelectColumn($alias . '.NOTE');
             $criteria->addSelectColumn($alias . '.STATUS');
         }
     }
@@ -349,7 +369,7 @@ class MenuTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(MenuTableMap::DATABASE_NAME)->getTable(MenuTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(SalesTableMap::DATABASE_NAME)->getTable(SalesTableMap::TABLE_NAME);
     }
 
     /**
@@ -357,16 +377,16 @@ class MenuTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(MenuTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(MenuTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new MenuTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(SalesTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(SalesTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new SalesTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Menu or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Sales or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Menu object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Sales object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -377,27 +397,27 @@ class MenuTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MenuTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \ORM\Menu) { // it's a model object
+        } elseif ($values instanceof \ORM\Sales) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(MenuTableMap::DATABASE_NAME);
-            $criteria->add(MenuTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(SalesTableMap::DATABASE_NAME);
+            $criteria->add(SalesTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = MenuQuery::create()->mergeWith($criteria);
+        $query = SalesQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            MenuTableMap::clearInstancePool();
+            SalesTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                MenuTableMap::removeInstanceFromPool($singleval);
+                SalesTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -405,20 +425,20 @@ class MenuTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the menu table.
+     * Deletes all rows from the sales table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return MenuQuery::create()->doDeleteAll($con);
+        return SalesQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Menu or Criteria object.
+     * Performs an INSERT on the database, given a Sales or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Menu object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Sales object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -427,18 +447,22 @@ class MenuTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(MenuTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SalesTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Menu object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Sales object
+        }
+
+        if ($criteria->containsKey(SalesTableMap::COL_ID) && $criteria->keyContainsValue(SalesTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.SalesTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = MenuQuery::create()->mergeWith($criteria);
+        $query = SalesQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -447,7 +471,7 @@ class MenuTableMap extends TableMap
         });
     }
 
-} // MenuTableMap
+} // SalesTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-MenuTableMap::buildTableMap();
+SalesTableMap::buildTableMap();

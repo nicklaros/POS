@@ -127,6 +127,10 @@ Ext.define('Ext.fn.App', {
         }, 10);
     },
 
+    printNotaSales: function(id){
+        window.open("remote/print/nota-sales.php?id=" + id, "_blank");
+    },
+
     setLoading: function(bool){
         if (bool){
             Ext.WindowManager.each(function(window){

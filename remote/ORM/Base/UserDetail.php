@@ -6,6 +6,8 @@ use \Exception;
 use \PDO;
 use ORM\RowHistory as ChildRowHistory;
 use ORM\RowHistoryQuery as ChildRowHistoryQuery;
+use ORM\Sales as ChildSales;
+use ORM\SalesQuery as ChildSalesQuery;
 use ORM\User as ChildUser;
 use ORM\UserDetail as ChildUserDetail;
 use ORM\UserDetailQuery as ChildUserDetailQuery;
@@ -94,6 +96,12 @@ abstract class UserDetail implements ActiveRecordInterface
     protected $collHistoriesPartial;
 
     /**
+     * @var        ObjectCollection|ChildSales[] Collection to store aggregation of ChildSales objects.
+     */
+    protected $collSaless;
+    protected $collSalessPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -106,6 +114,12 @@ abstract class UserDetail implements ActiveRecordInterface
      * @var ObjectCollection|ChildRowHistory[]
      */
     protected $historiesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSales[]
+     */
+    protected $salessScheduledForDeletion = null;
 
     /**
      * Initializes internal state of ORM\Base\UserDetail object.
@@ -570,6 +584,8 @@ abstract class UserDetail implements ActiveRecordInterface
             $this->aUser = null;
             $this->collHistories = null;
 
+            $this->collSaless = null;
+
         } // if (deep)
     }
 
@@ -704,6 +720,24 @@ abstract class UserDetail implements ActiveRecordInterface
 
             if ($this->collHistories !== null) {
                 foreach ($this->collHistories as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->salessScheduledForDeletion !== null) {
+                if (!$this->salessScheduledForDeletion->isEmpty()) {
+                    foreach ($this->salessScheduledForDeletion as $sales) {
+                        // need to save related object because we set the relation to null
+                        $sales->save($con);
+                    }
+                    $this->salessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSaless !== null) {
+                foreach ($this->collSaless as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -879,6 +913,9 @@ abstract class UserDetail implements ActiveRecordInterface
             }
             if (null !== $this->collHistories) {
                 $result['Histories'] = $this->collHistories->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSaless) {
+                $result['Saless'] = $this->collSaless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1120,6 +1157,12 @@ abstract class UserDetail implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getSaless() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSales($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -1207,6 +1250,9 @@ abstract class UserDetail implements ActiveRecordInterface
     {
         if ('History' == $relationName) {
             return $this->initHistories();
+        }
+        if ('Sales' == $relationName) {
+            return $this->initSaless();
         }
     }
 
@@ -1429,6 +1475,249 @@ abstract class UserDetail implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collSaless collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSaless()
+     */
+    public function clearSaless()
+    {
+        $this->collSaless = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSaless collection loaded partially.
+     */
+    public function resetPartialSaless($v = true)
+    {
+        $this->collSalessPartial = $v;
+    }
+
+    /**
+     * Initializes the collSaless collection.
+     *
+     * By default this just sets the collSaless collection to an empty array (like clearcollSaless());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSaless($overrideExisting = true)
+    {
+        if (null !== $this->collSaless && !$overrideExisting) {
+            return;
+        }
+        $this->collSaless = new ObjectCollection();
+        $this->collSaless->setModel('\ORM\Sales');
+    }
+
+    /**
+     * Gets an array of ChildSales objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUserDetail is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     * @throws PropelException
+     */
+    public function getSaless(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSalessPartial && !$this->isNew();
+        if (null === $this->collSaless || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSaless) {
+                // return empty collection
+                $this->initSaless();
+            } else {
+                $collSaless = ChildSalesQuery::create(null, $criteria)
+                    ->filterByCashier($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSalessPartial && count($collSaless)) {
+                        $this->initSaless(false);
+
+                        foreach ($collSaless as $obj) {
+                            if (false == $this->collSaless->contains($obj)) {
+                                $this->collSaless->append($obj);
+                            }
+                        }
+
+                        $this->collSalessPartial = true;
+                    }
+
+                    return $collSaless;
+                }
+
+                if ($partial && $this->collSaless) {
+                    foreach ($this->collSaless as $obj) {
+                        if ($obj->isNew()) {
+                            $collSaless[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSaless = $collSaless;
+                $this->collSalessPartial = false;
+            }
+        }
+
+        return $this->collSaless;
+    }
+
+    /**
+     * Sets a collection of ChildSales objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $saless A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUserDetail The current object (for fluent API support)
+     */
+    public function setSaless(Collection $saless, ConnectionInterface $con = null)
+    {
+        /** @var ChildSales[] $salessToDelete */
+        $salessToDelete = $this->getSaless(new Criteria(), $con)->diff($saless);
+
+
+        $this->salessScheduledForDeletion = $salessToDelete;
+
+        foreach ($salessToDelete as $salesRemoved) {
+            $salesRemoved->setCashier(null);
+        }
+
+        $this->collSaless = null;
+        foreach ($saless as $sales) {
+            $this->addSales($sales);
+        }
+
+        $this->collSaless = $saless;
+        $this->collSalessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Sales objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Sales objects.
+     * @throws PropelException
+     */
+    public function countSaless(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSalessPartial && !$this->isNew();
+        if (null === $this->collSaless || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSaless) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSaless());
+            }
+
+            $query = ChildSalesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCashier($this)
+                ->count($con);
+        }
+
+        return count($this->collSaless);
+    }
+
+    /**
+     * Method called to associate a ChildSales object to this object
+     * through the ChildSales foreign key attribute.
+     *
+     * @param  ChildSales $l ChildSales
+     * @return $this|\ORM\UserDetail The current object (for fluent API support)
+     */
+    public function addSales(ChildSales $l)
+    {
+        if ($this->collSaless === null) {
+            $this->initSaless();
+            $this->collSalessPartial = true;
+        }
+
+        if (!$this->collSaless->contains($l)) {
+            $this->doAddSales($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSales $sales The ChildSales object to add.
+     */
+    protected function doAddSales(ChildSales $sales)
+    {
+        $this->collSaless[]= $sales;
+        $sales->setCashier($this);
+    }
+
+    /**
+     * @param  ChildSales $sales The ChildSales object to remove.
+     * @return $this|ChildUserDetail The current object (for fluent API support)
+     */
+    public function removeSales(ChildSales $sales)
+    {
+        if ($this->getSaless()->contains($sales)) {
+            $pos = $this->collSaless->search($sales);
+            $this->collSaless->remove($pos);
+            if (null === $this->salessScheduledForDeletion) {
+                $this->salessScheduledForDeletion = clone $this->collSaless;
+                $this->salessScheduledForDeletion->clear();
+            }
+            $this->salessScheduledForDeletion[]= $sales;
+            $sales->setCashier(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this UserDetail is new, it will return
+     * an empty collection; or if this UserDetail has previously
+     * been saved, it will retrieve related Saless from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in UserDetail.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     */
+    public function getSalessJoinCustomer(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSalesQuery::create(null, $criteria);
+        $query->joinWith('Customer', $joinBehavior);
+
+        return $this->getSaless($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1465,9 +1754,15 @@ abstract class UserDetail implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collSaless) {
+                foreach ($this->collSaless as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collHistories = null;
+        $this->collSaless = null;
         $this->aUser = null;
     }
 

@@ -59,7 +59,7 @@ class ProductTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ProductTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the ID field
@@ -87,6 +87,11 @@ class ProductTableMap extends TableMap
     const COL_NAME = 'product.NAME';
 
     /**
+     * the column name for the STATUS field
+     */
+    const COL_STATUS = 'product.STATUS';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,12 +103,12 @@ class ProductTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Code', 'Name', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'code', 'name', ),
-        self::TYPE_COLNAME       => array(ProductTableMap::COL_ID, ProductTableMap::COL_CODE, ProductTableMap::COL_NAME, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_CODE', 'COL_NAME', ),
-        self::TYPE_FIELDNAME     => array('id', 'code', 'name', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'Code', 'Name', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'code', 'name', 'status', ),
+        self::TYPE_COLNAME       => array(ProductTableMap::COL_ID, ProductTableMap::COL_CODE, ProductTableMap::COL_NAME, ProductTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_CODE', 'COL_NAME', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'code', 'name', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -113,12 +118,12 @@ class ProductTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Name' => 2, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'code' => 1, 'name' => 2, ),
-        self::TYPE_COLNAME       => array(ProductTableMap::COL_ID => 0, ProductTableMap::COL_CODE => 1, ProductTableMap::COL_NAME => 2, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_CODE' => 1, 'COL_NAME' => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'name' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Code' => 1, 'Name' => 2, 'Status' => 3, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'code' => 1, 'name' => 2, 'status' => 3, ),
+        self::TYPE_COLNAME       => array(ProductTableMap::COL_ID => 0, ProductTableMap::COL_CODE => 1, ProductTableMap::COL_NAME => 2, ProductTableMap::COL_STATUS => 3, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_CODE' => 1, 'COL_NAME' => 2, 'COL_STATUS' => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'code' => 1, 'name' => 2, 'status' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,7 +144,8 @@ class ProductTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addColumn('CODE', 'Code', 'CHAR', false, 20, null);
-        $this->addColumn('NAME', 'Name', 'CHAR', false, 128, null);
+        $this->addColumn('NAME', 'Name', 'CHAR', false, 64, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', false, null, null);
     } // initialize()
 
     /**
@@ -303,10 +309,12 @@ class ProductTableMap extends TableMap
             $criteria->addSelectColumn(ProductTableMap::COL_ID);
             $criteria->addSelectColumn(ProductTableMap::COL_CODE);
             $criteria->addSelectColumn(ProductTableMap::COL_NAME);
+            $criteria->addSelectColumn(ProductTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.CODE');
             $criteria->addSelectColumn($alias . '.NAME');
+            $criteria->addSelectColumn($alias . '.STATUS');
         }
     }
 

@@ -9,10 +9,12 @@ Ext.define('POS.view.sales.ListController', {
             },
             selectionchange: function(sm, selected){
                 var btnEdit = this.lookupReference('edit'),
-                    btnDelete = this.lookupReference('delete');
+                    btnDelete = this.lookupReference('delete'),
+                    btnPrint = this.lookupReference('print');
 
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
+                btnPrint.setDisabled(selected.length !== 1);
             },
             celldblclick: function(){
                 this.edit();
@@ -23,11 +25,18 @@ Ext.define('POS.view.sales.ListController', {
     add: function(){
         Ext.fn.App.window('add-sales');
     },
+
+    print: function(){
+        var rec  = this.getView().getSelectionModel().getSelection()[0];
+
+        Ext.fn.App.printNotaSales(rec.get('id'));
+    },
     
     remove: function(){
-        var sm  = this.getView().getSelectionModel(),
-            sel = sm.getSelection(),
+        var sm      = this.getView().getSelectionModel(),
+            sel     = sm.getSelection(),
             smCount = sm.getCount();
+
         Ext.Msg.confirm(
             '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
             '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
@@ -60,10 +69,13 @@ Ext.define('POS.view.sales.ListController', {
     },
 
     edit: function(){
-        var rec = this.getView().getSelectionModel().getSelection()[0];
+        var rec     = this.getView().getSelectionModel().getSelection()[0],
+            params  = {
+                id: rec.get('id')
+            };
 
         var edit = Ext.fn.App.window('edit-sales');
-        edit.getController().load(rec.get('id'));
+        edit.getController().load(params);
     },
     
     search: function(){

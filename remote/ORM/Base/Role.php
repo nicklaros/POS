@@ -78,8 +78,8 @@ abstract class Role implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
      */
-    protected $collUserRoleIds;
-    protected $collUserRoleIdsPartial;
+    protected $collUsers;
+    protected $collUsersPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -93,7 +93,7 @@ abstract class Role implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildUser[]
      */
-    protected $userRoleIdsScheduledForDeletion = null;
+    protected $usersScheduledForDeletion = null;
 
     /**
      * Initializes internal state of ORM\Base\Role object.
@@ -484,7 +484,7 @@ abstract class Role implements ActiveRecordInterface
 
             $this->singlePermission = null;
 
-            $this->collUserRoleIds = null;
+            $this->collUsers = null;
 
         } // if (deep)
     }
@@ -602,17 +602,17 @@ abstract class Role implements ActiveRecordInterface
                 }
             }
 
-            if ($this->userRoleIdsScheduledForDeletion !== null) {
-                if (!$this->userRoleIdsScheduledForDeletion->isEmpty()) {
+            if ($this->usersScheduledForDeletion !== null) {
+                if (!$this->usersScheduledForDeletion->isEmpty()) {
                     \ORM\UserQuery::create()
-                        ->filterByPrimaryKeys($this->userRoleIdsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->usersScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->userRoleIdsScheduledForDeletion = null;
+                    $this->usersScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collUserRoleIds !== null) {
-                foreach ($this->collUserRoleIds as $referrerFK) {
+            if ($this->collUsers !== null) {
+                foreach ($this->collUsers as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -777,8 +777,8 @@ abstract class Role implements ActiveRecordInterface
             if (null !== $this->singlePermission) {
                 $result['Permission'] = $this->singlePermission->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
-            if (null !== $this->collUserRoleIds) {
-                $result['UserRoleIds'] = $this->collUserRoleIds->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collUsers) {
+                $result['Users'] = $this->collUsers->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -991,9 +991,9 @@ abstract class Role implements ActiveRecordInterface
                 $copyObj->setPermission($relObj->copy($deepCopy));
             }
 
-            foreach ($this->getUserRoleIds() as $relObj) {
+            foreach ($this->getUsers() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUserRoleId($relObj->copy($deepCopy));
+                    $copyObj->addUser($relObj->copy($deepCopy));
                 }
             }
 
@@ -1038,8 +1038,8 @@ abstract class Role implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('UserRoleId' == $relationName) {
-            return $this->initUserRoleIds();
+        if ('User' == $relationName) {
+            return $this->initUsers();
         }
     }
 
@@ -1080,31 +1080,31 @@ abstract class Role implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collUserRoleIds collection
+     * Clears out the collUsers collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addUserRoleIds()
+     * @see        addUsers()
      */
-    public function clearUserRoleIds()
+    public function clearUsers()
     {
-        $this->collUserRoleIds = null; // important to set this to NULL since that means it is uninitialized
+        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collUserRoleIds collection loaded partially.
+     * Reset is the collUsers collection loaded partially.
      */
-    public function resetPartialUserRoleIds($v = true)
+    public function resetPartialUsers($v = true)
     {
-        $this->collUserRoleIdsPartial = $v;
+        $this->collUsersPartial = $v;
     }
 
     /**
-     * Initializes the collUserRoleIds collection.
+     * Initializes the collUsers collection.
      *
-     * By default this just sets the collUserRoleIds collection to an empty array (like clearcollUserRoleIds());
+     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1113,13 +1113,13 @@ abstract class Role implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initUserRoleIds($overrideExisting = true)
+    public function initUsers($overrideExisting = true)
     {
-        if (null !== $this->collUserRoleIds && !$overrideExisting) {
+        if (null !== $this->collUsers && !$overrideExisting) {
             return;
         }
-        $this->collUserRoleIds = new ObjectCollection();
-        $this->collUserRoleIds->setModel('\ORM\User');
+        $this->collUsers = new ObjectCollection();
+        $this->collUsers->setModel('\ORM\User');
     }
 
     /**
@@ -1136,48 +1136,48 @@ abstract class Role implements ActiveRecordInterface
      * @return ObjectCollection|ChildUser[] List of ChildUser objects
      * @throws PropelException
      */
-    public function getUserRoleIds(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collUserRoleIdsPartial && !$this->isNew();
-        if (null === $this->collUserRoleIds || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUserRoleIds) {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
                 // return empty collection
-                $this->initUserRoleIds();
+                $this->initUsers();
             } else {
-                $collUserRoleIds = ChildUserQuery::create(null, $criteria)
-                    ->filterByUserRoleId($this)
+                $collUsers = ChildUserQuery::create(null, $criteria)
+                    ->filterByRole($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collUserRoleIdsPartial && count($collUserRoleIds)) {
-                        $this->initUserRoleIds(false);
+                    if (false !== $this->collUsersPartial && count($collUsers)) {
+                        $this->initUsers(false);
 
-                        foreach ($collUserRoleIds as $obj) {
-                            if (false == $this->collUserRoleIds->contains($obj)) {
-                                $this->collUserRoleIds->append($obj);
+                        foreach ($collUsers as $obj) {
+                            if (false == $this->collUsers->contains($obj)) {
+                                $this->collUsers->append($obj);
                             }
                         }
 
-                        $this->collUserRoleIdsPartial = true;
+                        $this->collUsersPartial = true;
                     }
 
-                    return $collUserRoleIds;
+                    return $collUsers;
                 }
 
-                if ($partial && $this->collUserRoleIds) {
-                    foreach ($this->collUserRoleIds as $obj) {
+                if ($partial && $this->collUsers) {
+                    foreach ($this->collUsers as $obj) {
                         if ($obj->isNew()) {
-                            $collUserRoleIds[] = $obj;
+                            $collUsers[] = $obj;
                         }
                     }
                 }
 
-                $this->collUserRoleIds = $collUserRoleIds;
-                $this->collUserRoleIdsPartial = false;
+                $this->collUsers = $collUsers;
+                $this->collUsersPartial = false;
             }
         }
 
-        return $this->collUserRoleIds;
+        return $this->collUsers;
     }
 
     /**
@@ -1186,29 +1186,29 @@ abstract class Role implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $userRoleIds A Propel collection.
+     * @param      Collection $users A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildRole The current object (for fluent API support)
      */
-    public function setUserRoleIds(Collection $userRoleIds, ConnectionInterface $con = null)
+    public function setUsers(Collection $users, ConnectionInterface $con = null)
     {
-        /** @var ChildUser[] $userRoleIdsToDelete */
-        $userRoleIdsToDelete = $this->getUserRoleIds(new Criteria(), $con)->diff($userRoleIds);
+        /** @var ChildUser[] $usersToDelete */
+        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
 
 
-        $this->userRoleIdsScheduledForDeletion = $userRoleIdsToDelete;
+        $this->usersScheduledForDeletion = $usersToDelete;
 
-        foreach ($userRoleIdsToDelete as $userRoleIdRemoved) {
-            $userRoleIdRemoved->setUserRoleId(null);
+        foreach ($usersToDelete as $userRemoved) {
+            $userRemoved->setRole(null);
         }
 
-        $this->collUserRoleIds = null;
-        foreach ($userRoleIds as $userRoleId) {
-            $this->addUserRoleId($userRoleId);
+        $this->collUsers = null;
+        foreach ($users as $user) {
+            $this->addUser($user);
         }
 
-        $this->collUserRoleIds = $userRoleIds;
-        $this->collUserRoleIdsPartial = false;
+        $this->collUsers = $users;
+        $this->collUsersPartial = false;
 
         return $this;
     }
@@ -1222,16 +1222,16 @@ abstract class Role implements ActiveRecordInterface
      * @return int             Count of related User objects.
      * @throws PropelException
      */
-    public function countUserRoleIds(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collUserRoleIdsPartial && !$this->isNew();
-        if (null === $this->collUserRoleIds || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUserRoleIds) {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getUserRoleIds());
+                return count($this->getUsers());
             }
 
             $query = ChildUserQuery::create(null, $criteria);
@@ -1240,11 +1240,11 @@ abstract class Role implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByUserRoleId($this)
+                ->filterByRole($this)
                 ->count($con);
         }
 
-        return count($this->collUserRoleIds);
+        return count($this->collUsers);
     }
 
     /**
@@ -1254,44 +1254,44 @@ abstract class Role implements ActiveRecordInterface
      * @param  ChildUser $l ChildUser
      * @return $this|\ORM\Role The current object (for fluent API support)
      */
-    public function addUserRoleId(ChildUser $l)
+    public function addUser(ChildUser $l)
     {
-        if ($this->collUserRoleIds === null) {
-            $this->initUserRoleIds();
-            $this->collUserRoleIdsPartial = true;
+        if ($this->collUsers === null) {
+            $this->initUsers();
+            $this->collUsersPartial = true;
         }
 
-        if (!$this->collUserRoleIds->contains($l)) {
-            $this->doAddUserRoleId($l);
+        if (!$this->collUsers->contains($l)) {
+            $this->doAddUser($l);
         }
 
         return $this;
     }
 
     /**
-     * @param ChildUser $userRoleId The ChildUser object to add.
+     * @param ChildUser $user The ChildUser object to add.
      */
-    protected function doAddUserRoleId(ChildUser $userRoleId)
+    protected function doAddUser(ChildUser $user)
     {
-        $this->collUserRoleIds[]= $userRoleId;
-        $userRoleId->setUserRoleId($this);
+        $this->collUsers[]= $user;
+        $user->setRole($this);
     }
 
     /**
-     * @param  ChildUser $userRoleId The ChildUser object to remove.
+     * @param  ChildUser $user The ChildUser object to remove.
      * @return $this|ChildRole The current object (for fluent API support)
      */
-    public function removeUserRoleId(ChildUser $userRoleId)
+    public function removeUser(ChildUser $user)
     {
-        if ($this->getUserRoleIds()->contains($userRoleId)) {
-            $pos = $this->collUserRoleIds->search($userRoleId);
-            $this->collUserRoleIds->remove($pos);
-            if (null === $this->userRoleIdsScheduledForDeletion) {
-                $this->userRoleIdsScheduledForDeletion = clone $this->collUserRoleIds;
-                $this->userRoleIdsScheduledForDeletion->clear();
+        if ($this->getUsers()->contains($user)) {
+            $pos = $this->collUsers->search($user);
+            $this->collUsers->remove($pos);
+            if (null === $this->usersScheduledForDeletion) {
+                $this->usersScheduledForDeletion = clone $this->collUsers;
+                $this->usersScheduledForDeletion->clear();
             }
-            $this->userRoleIdsScheduledForDeletion[]= clone $userRoleId;
-            $userRoleId->setUserRoleId(null);
+            $this->usersScheduledForDeletion[]= clone $user;
+            $user->setRole(null);
         }
 
         return $this;
@@ -1327,15 +1327,15 @@ abstract class Role implements ActiveRecordInterface
             if ($this->singlePermission) {
                 $this->singlePermission->clearAllReferences($deep);
             }
-            if ($this->collUserRoleIds) {
-                foreach ($this->collUserRoleIds as $o) {
+            if ($this->collUsers) {
+                foreach ($this->collUsers as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
         $this->singlePermission = null;
-        $this->collUserRoleIds = null;
+        $this->collUsers = null;
     }
 
     /**

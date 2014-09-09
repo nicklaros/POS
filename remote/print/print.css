@@ -1,0 +1,41 @@
+
+@page{
+    size: 105mm 143mm;
+    margin: 3mm;
+}
+div{
+    overflow:hidden;
+}
+body{
+	font-family:Arial,sans-serif;
+	font-size:11px;
+	color:#333;
+    width: 350px;
+    margin: auto;
+}
+
+.doubleDot{
+    float: left;width: 15px;
+    margin-bottom: 2px;
+}
+.fieldSet{
+    clear: both;float: left;font-weight: bold;margin-top: 10px;
+}
+.number{
+    clear: both;float: left;text-align: right;padding-right: 5px;width: 25px;
+}
+.recordTitle{
+    float: left;width: 200px;
+    margin-bottom: 2px;
+}
+.recordValue{
+    float: left;width: 550px;
+    margin-bottom: 2px;
+}
+
+.left{
+    text-align: left;
+}
+.right{
+    text-align: right;
+}

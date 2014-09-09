@@ -23,22 +23,24 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStockQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildStockQuery orderByProductId($order = Criteria::ASC) Order by the product_id column
  * @method     ChildStockQuery orderByAmount($order = Criteria::ASC) Order by the amount column
- * @method     ChildStockQuery orderByUnit($order = Criteria::ASC) Order by the unit column
+ * @method     ChildStockQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
  * @method     ChildStockQuery orderByBuy($order = Criteria::ASC) Order by the buy column
  * @method     ChildStockQuery orderBySellPublic($order = Criteria::ASC) Order by the sell_public column
  * @method     ChildStockQuery orderBySellDistributor($order = Criteria::ASC) Order by the sell_distributor column
  * @method     ChildStockQuery orderBySellMisc($order = Criteria::ASC) Order by the sell_misc column
  * @method     ChildStockQuery orderByDiscount($order = Criteria::ASC) Order by the discount column
+ * @method     ChildStockQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildStockQuery groupById() Group by the id column
  * @method     ChildStockQuery groupByProductId() Group by the product_id column
  * @method     ChildStockQuery groupByAmount() Group by the amount column
- * @method     ChildStockQuery groupByUnit() Group by the unit column
+ * @method     ChildStockQuery groupByUnitId() Group by the unit_id column
  * @method     ChildStockQuery groupByBuy() Group by the buy column
  * @method     ChildStockQuery groupBySellPublic() Group by the sell_public column
  * @method     ChildStockQuery groupBySellDistributor() Group by the sell_distributor column
  * @method     ChildStockQuery groupBySellMisc() Group by the sell_misc column
  * @method     ChildStockQuery groupByDiscount() Group by the discount column
+ * @method     ChildStockQuery groupByStatus() Group by the status column
  *
  * @method     ChildStockQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildStockQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -48,7 +50,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStockQuery rightJoinProduct($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Product relation
  * @method     ChildStockQuery innerJoinProduct($relationAlias = null) Adds a INNER JOIN clause to the query using the Product relation
  *
- * @method     \ORM\ProductQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildStockQuery leftJoinUnit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Unit relation
+ * @method     ChildStockQuery rightJoinUnit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Unit relation
+ * @method     ChildStockQuery innerJoinUnit($relationAlias = null) Adds a INNER JOIN clause to the query using the Unit relation
+ *
+ * @method     ChildStockQuery leftJoinSales($relationAlias = null) Adds a LEFT JOIN clause to the query using the Sales relation
+ * @method     ChildStockQuery rightJoinSales($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Sales relation
+ * @method     ChildStockQuery innerJoinSales($relationAlias = null) Adds a INNER JOIN clause to the query using the Sales relation
+ *
+ * @method     \ORM\ProductQuery|\ORM\UnitQuery|\ORM\SalesDetailQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildStock findOne(ConnectionInterface $con = null) Return the first ChildStock matching the query
  * @method     ChildStock findOneOrCreate(ConnectionInterface $con = null) Return the first ChildStock matching the query, or a new ChildStock object populated from the query conditions when no match is found
@@ -56,23 +66,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStock findOneById(string $id) Return the first ChildStock filtered by the id column
  * @method     ChildStock findOneByProductId(string $product_id) Return the first ChildStock filtered by the product_id column
  * @method     ChildStock findOneByAmount(string $amount) Return the first ChildStock filtered by the amount column
- * @method     ChildStock findOneByUnit(string $unit) Return the first ChildStock filtered by the unit column
- * @method     ChildStock findOneByBuy(string $buy) Return the first ChildStock filtered by the buy column
- * @method     ChildStock findOneBySellPublic(string $sell_public) Return the first ChildStock filtered by the sell_public column
- * @method     ChildStock findOneBySellDistributor(string $sell_distributor) Return the first ChildStock filtered by the sell_distributor column
- * @method     ChildStock findOneBySellMisc(string $sell_misc) Return the first ChildStock filtered by the sell_misc column
+ * @method     ChildStock findOneByUnitId(string $unit_id) Return the first ChildStock filtered by the unit_id column
+ * @method     ChildStock findOneByBuy(int $buy) Return the first ChildStock filtered by the buy column
+ * @method     ChildStock findOneBySellPublic(int $sell_public) Return the first ChildStock filtered by the sell_public column
+ * @method     ChildStock findOneBySellDistributor(int $sell_distributor) Return the first ChildStock filtered by the sell_distributor column
+ * @method     ChildStock findOneBySellMisc(int $sell_misc) Return the first ChildStock filtered by the sell_misc column
  * @method     ChildStock findOneByDiscount(int $discount) Return the first ChildStock filtered by the discount column
+ * @method     ChildStock findOneByStatus(string $status) Return the first ChildStock filtered by the status column
  *
  * @method     ChildStock[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildStock objects based on current ModelCriteria
  * @method     ChildStock[]|ObjectCollection findById(string $id) Return ChildStock objects filtered by the id column
  * @method     ChildStock[]|ObjectCollection findByProductId(string $product_id) Return ChildStock objects filtered by the product_id column
  * @method     ChildStock[]|ObjectCollection findByAmount(string $amount) Return ChildStock objects filtered by the amount column
- * @method     ChildStock[]|ObjectCollection findByUnit(string $unit) Return ChildStock objects filtered by the unit column
- * @method     ChildStock[]|ObjectCollection findByBuy(string $buy) Return ChildStock objects filtered by the buy column
- * @method     ChildStock[]|ObjectCollection findBySellPublic(string $sell_public) Return ChildStock objects filtered by the sell_public column
- * @method     ChildStock[]|ObjectCollection findBySellDistributor(string $sell_distributor) Return ChildStock objects filtered by the sell_distributor column
- * @method     ChildStock[]|ObjectCollection findBySellMisc(string $sell_misc) Return ChildStock objects filtered by the sell_misc column
+ * @method     ChildStock[]|ObjectCollection findByUnitId(string $unit_id) Return ChildStock objects filtered by the unit_id column
+ * @method     ChildStock[]|ObjectCollection findByBuy(int $buy) Return ChildStock objects filtered by the buy column
+ * @method     ChildStock[]|ObjectCollection findBySellPublic(int $sell_public) Return ChildStock objects filtered by the sell_public column
+ * @method     ChildStock[]|ObjectCollection findBySellDistributor(int $sell_distributor) Return ChildStock objects filtered by the sell_distributor column
+ * @method     ChildStock[]|ObjectCollection findBySellMisc(int $sell_misc) Return ChildStock objects filtered by the sell_misc column
  * @method     ChildStock[]|ObjectCollection findByDiscount(int $discount) Return ChildStock objects filtered by the discount column
+ * @method     ChildStock[]|ObjectCollection findByStatus(string $status) Return ChildStock objects filtered by the status column
  * @method     ChildStock[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -162,7 +174,7 @@ abstract class StockQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, PRODUCT_ID, AMOUNT, UNIT, BUY, SELL_PUBLIC, SELL_DISTRIBUTOR, SELL_MISC, DISCOUNT FROM stock WHERE ID = :p0';
+        $sql = 'SELECT ID, PRODUCT_ID, AMOUNT, UNIT_ID, BUY, SELL_PUBLIC, SELL_DISTRIBUTOR, SELL_MISC, DISCOUNT, STATUS FROM stock WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -378,32 +390,46 @@ abstract class StockQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the unit column
+     * Filter the query on the unit_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByUnit('fooValue');   // WHERE unit = 'fooValue'
-     * $query->filterByUnit('%fooValue%'); // WHERE unit LIKE '%fooValue%'
+     * $query->filterByUnitId(1234); // WHERE unit_id = 1234
+     * $query->filterByUnitId(array(12, 34)); // WHERE unit_id IN (12, 34)
+     * $query->filterByUnitId(array('min' => 12)); // WHERE unit_id > 12
      * </code>
      *
-     * @param     string $unit The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @see       filterByUnit()
+     *
+     * @param     mixed $unitId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildStockQuery The current query, for fluid interface
      */
-    public function filterByUnit($unit = null, $comparison = null)
+    public function filterByUnitId($unitId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($unit)) {
+        if (is_array($unitId)) {
+            $useMinMax = false;
+            if (isset($unitId['min'])) {
+                $this->addUsingAlias(StockTableMap::COL_UNIT_ID, $unitId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($unitId['max'])) {
+                $this->addUsingAlias(StockTableMap::COL_UNIT_ID, $unitId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $unit)) {
-                $unit = str_replace('*', '%', $unit);
-                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(StockTableMap::COL_UNIT, $unit, $comparison);
+        return $this->addUsingAlias(StockTableMap::COL_UNIT_ID, $unitId, $comparison);
     }
 
     /**
@@ -612,6 +638,35 @@ abstract class StockQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the status column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatus('fooValue');   // WHERE status = 'fooValue'
+     * $query->filterByStatus('%fooValue%'); // WHERE status LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $status The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildStockQuery The current query, for fluid interface
+     */
+    public function filterByStatus($status = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($status)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $status)) {
+                $status = str_replace('*', '%', $status);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(StockTableMap::COL_STATUS, $status, $comparison);
+    }
+
+    /**
      * Filter the query by a related \ORM\Product object
      *
      * @param \ORM\Product|ObjectCollection $product The related object(s) to use as filter
@@ -684,6 +739,154 @@ abstract class StockQuery extends ModelCriteria
         return $this
             ->joinProduct($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Product', '\ORM\ProductQuery');
+    }
+
+    /**
+     * Filter the query by a related \ORM\Unit object
+     *
+     * @param \ORM\Unit|ObjectCollection $unit The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildStockQuery The current query, for fluid interface
+     */
+    public function filterByUnit($unit, $comparison = null)
+    {
+        if ($unit instanceof \ORM\Unit) {
+            return $this
+                ->addUsingAlias(StockTableMap::COL_UNIT_ID, $unit->getId(), $comparison);
+        } elseif ($unit instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(StockTableMap::COL_UNIT_ID, $unit->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByUnit() only accepts arguments of type \ORM\Unit or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Unit relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildStockQuery The current query, for fluid interface
+     */
+    public function joinUnit($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Unit');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Unit');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Unit relation Unit object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\UnitQuery A secondary query class using the current class as primary query
+     */
+    public function useUnitQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinUnit($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Unit', '\ORM\UnitQuery');
+    }
+
+    /**
+     * Filter the query by a related \ORM\SalesDetail object
+     *
+     * @param \ORM\SalesDetail|ObjectCollection $salesDetail  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildStockQuery The current query, for fluid interface
+     */
+    public function filterBySales($salesDetail, $comparison = null)
+    {
+        if ($salesDetail instanceof \ORM\SalesDetail) {
+            return $this
+                ->addUsingAlias(StockTableMap::COL_ID, $salesDetail->getStockId(), $comparison);
+        } elseif ($salesDetail instanceof ObjectCollection) {
+            return $this
+                ->useSalesQuery()
+                ->filterByPrimaryKeys($salesDetail->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterBySales() only accepts arguments of type \ORM\SalesDetail or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Sales relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildStockQuery The current query, for fluid interface
+     */
+    public function joinSales($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Sales');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Sales');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Sales relation SalesDetail object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\SalesDetailQuery A secondary query class using the current class as primary query
+     */
+    public function useSalesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinSales($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Sales', '\ORM\SalesDetailQuery');
     }
 
     /**

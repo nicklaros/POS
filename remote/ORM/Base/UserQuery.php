@@ -36,9 +36,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUserQuery leftJoinUserRoleId($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRoleId relation
- * @method     ChildUserQuery rightJoinUserRoleId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRoleId relation
- * @method     ChildUserQuery innerJoinUserRoleId($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRoleId relation
+ * @method     ChildUserQuery leftJoinRole($relationAlias = null) Adds a LEFT JOIN clause to the query using the Role relation
+ * @method     ChildUserQuery rightJoinRole($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Role relation
+ * @method     ChildUserQuery innerJoinRole($relationAlias = null) Adds a INNER JOIN clause to the query using the Role relation
  *
  * @method     ChildUserQuery leftJoinDetail($relationAlias = null) Adds a LEFT JOIN clause to the query using the Detail relation
  * @method     ChildUserQuery rightJoinDetail($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Detail relation
@@ -349,7 +349,7 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByRoleId(array('min' => 12)); // WHERE role_id > 12
      * </code>
      *
-     * @see       filterByUserRoleId()
+     * @see       filterByRole()
      *
      * @param     mixed $roleId The value to use as filter.
      *              Use scalar values for equality.
@@ -419,7 +419,7 @@ abstract class UserQuery extends ModelCriteria
      *
      * @return ChildUserQuery The current query, for fluid interface
      */
-    public function filterByUserRoleId($role, $comparison = null)
+    public function filterByRole($role, $comparison = null)
     {
         if ($role instanceof \ORM\Role) {
             return $this
@@ -432,22 +432,22 @@ abstract class UserQuery extends ModelCriteria
             return $this
                 ->addUsingAlias(UserTableMap::COL_ROLE_ID, $role->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByUserRoleId() only accepts arguments of type \ORM\Role or Collection');
+            throw new PropelException('filterByRole() only accepts arguments of type \ORM\Role or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the UserRoleId relation
+     * Adds a JOIN clause to the query using the Role relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildUserQuery The current query, for fluid interface
      */
-    public function joinUserRoleId($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinRole($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('UserRoleId');
+        $relationMap = $tableMap->getRelation('Role');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -462,14 +462,14 @@ abstract class UserQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'UserRoleId');
+            $this->addJoinObject($join, 'Role');
         }
 
         return $this;
     }
 
     /**
-     * Use the UserRoleId relation Role object
+     * Use the Role relation Role object
      *
      * @see useQuery()
      *
@@ -479,11 +479,11 @@ abstract class UserQuery extends ModelCriteria
      *
      * @return \ORM\RoleQuery A secondary query class using the current class as primary query
      */
-    public function useUserRoleIdQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useRoleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinUserRoleId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'UserRoleId', '\ORM\RoleQuery');
+            ->joinRole($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Role', '\ORM\RoleQuery');
     }
 
     /**
