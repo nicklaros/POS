@@ -9,7 +9,8 @@ Ext.define('POS.view.sales.List' ,{
         'POS.store.Sales',
         'POS.view.sales.Add',
         'POS.view.sales.Edit',
-        'POS.view.sales.ListController'
+        'POS.view.sales.ListController',
+        'POS.view.sales.Search'
     ],
 
     autoScroll: true,
@@ -19,7 +20,7 @@ Ext.define('POS.view.sales.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-tasks glyph"></i> Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan';
 
         var store = POS.app.getStore('POS.store.Sales');
         this.store = store;

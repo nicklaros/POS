@@ -41,7 +41,7 @@ Ext.define('POS.view.sales.EditDetailController', {
         
         form.getForm().setValues(record.getData());
         
-        var amount = this.reference('amount');
+        var amount = this.lookupReference('amount');
         
         setTimeout(function(){
             amount.focus();

@@ -28,7 +28,7 @@ Ext.define('POS.view.sales.Edit' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-tasks glyph"></i> Ubah Data Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Ubah Data Penjualan';
 
         this.items = [{
             xtype: 'container',
@@ -106,6 +106,7 @@ Ext.define('POS.view.sales.Edit' ,{
                             name: 'paid',
                             reference: 'paid',
                             saveOnEnter: true,
+                            selectOnFocus: true,
                             margin: '0 0 0 20',
                             width: 150
                         },{

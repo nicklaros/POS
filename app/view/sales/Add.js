@@ -28,7 +28,7 @@ Ext.define('POS.view.sales.Add' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-tasks glyph"></i> Tambah Data Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambah Data Penjualan';
 
         this.items = [{
             xtype: 'container',
@@ -103,6 +103,7 @@ Ext.define('POS.view.sales.Add' ,{
                             name: 'paid',
                             reference: 'paid',
                             saveOnEnter: true,
+                            selectOnFocus: true,
                             margin: '0 0 0 20',
                             width: 150
                         },{
