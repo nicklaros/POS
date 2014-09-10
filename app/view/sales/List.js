@@ -8,6 +8,7 @@ Ext.define('POS.view.sales.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.store.Sales',
         'POS.view.sales.Add',
+        'POS.view.sales.Detail',
         'POS.view.sales.Edit',
         'POS.view.sales.ListController',
         'POS.view.sales.Search'
@@ -41,6 +42,11 @@ Ext.define('POS.view.sales.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-credit-card glyph"></i> Detail',
+                reference: 'detail',
+                handler: 'detail',
+                disabled: true
+            },{
                 text: '<i class="fa fa-plus-square glyph"></i> Tambah',
                 reference: 'add',
                 handler: 'add'
@@ -50,7 +56,7 @@ Ext.define('POS.view.sales.List' ,{
                 handler: 'edit',
                 disabled: true
             },{
-                text: '<i class="fa fa-trash-o glyph"></i> Hapus',
+                text: '<i class="fa fa-undo glyph"></i> Batalkan Penjualan',
                 reference: 'delete',
                 handler: 'remove',
                 disabled: true

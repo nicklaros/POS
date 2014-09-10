@@ -31,7 +31,7 @@ Ext.define('POS.view.main.MainController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 112, // F1
+                key: 112, // F1 ---> dedicated for sales module
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     // lets rock it
@@ -43,7 +43,7 @@ Ext.define('POS.view.main.MainController', {
                         &&
                         Ext.isEmpty(Ext.ComponentQuery.query('edit-sales')[0])
                     ) {
-                        // if list-sales opened but add-sales is not open then open it
+                        // if add-sales and edit-sales is not open then open add-sales.. sorry edit-sales you lost :p
                         Ext.fn.App.window('add-sales');
                     }
                 }

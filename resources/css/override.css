@@ -2,7 +2,7 @@
     position: absolute;
 }
 .x-mask {
-    background: #e4e4e4;
+    background: #333333 !important;
 }
 .x-monthpicker-buttons {
     position: relative;

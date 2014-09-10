@@ -11,7 +11,7 @@ Ext.define('POS.custom.field.ComboStock', {
     valueField: 'stock_id',
 
     anyMatch: true,
-    autoSelect: true,
+    autoSelect: false,
     enableKeyEvents: true,
     forceSelection: true,
     hideTrigger: true,
