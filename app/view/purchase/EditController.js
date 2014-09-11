@@ -1,26 +1,14 @@
-Ext.define('POS.view.purchase.AddController', {
+Ext.define('POS.view.purchase.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-purchase',
+    alias: 'controller.edit-purchase',
 
     control: {
         '#': {
             boxready: function(panel){
-                var supplier = Ext.create('POS.model.Supplier', {
-                    id: 0,
-                    name: '-'
-                });
-                
-                this.lookupReference('supplier').setValue(supplier);
-
                 this.keyMap(panel);
-            
-                var add = this.lookupReference('add');
-                setTimeout(function(){
-                    add.focus();
-                }, 10);
             },
             close: function(){
-                POS.app.getStore('POS.store.PurchaseDetail').removeAll();
+                POS.app.getStore('POS.store.PurchaseDetail').removeAll(true);
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -41,9 +29,9 @@ Ext.define('POS.view.purchase.AddController', {
             }
         }
     },
-    
+
     add: function(){
-        Ext.fn.App.window('add-purchase-detail');
+        Ext.fn.App.window('edit-purchase-detail');
     },
 
     close: function(){
@@ -76,11 +64,11 @@ Ext.define('POS.view.purchase.AddController', {
     edit: function(){
         var rec = this.lookupReference('grid-purchase-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('add-purchase-detail');
+        var edit = Ext.fn.App.window('edit-purchase-detail');
         edit.isEdit = true;
         edit.getController().load(rec);
     },
-    
+
     keyMap: function(panel){
         var me = this;
         
@@ -104,6 +92,44 @@ Ext.define('POS.view.purchase.AddController', {
         });
     },
 
+    load: function(params){
+        var panel = this.getView(),
+            form = panel.down('form');
+
+        Ext.fn.App.setLoading(true);
+        var monitor = Ext.fn.WebSocket.monitor(
+            Ext.ws.Main.on('purchase/loadFormEdit', function(websocket, result){
+                clearTimeout(monitor);
+                Ext.fn.App.setLoading(false);
+                if (result.success){
+                    var supplier = Ext.create('POS.model.Supplier', {
+                        id  : result.data.supplier_id,
+                        name: result.data.supplier_name
+                    });
+
+                    result.data.supplier = supplier;
+
+                    form.getForm().setValues(result.data);
+
+                    POS.app.getStore('POS.store.PurchaseDetail').loadData(result.detail);
+
+                    var add = this.lookupReference('add');
+                    setTimeout(function(){
+                        add.focus();
+                    }, 10);
+                }else{
+                    panel.close();
+                    Ext.fn.App.notification('Ups', result.errmsg);
+                }
+            }, this, {
+                single: true,
+                destroyable: true
+            }),
+            panel
+        );
+        Ext.ws.Main.send('purchase/loadFormEdit', params);
+    },
+
     save: function(){
         var panel   = this.getView(),
             form    = panel.down('form');
@@ -116,11 +142,18 @@ Ext.define('POS.view.purchase.AddController', {
                 products.push(rec.data)
             });
 
+            // get removed product from purchase
+            var removed_id = [];
+            storeDetail.removed.forEach(function(rec){
+                removed_id.push(rec.id);
+            });
+
             // make sure there are any product to process purchase
             if (products.length != 0) {
                 var values = form.getValues();
 
                 values.products = Ext.encode(products);
+                values.removed_id = removed_id;
                 
                 // safety first, sum total one more time before sending it to server ^_^
                 values.total_price = this.sumTotalPrice();
@@ -129,7 +162,7 @@ Ext.define('POS.view.purchase.AddController', {
 
                 Ext.fn.App.setLoading(true);
                 var monitor = Ext.fn.WebSocket.monitor(
-                    Ext.ws.Main.on('purchase/create', function(websocket, result){
+                    Ext.ws.Main.on('purchase/update', function(websocket, result){
                         clearTimeout(monitor);
                         Ext.fn.App.setLoading(false);
                         if (result.success){
@@ -143,7 +176,7 @@ Ext.define('POS.view.purchase.AddController', {
                         destroyable: true
                     })
                 );
-                Ext.ws.Main.send('purchase/create', values);
+                Ext.ws.Main.send('purchase/update', values);
             } else {
                 Ext.fn.App.notification('Ups', ERROR_1);
             }
@@ -152,6 +185,7 @@ Ext.define('POS.view.purchase.AddController', {
     
     setTotalPrice: function(){
         var totalPrice = this.lookupReference('total_price');
+        
         totalPrice.setValue(this.sumTotalPrice());
     },
 

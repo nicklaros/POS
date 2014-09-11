@@ -55,8 +55,8 @@ Ext.define('POS.view.purchase.ListController', {
             smCount = sm.getCount();
 
         Ext.Msg.confirm(
-            '<i class="fa fa-exclamation-triangle glyph"></i> Batalkan Penjualan ',
-            '<p><b>Apakah Anda yakin akan membatalkan penjualan (<span style="color:red">' + smCount + ' data</span>)?</b>',
+            '<i class="fa fa-exclamation-triangle glyph"></i> Batalkan Pembelian ',
+            '<p><b>Apakah Anda yakin akan membatalkan pembelian (<span style="color:red">' + smCount + ' data</span>)?</b>',
             function(btn){
                 if (btn == 'yes'){
                     var id = [];

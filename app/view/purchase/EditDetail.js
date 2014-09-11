@@ -1,10 +1,10 @@
-Ext.define('POS.view.purchase.AddDetail' ,{
+Ext.define('POS.view.purchase.EditDetail' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-purchase-detail',
-    id: 'add-purchase-detail',
-    controller: 'add-purchase-detail',
+    alias : 'widget.edit-purchase-detail',
+    id: 'edit-purchase-detail',
+    controller: 'edit-purchase-detail',
     viewModel: {
-        type: 'add-purchase-detail'
+        type: 'edit-purchase-detail'
     },
 
     requires: [
@@ -14,8 +14,8 @@ Ext.define('POS.view.purchase.AddDetail' ,{
         'POS.custom.field.Price',
         'POS.tpl.PriceStatus',
         'POS.tpl.StockDetail',
-        'POS.view.purchase.AddDetailController',
-        'POS.view.purchase.AddDetailModel',
+        'POS.view.purchase.EditDetailController',
+        'POS.view.purchase.EditDetailModel',
         'POS.view.stock.AddVariant'
     ],
 
@@ -49,6 +49,9 @@ Ext.define('POS.view.purchase.AddDetail' ,{
             },
             width: 900,
             items: [{
+                xtype: 'hidden',
+                name: 'id'
+            },{
                 xtype: 'container',
                 layout: 'anchor',
                 cls: 'panel',

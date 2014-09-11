@@ -1,10 +1,10 @@
-Ext.define('POS.view.purchase.AddDetailController', {
+Ext.define('POS.view.purchase.EditDetailController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-purchase-detail',
+    alias: 'controller.edit-purchase-detail',
 
     control: {
         '#': {
-            boxready: function(){
+            boxready: function(panel){
                 var product = this.lookupReference('product');
                 
                 setTimeout(function(){
@@ -41,7 +41,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
         }
     },
-    
+
     close: function(){
         this.getView().close();
     },
@@ -68,7 +68,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
         
         var params = {
             product_id: record.get('product_id')
-        }        
+        }
         var monitor = Ext.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
@@ -198,13 +198,13 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 store.add(rec);
             }else{
                 // perhaps there is a better way to select currently edited record than this clumsy code below
-                var rec = Ext.ComponentQuery.query('add-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
+                var rec = Ext.ComponentQuery.query('edit-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
                 rec.set(values);
             }
 
             panel.close();
             
-            Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
+            Ext.ComponentQuery.query('edit-purchase')[0].getController().setTotalPrice();
         }
     },
     

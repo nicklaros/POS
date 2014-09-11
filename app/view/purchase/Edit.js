@@ -1,16 +1,16 @@
-Ext.define('POS.view.purchase.Add' ,{
+Ext.define('POS.view.purchase.Edit' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-purchase',
-    id: 'add-purchase',
-    controller: 'add-purchase',
+    alias : 'widget.edit-purchase',
+    id: 'edit-purchase',
+    controller: 'edit-purchase',
 
     requires: [
         'POS.custom.field.ComboSupplier',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.PurchaseDetail',
-        'POS.view.purchase.AddController',
-        'POS.view.purchase.AddDetail'
+        'POS.view.purchase.EditController',
+        'POS.view.purchase.EditDetail'
     ],
 
 	autoScroll: true,
@@ -28,7 +28,7 @@ Ext.define('POS.view.purchase.Add' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-truck glyph"></i> Tambah Data Pembelian';
+        this.title = '<i class="fa fa-truck glyph"></i> Ubah Data Pembelian';
 
         this.items = [{
             xtype: 'container',
@@ -45,6 +45,9 @@ Ext.define('POS.view.purchase.Add' ,{
                 margin: '0 0 10 0',
                 width: 900,
                 items: [{
+                    xtype: 'hidden',
+                    name: 'id'
+                },{
                     xtype: 'container',
                     anchor: '100%',
                     layout: 'hbox',

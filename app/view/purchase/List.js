@@ -8,8 +8,9 @@ Ext.define('POS.view.purchase.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.store.Purchase',
         'POS.view.purchase.Add',
-        'POS.view.purchase.AddDetail',
-        'POS.view.purchase.ListController'
+        'POS.view.purchase.Edit',
+        'POS.view.purchase.ListController',
+        'POS.view.purchase.Search'
     ],
 
     autoScroll: true,
@@ -19,7 +20,7 @@ Ext.define('POS.view.purchase.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Pembelian';
+        this.title = '<i class="fa fa-truck glyph"></i> Pembelian';
 
         var store = POS.app.getStore('POS.store.Purchase');
         this.store = store;
