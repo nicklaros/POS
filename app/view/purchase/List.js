@@ -8,6 +8,7 @@ Ext.define('POS.view.purchase.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.store.Purchase',
         'POS.view.purchase.Add',
+        'POS.view.purchase.Detail',
         'POS.view.purchase.Edit',
         'POS.view.purchase.ListController',
         'POS.view.purchase.Search'

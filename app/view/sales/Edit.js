@@ -145,7 +145,7 @@ Ext.define('POS.view.sales.Edit' ,{
                 width: 900,
                 items: [{
                     xtype: 'container',
-                    html: 'Produk yang Dibeli',
+                    html: 'Produk yang Dijual',
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',

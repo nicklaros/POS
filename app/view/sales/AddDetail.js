@@ -27,7 +27,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dibeli Pelanggan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dijual';
 
         this.items = [{
             xtype: 'form',

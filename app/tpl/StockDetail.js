@@ -2,7 +2,7 @@ Ext.define('POS.tpl.StockDetail', {
     extend: 'Ext.XTemplate',
 
     html: [
-        '<div class="stock-detail-block">',
+        '<div class="detail-block">',
             '<table>',
                 '<tr>',
                     '<td>Produk</td>',
@@ -26,7 +26,7 @@ Ext.define('POS.tpl.StockDetail', {
                 '</tr>',
             '</table>',
         '</div>',
-        '<div class="stock-detail-block">',
+        '<div class="detail-block">',
             '<table>',
                 '<tr>',
                     '<td>Harga Satuan</td>',

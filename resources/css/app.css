@@ -125,6 +125,22 @@ html{
     color: #666;
     line-height: 1;
 }
+.detail-block{
+    font-family: tahoma, arial, sans-serif;
+    float: left;
+    font-size: 12px;
+    white-space: normal;
+    color: #838383;
+    padding: 1.5px;
+    width: 380px;
+    line-height: 2;
+    border-right: 1px solid #dfdfdf;
+    margin-right: 10px;
+}
+.detail-block:last-child{
+    border-right: 0;
+    margin-right: 0;
+}
 .glyph{
     font-size:18px !important;
     margin-right: 5px;
@@ -218,38 +234,6 @@ html{
     padding: 5px;
     font-size: 13px;
     line-height: 20px;
-}
-.sales-detail-block{
-    font-family: tahoma, arial, sans-serif;
-    float: left;
-    font-size: 12px;
-    white-space: normal;
-    color: #838383;
-    padding: 1.5px;
-    width: 380px;
-    line-height: 2;
-    border-right: 1px solid #dfdfdf;
-    margin-right: 10px;
-}
-.sales-detail-block:last-child{
-    border-right: 0;
-    margin-right: 0;
-}
-.stock-detail-block{
-    font-family: tahoma, arial, sans-serif;
-    float: left;
-    font-size: 12px;
-    white-space: normal;
-    color: #838383;
-    padding: 1.5px;
-    width: 380px;
-    line-height: 2;
-    border-right: 1px solid #dfdfdf;
-    margin-right: 10px;
-}
-.stock-detail-block:last-child{
-    border-right: 0;
-    margin-right: 0;
 }
 .trans{
     float: left;

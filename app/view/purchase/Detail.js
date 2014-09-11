@@ -1,13 +1,13 @@
-Ext.define('POS.view.sales.Detail' ,{
+Ext.define('POS.view.purchase.Detail' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.detail-sales',
-    id: 'detail-sales',
-    controller: 'detail-sales',
+    alias : 'widget.detail-purchase',
+    id: 'detail-purchase',
+    controller: 'detail-purchase',
 
     requires: [
-        'POS.custom.grid.SalesDetail',
-        'POS.tpl.SalesDetail',
-        'POS.view.sales.DetailController'
+        'POS.custom.grid.PurchaseDetail',
+        'POS.tpl.PurchaseDetail',
+        'POS.view.purchase.DetailController'
     ],
 
     layout: 'anchor',
@@ -37,13 +37,8 @@ Ext.define('POS.view.sales.Detail' ,{
             anchor: '100%',
             items: [{
                 xtype: 'container',
-                html: 'Detail Penjualan',
+                html: 'Detail Pembelian',
                 flex: 1
-            },{
-                xtype: 'button',
-                text: '<i class="fa fa-print glyph"></i>',
-                margin: '0 10 0 0',
-                handler: 'print'
             },{
                 xtype: 'button',
                 text: 'x',
@@ -62,7 +57,7 @@ Ext.define('POS.view.sales.Detail' ,{
                 xtype: 'container',
                 reference: 'detail-panel',
                 cls: 'panel',
-                tpl: Ext.create('POS.tpl.SalesDetail'),
+                tpl: Ext.create('POS.tpl.PurchaseDetail'),
                 margin: '0 0 10 0',
                 padding: 10,
                 anchor: '100%',
@@ -73,10 +68,10 @@ Ext.define('POS.view.sales.Detail' ,{
                 anchor: '100%',
                 items: [{
                     xtype: 'container',
-                    html: 'Produk yang Dijual',
+                    html: 'Produk yang Dibeli',
                     cls: 'panel-header'
                 },{
-                    xtype: 'grid-sales-detail',
+                    xtype: 'grid-purchase-detail',
                     selType: 'rowmodel'
                 }]
             }]
