@@ -1,17 +1,15 @@
-Ext.define('POS.view.sales.Add' ,{
+Ext.define('POS.view.purchase.Add' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-sales',
-    id: 'add-sales',
-    controller: 'add-sales',
+    alias : 'widget.add-purchase',
+    id: 'add-purchase',
+    controller: 'add-purchase',
 
     requires: [
-        'POS.custom.field.ComboCashier',
-        'POS.custom.field.ComboCustomer',
+        'POS.custom.field.ComboSupplier',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
-        'POS.custom.grid.SalesDetail',
-        'POS.view.sales.AddController',
-        'POS.view.sales.AddDetail'
+        'POS.custom.grid.PurchaseDetail',
+        'POS.view.purchase.AddController'
     ],
 
 	autoScroll: true,
@@ -29,7 +27,7 @@ Ext.define('POS.view.sales.Add' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambah Data Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambah Data Pembelian';
 
         this.items = [{
             xtype: 'container',
@@ -61,10 +59,10 @@ Ext.define('POS.view.sales.Add' ,{
                             value: new Date(),
                             width: 130
                         },{
-                            xtype: 'combo-customer',
-                            fieldLabel: 'Pelanggan',
-                            name: 'customer_id',
-                            reference: 'customer',
+                            xtype: 'combo-supplier',
+                            fieldLabel: 'Supplier',
+                            name: 'supplier',
+                            reference: 'supplier',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
                             margin: '0 0 0 20',
@@ -76,51 +74,15 @@ Ext.define('POS.view.sales.Add' ,{
                             margin: '0 0 0 20',
                             width: 200
                         },{
-                            xtype: 'combo-cashier',
-                            fieldLabel: 'Kasir',
-                            name: 'cashier_id',
-                            reference: 'cashier',
-                            afterLabelTextTpl: REQUIRED,
-                            allowBlank: false,
-                            margin: '0 0 0 20',
-                            width: 200
-                        }]
-                    },{
-                        xtype: 'container',
-                        anchor: '100%',
-                        layout: 'hbox',
-                        margin: '0 0 10 0',
-                        items:[{
                             xtype: 'field-price',
                             fieldLabel: 'Harga Total',
                             name: 'total_price',
                             reference: 'total_price',
                             readOnly: true,
                             saveOnEnter: true,
-                            width: 150
-                        },{
-                            xtype: 'field-price',
-                            fieldLabel: 'Dibayar',
-                            name: 'paid',
-                            reference: 'paid',
-                            saveOnEnter: true,
-                            selectOnFocus: true,
-                            margin: '0 0 0 20',
-                            width: 150
-                        },{
-                            xtype: 'field-price',
-                            fieldLabel: 'Sisa',
-                            name: 'balance',
-                            reference: 'balance',
-                            raedOnly: true,
-                            saveOnEnter: true,
                             margin: '0 0 0 20',
                             width: 150
                         }]
-                    },{
-                        xtype: 'hidden',
-                        name: 'buy_price',
-                        reference: 'buy_price'
                     }]
                 }]
             },{
@@ -145,8 +107,8 @@ Ext.define('POS.view.sales.Add' ,{
                     html: 'Produk yang Dibeli',
                     cls: 'panel-header'
                 },{
-                    xtype: 'grid-sales-detail',
-                    reference: 'grid-sales-detail',
+                    xtype: 'grid-purchase-detail',
+                    reference: 'grid-purchase-detail',
                     dockedItems: [{
                         xtype: 'toolbar',
                         dock: 'top',

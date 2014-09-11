@@ -1,23 +1,16 @@
-Ext.define('POS.view.sales.AddController', {
+Ext.define('POS.view.purchase.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-sales',
+    alias: 'controller.add-purchase',
 
     control: {
         '#': {
             boxready: function(panel){
-                var customer = Ext.create('POS.model.Customer', {
+                var supplier = Ext.create('POS.model.Supplier', {
                     id: 0,
                     name: '-'
                 });
                 
-                this.lookupReference('customer').setValue(customer);
-                
-                var cashier = Ext.create('POS.model.Cashier', {
-                    id: Ext.main.ViewModel.data.current_user.id,
-                    name: Ext.main.ViewModel.data.current_user.name
-                });
-                
-                this.lookupReference('cashier').setValue(cashier);   
+                this.lookupReference('supplier').setValue(supplier);
 
                 this.keyMap(panel);
             
@@ -27,7 +20,7 @@ Ext.define('POS.view.sales.AddController', {
                 }, 10);
             },
             close: function(){
-                POS.app.getStore('POS.store.SalesDetail').removeAll(true);
+                POS.app.getStore('POS.store.PurchaseDetail').removeAll(true);
             }
         },
         'textfield[name = paid]': {
@@ -40,7 +33,7 @@ Ext.define('POS.view.sales.AddController', {
                 if (e.getKey() == e.ENTER) this.save();
             }
         },
-        'grid-sales-detail': {
+        'grid-purchase-detail': {
             selectionchange: function(sm, selected){
                 var btnEdit     = this.lookupReference('edit'),
                     btnDelete   = this.lookupReference('delete');
@@ -55,7 +48,7 @@ Ext.define('POS.view.sales.AddController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-sales-detail');
+        Ext.fn.App.window('add-purchase-detail');
     },
 
     close: function(){
@@ -63,7 +56,7 @@ Ext.define('POS.view.sales.AddController', {
     },
     
     remove: function(){
-        var grid    = this.lookupReference('grid-sales-detail'),
+        var grid    = this.lookupReference('grid-purchase-detail'),
             store   = grid.getStore(),
             sm      = grid.getSelectionModel(),
             sel     = sm.getSelection(),
@@ -78,15 +71,16 @@ Ext.define('POS.view.sales.AddController', {
                     for(i=0;i<smCount;i++){
                         store.remove(sel[i]);
                     }
+                    this.setTotalPrice();
                 }
             }
         );
     },
 
     edit: function(){
-        var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
+        var rec = this.lookupReference('grid-purchase-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('add-sales-detail');
+        var edit = Ext.fn.App.window('add-purchase-detail');
         edit.isEdit = true;
         edit.getController().load(rec);
     },
@@ -104,13 +98,6 @@ Ext.define('POS.view.sales.AddController', {
                     me.add();
                 }
             },{
-                key: 66, // Ctrl + B
-                ctrl: true,
-                defaultEventAction: 'preventDefault',
-                fn: function(){ 
-                    me.lookupReference('paid').focus(true);
-                }
-            },{
                 key: 83, // Ctrl + S
                 ctrl: true,
                 defaultEventAction: 'preventDefault',
@@ -126,78 +113,53 @@ Ext.define('POS.view.sales.AddController', {
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('POS.store.SalesDetail');
+            var storeDetail = POS.app.getStore('POS.store.PurchaseDetail');
 
             var products = [];
             storeDetail.each(function(rec){
                 products.push(rec.data)
             });
 
-            // make sure there are any product to process sales
+            // make sure there are any product to process purchase
             if (products.length != 0) {
                 var values = form.getValues();
 
                 values.products = Ext.encode(products);
+                
+                // safety first, sum total one more time before sending it to server ^_^
+                values.total_price = this.sumTotalPrice();
+                
+                values.supplier_id = values.supplier;
 
                 Ext.fn.App.setLoading(true);
-                Ext.ws.Main.send('sales/create', values);
                 var monitor = Ext.fn.WebSocket.monitor(
-                    Ext.ws.Main.on('sales/create', function(websocket, data){
+                    Ext.ws.Main.on('purchase/create', function(websocket, result){
                         clearTimeout(monitor);
                         Ext.fn.App.setLoading(false);
-                        if (data.success){
+                        if (result.success){
                             panel.close();
-                            POS.app.getStore('POS.store.Sales').load();
-
-                            Ext.Msg.confirm(
-                                '<i class="fa fa-exclamation-triangle glyph"></i> Print',
-                                'Print Nota Penjualan?',
-                                function(btn){
-                                    if (btn == 'yes'){
-                                        Ext.fn.App.printNotaSales(data.id);
-                                    }
-                                }
-                            );
+                            POS.app.getStore('POS.store.Purchase').load();
                         }else{
-                            Ext.fn.App.notification('Ups', data.errmsg);
+                            Ext.fn.App.notification('Ups', result.errmsg);
                         }
                     }, this, {
                         single: true,
                         destroyable: true
                     })
                 );
+                Ext.ws.Main.send('purchase/create', values);
             } else {
                 Ext.fn.App.notification('Ups', ERROR_1);
             }
         }
     },
     
-    setBalance: function(){
-        var totalPrice  = this.lookupReference('total_price'),
-            paid        = this.lookupReference('paid'),
-            balance     = this.lookupReference('balance'),
-            result      = paid.getSubmitValue() - totalPrice.getSubmitValue();
-        
-        balance.setValue(result);
-        
-        balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
-    },
-    
     setTotalPrice: function(){
         var totalPrice = this.lookupReference('total_price');
         totalPrice.setValue(this.sumTotalPrice());
-
-        var buyPrice = this.lookupReference('buy_price');
-        buyPrice.setValue(this.sumBuyPrice());
-
-        this.setBalance()
-    },
-
-    sumBuyPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_buy_price');
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_price');
+        return POS.app.getStore('POS.store.PurchaseDetail').sum('total_price');
     }
 });

@@ -53,7 +53,7 @@ Ext.define('Ext.fn.Util', {
     applyProxy: function(){
         POS.app.getStore('POS.store.combo.Cashier').setProxy({
             type: 'websocket',
-            storeId: 'combo-cashier',
+            storeId: 'POS.store.combo.Cashier',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/cashier'
@@ -66,7 +66,7 @@ Ext.define('Ext.fn.Util', {
         
         POS.app.getStore('POS.store.combo.Customer').setProxy({
             type: 'websocket',
-            storeId: 'combo-customer',
+            storeId: 'POS.store.combo.Customer',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/customer'
@@ -79,7 +79,7 @@ Ext.define('Ext.fn.Util', {
         
         POS.app.getStore('POS.store.combo.Product').setProxy({
             type: 'websocket',
-            storeId: 'combo-product',
+            storeId: 'POS.store.combo.Product',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/product'
@@ -92,7 +92,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.combo.Stock').setProxy({
             type: 'websocket',
-            storeId: 'combo-stock',
+            storeId: 'POS.store.combo.Stock',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/stock'
@@ -105,7 +105,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.combo.Unit').setProxy({
             type: 'websocket',
-            storeId: 'combo-unit',
+            storeId: 'POS.store.combo.Unit',
             websocket: Ext.ws.Main,
             api: {
                 read: 'combo/unit'
@@ -118,7 +118,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.Product').setProxy({
             type: 'websocket',
-            storeId: 'product',
+            storeId: 'POS.store.Product',
             websocket: Ext.ws.Main,
             api: {
                 read: 'product/read'
@@ -129,9 +129,22 @@ Ext.define('Ext.fn.Util', {
             }
         });
 
+        POS.app.getStore('POS.store.Purchase').setProxy({
+            type: 'websocket',
+            storeId: 'POS.store.Purchase',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'purchase/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
         POS.app.getStore('POS.store.Sales').setProxy({
             type: 'websocket',
-            storeId: 'sales',
+            storeId: 'POS.store.Sales',
             websocket: Ext.ws.Main,
             api: {
                 read: 'sales/read'
@@ -144,7 +157,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.SalesDetail').setProxy({
             type: 'websocket',
-            storeId: 'sales-detail',
+            storeId: 'POS.store.SalesDetail',
             websocket: Ext.ws.Main,
             api: {
                 read: 'salesdetail/read'
@@ -157,7 +170,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.Stock').setProxy({
             type: 'websocket',
-            storeId: 'stock',
+            storeId: 'POS.store.Stock',
             websocket: Ext.ws.Main,
             api: {
                 read: 'stock/read'
@@ -170,7 +183,7 @@ Ext.define('Ext.fn.Util', {
 
         POS.app.getStore('POS.store.User').setProxy({
             type: 'websocket',
-            storeId: 'user',
+            storeId: 'POS.store.User',
             websocket: Ext.ws.Main,
             api: {
                 read: 'user/read'

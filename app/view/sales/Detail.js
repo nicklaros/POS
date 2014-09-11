@@ -77,7 +77,7 @@ Ext.define('POS.view.sales.Detail' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',
-                    selType: 'checkboxmodel'
+                    selType: 'rowmodel'
                 }]
             }]
         }];

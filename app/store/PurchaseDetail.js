@@ -1,6 +1,6 @@
-Ext.define('POS.store.SalesDetail', {
+Ext.define('POS.store.PurchaseDetail', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.SalesDetail',
+    model: 'POS.model.PurchaseDetail',
 
     remoteSort: false,
 

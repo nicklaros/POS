@@ -1,7 +1,6 @@
 Ext.define('POS.store.User', {
     extend: 'Ext.data.Store',
     model: 'POS.model.User',
-    storeId: 'user',
 
     remoteSort: true,
     pageSize: 100,

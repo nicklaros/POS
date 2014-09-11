@@ -1,6 +1,6 @@
-Ext.define('POS.view.sales.ListController', {
+Ext.define('POS.view.purchase.ListController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.list-sales',
+    alias: 'controller.list-purchase',
 
     control: {
         '#': {
@@ -13,13 +13,11 @@ Ext.define('POS.view.sales.ListController', {
             selectionchange: function(sm, selected){
                 var btnDetail = this.lookupReference('detail'),
                     btnEdit = this.lookupReference('edit'),
-                    btnDelete = this.lookupReference('cancel'),
-                    btnPrint = this.lookupReference('print');
+                    btnCancel = this.lookupReference('cancel');
 
                 btnDetail.setDisabled(selected.length !== 1);
                 btnEdit.setDisabled(selected.length !== 1);
-                btnDelete.setDisabled(selected.length === 0);
-                btnPrint.setDisabled(selected.length !== 1);
+                btnCancel.setDisabled(selected.length === 0);
             },
             celldblclick: function(){
                 this.detail();
@@ -28,7 +26,7 @@ Ext.define('POS.view.sales.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-sales');
+        Ext.fn.App.window('add-purchase');
     },
 
     detail: function(){
@@ -37,7 +35,7 @@ Ext.define('POS.view.sales.ListController', {
                 id: rec.get('id')
             };
 
-        var detail = Ext.fn.App.window('detail-sales');
+        var detail = Ext.fn.App.window('detail-purchase');
         detail.getController().load(params);
     },
 
@@ -47,14 +45,8 @@ Ext.define('POS.view.sales.ListController', {
                 id: rec.get('id')
             };
 
-        var edit = Ext.fn.App.window('edit-sales');
+        var edit = Ext.fn.App.window('edit-purchase');
         edit.getController().load(params);
-    },
-
-    print: function(){
-        var rec  = this.getView().getSelectionModel().getSelection()[0];
-
-        Ext.fn.App.printNotaSales(rec.get('id'));
     },
     
     cancel: function(){
@@ -73,13 +65,13 @@ Ext.define('POS.view.sales.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('sales/destroy', {id: id});
+                    Ext.ws.Main.send('purchase/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('sales/destroy', function(websocket, data){
+                        Ext.ws.Main.on('purchase/destroy', function(websocket, data){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
                             if (data.success){
-                                POS.app.getStore('POS.store.Sales').load();
+                                POS.app.getStore('POS.store.Purchase').load();
                             }else{
                                 Ext.fn.App.notification('Ups', data.errmsg);
                             }
@@ -94,7 +86,7 @@ Ext.define('POS.view.sales.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-sales');
+        Ext.fn.App.window('search-purchase');
     },
     
     reset: function(){

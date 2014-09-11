@@ -1,6 +1,6 @@
-Ext.define('POS.store.Sales', {
+Ext.define('POS.store.Purchase', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.Sales',
+    model: 'POS.model.Purchase',
 
     remoteSort: true,
     pageSize: 100,

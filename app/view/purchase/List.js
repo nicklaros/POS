@@ -1,17 +1,15 @@
-Ext.define('POS.view.sales.List' ,{
+Ext.define('POS.view.purchase.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.list-sales',
-    controller: 'list-sales',
+    alias : 'widget.list-purchase',
+    controller: 'list-purchase',
 
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.store.Sales',
-        'POS.view.sales.Add',
-        'POS.view.sales.Detail',
-        'POS.view.sales.Edit',
-        'POS.view.sales.ListController',
-        'POS.view.sales.Search'
+        'POS.store.Purchase',
+        'POS.view.purchase.Add',
+        'POS.view.purchase.AddDetail',
+        'POS.view.purchase.ListController'
     ],
 
     autoScroll: true,
@@ -21,19 +19,15 @@ Ext.define('POS.view.sales.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Pembelian';
 
-        var store = POS.app.getStore('POS.store.Sales');
+        var store = POS.app.getStore('POS.store.Purchase');
         this.store = store;
 
         this.columns = [
-            {header: 'Nota', dataIndex:'id', width: 75},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
+            {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
             {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kasir', dataIndex: 'cashier_name', width: 120},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
 
@@ -56,14 +50,9 @@ Ext.define('POS.view.sales.List' ,{
                 handler: 'edit',
                 disabled: true
             },{
-                text: '<i class="fa fa-undo glyph"></i> Batalkan Penjualan',
+                text: '<i class="fa fa-undo glyph"></i> Batalkan Pembelian',
                 reference: 'cancel',
                 handler: 'cancel',
-                disabled: true
-            },{
-                text: '<i class="fa fa-print glyph"></i> Print',
-                reference: 'print',
-                handler: 'print',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

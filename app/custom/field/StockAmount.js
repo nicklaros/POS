@@ -3,7 +3,6 @@ Ext.define('POS.custom.field.StockAmount', {
     alias: 'widget.field-stock-amount',
 
     fieldStyle: 'text-align: right;',
-    minValue: 0,
     step: 10,
     value: 0
 });

@@ -1,25 +1,25 @@
-Ext.define('POS.custom.field.ComboStock', {
+Ext.define('POS.custom.field.ComboStockVariant', {
     extend: 'Ext.ux.form.field.ClearCombo',
-    alias: 'widget.combo-stock',
+    alias: 'widget.combo-stock-variant',
 
     requires: [
         'POS.store.combo.Stock',
-        'POS.tpl.combo.Stock'
+        'POS.tpl.combo.StockVariant'
     ],
 
-    displayField: 'product_name',
+    displayField: 'unit_name',
     valueField: 'stock_id',
 
     anyMatch: true,
     autoSelect: false,
     enableKeyEvents: true,
     forceSelection: true,
-    hideTrigger: true,
+    hideTrigger: false,
     matchFieldWidth: true,
     minChars: 1,
-    queryDelay: 50,
-    queryMode: 'remote',
-    triggerAction: 'query',
+    queryDelay: 0,
+    queryMode: 'local',
+    triggerAction: 'all',
     typeAhead: false,
     typeAheadDelay: 250,
 
@@ -27,7 +27,7 @@ Ext.define('POS.custom.field.ComboStock', {
         this.store = POS.app.getStore('POS.store.combo.Stock');
 
         this.listConfig = {
-            itemTpl: Ext.create('POS.tpl.combo.Stock')
+            itemTpl: Ext.create('POS.tpl.combo.StockVariant')
         };
 
         this.callParent(arguments);

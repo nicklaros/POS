@@ -32,7 +32,7 @@ Ext.define('POS.view.sales.AddDetailController', {
             form = panel.down('form');
 
         var stock = Ext.create('POS.model.Stock', {
-            id: record.get('stock_id'),
+            stock_id: record.get('stock_id'),
             product_name: record.get('product_name')
         });
 

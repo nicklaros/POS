@@ -3,8 +3,8 @@ Ext.define('POS.custom.field.ComboProduct', {
     alias: 'widget.combo-product',
 
     requires: [
-        'Ext.tpl.combo.Product',
-        'POS.store.combo.Product'
+        'POS.store.combo.Product',
+        'POS.tpl.combo.Product'
     ],
 
     displayField: 'name',
@@ -34,7 +34,7 @@ Ext.define('POS.custom.field.ComboProduct', {
         this.store = POS.app.getStore('POS.store.combo.Product');
 
         this.listConfig = {
-            itemTpl: new Ext.tpl.combo.Product
+            itemTpl: Ext.create('POS.tpl.combo.Product')
         };
 
         this.callParent(arguments);

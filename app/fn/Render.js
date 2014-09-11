@@ -8,7 +8,7 @@ Ext.define('Ext.fn.Render', {
     },
     
     date: function(value, withDay){
-        var format = (withDay ? 'l, d F Y' : 'd F Y');
+        var format = (withDay === true ? 'l, d F Y' : 'd F Y');
         
         return Ext.util.Format.date(value, format);
     },

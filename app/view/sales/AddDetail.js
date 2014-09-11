@@ -19,6 +19,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
         border: '0 !important',
         padding: '25px'
     },
+    cls: 'window',
     constrain: true,
     layout: 'anchor',
     maximized: true,
