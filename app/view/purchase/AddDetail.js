@@ -108,9 +108,12 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         fieldLabel: 'Jumlah',
                         name: 'amount',
                         reference: 'amount',
+                        afterLabelTextTpl: REQUIRED,
+                        allowBlank: false,
                         step: 1,
                         tabOnEnter: true,
-                        minValue: 0,
+                        minValue: 1,
+                        value: 1,
                         width: 75,
                         listeners: {
                             'change': 'setUnitPrice'
@@ -125,6 +128,8 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         fieldLabel: 'Total Harga',
                         name: 'total_price',
                         reference: 'total_price',
+                        afterLabelTextTpl: REQUIRED,
+                        allowBlank: false,
                         saveOnEnter: true,
                         margin: '0 0 0 50',
                         width: 150,

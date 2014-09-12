@@ -13,6 +13,10 @@ Ext.define('POS.view.stock.EditController', {
     close: function(){
         this.getView().close();
     },
+    
+    onChangeUnlimited: function(field, value){
+        this.lookupReference('amount').setDisabled(value);
+    },
 
     load: function(id){
         var panel = this.getView(),

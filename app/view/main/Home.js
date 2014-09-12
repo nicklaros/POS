@@ -52,6 +52,7 @@ Ext.define('POS.view.main.Home' ,{
                         cls: 'panel-header'
                     },{
                         xtype: 'login',
+                        reference: 'login',
                         width: 208
                     }]
                 },{

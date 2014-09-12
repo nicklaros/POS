@@ -67,8 +67,11 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     fieldLabel: 'Jumlah',
                     name: 'amount',
                     reference: 'amount',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
                     step: 1,
                     tabOnEnter: true,
+                    minValue: 1,
                     value: 1,
                     margin: '0 0 0 50',
                     width: 75

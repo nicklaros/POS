@@ -1,6 +1,13 @@
 Ext.define('Ext.fn.Render', {
     singleton: true,
 
+    amount: function(value, unlimited){
+        value = parseInt(value);
+        unlimited = unlimited || false;
+        
+        return (unlimited == true ? 'tak terhingga' : value);
+    },
+
     currency: function(value){
         value = parseInt(value);
         

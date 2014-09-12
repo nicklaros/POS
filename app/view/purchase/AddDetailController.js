@@ -180,7 +180,11 @@ Ext.define('POS.view.purchase.AddDetailController', {
         var panel = this.getView(),
             form = panel.down('form');
 
-        if(form.getForm().isValid()){
+        if(
+            form.getForm().isValid()
+            &&
+            this.lookupReference('total_price').getSubmitValue() != 0
+        ){
             var values = form.getValues(),
                 viewModelData = this.getViewModel().getData();
             
