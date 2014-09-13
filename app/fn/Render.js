@@ -1,11 +1,15 @@
 Ext.define('Ext.fn.Render', {
     singleton: true,
 
-    amount: function(value, unlimited){
-        value = parseInt(value);
-        unlimited = unlimited || false;
+    amount: function(value){
+        amount = parseInt(value.amount);
+        unlimited = value.unlimited || false;
         
-        return (unlimited == true ? 'tak terhingga' : value);
+        return (unlimited == true ? 'tak terhingga' : amount);
+    },
+
+    amountOnGrid: function(value, meta, record){
+        return (record.get('unlimited') == true ? '~' : value);
     },
 
     currency: function(value){

@@ -17,7 +17,7 @@ Ext.define('POS.tpl.StockDetail', {
                 '<tr>',
                     '<td>Jumlah Stock</td>',
                     '<td>:</td>',
-                    '<td>{[  Ext.fn.Render.stockAmount(values.amount, values.unlimited) ]} {unit_name}</td>',
+                    '<td>{[  Ext.fn.Render.amount(values) ]} {unit_name}</td>',
                 '</tr>',
                 '<tr>',
                     '<td>Discount</td>',
