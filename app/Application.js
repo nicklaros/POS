@@ -28,6 +28,7 @@ Ext.define('POS.Application', {
     ],
 
     views: [
+        'POS.view.notification.List',
         'POS.view.product.List',
         'POS.view.purchase.List',
         'POS.view.sales.List',

@@ -4,7 +4,6 @@ Ext.define('Ext.tpl.MainNavigation', {
     html: [
         '<tpl if="main">',
             '<div class="main-nav-container">',
-            '<div class="main-nav-header">Menu Utama</div>',
             '<div class="main-nav-body">',
             '<tpl for="main">',
                 '<a onClick="Ext.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',

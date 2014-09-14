@@ -1,6 +1,10 @@
 Ext.define("POS.view.main.Tab", {
     extend: 'Ext.tab.Panel',
     alias: 'widget.app-tab',
+    
+    requires: [
+        'POS.plugin.tab.Tool'
+    ],
 
     margins: '0 0 0 0',
     border: 0,

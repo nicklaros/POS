@@ -32,6 +32,7 @@ Ext.define('POS.view.stock.ListController', {
         var sm  = this.getView().getSelectionModel(),
             sel = sm.getSelection(),
             smCount = sm.getCount();
+            
         Ext.Msg.confirm(
             '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
             '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
@@ -43,7 +44,6 @@ Ext.define('POS.view.stock.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('stock/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
                         Ext.ws.Main.on('stock/destroy', function(websocket, data){
                             clearTimeout(monitor);
@@ -58,6 +58,7 @@ Ext.define('POS.view.stock.ListController', {
                             destroyable: true
                         })
                     );
+                    Ext.ws.Main.send('stock/destroy', {id: id});
                 }
             }
         );

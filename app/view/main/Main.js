@@ -30,9 +30,24 @@ Ext.define('POS.view.main.Main', {
 
     items: [{
         region: 'west',
-        xtype: 'app-nav'
+        xtype: 'app-nav',
+        dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'top',
+            style: {
+                'background': '#789'
+            },
+            items: [{
+                text: '<i class="fa fa-bell-o glyph"></i> 0 Pemberitahuan',
+                bind: {
+                    text: '<i class="fa fa-bell-o glyph"></i> {notificationCount} Pemberitahuan'
+                },
+                handler: 'openNotification'
+            }]
+        }]
     },{
         region: 'center',
         xtype: 'app-tab'
-    }]
+    }],
+    
 });

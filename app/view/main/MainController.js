@@ -30,6 +30,28 @@ Ext.define('POS.view.main.MainController', {
         }
     },
     
+    isKeyBlocked: function(){
+        return !(
+            App.init.state == 1
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-sales-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase-detail'))
+        );
+    },
+    
     keyMap: function(panel){
         var me = this;
         
@@ -55,24 +77,8 @@ Ext.define('POS.view.main.MainController', {
         });
     },
     
-    isKeyBlocked: function(){
-        return !(
-            Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-sales-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase-detail'))
-        );
+    openNotification: function(){
+        Ext.widget('list-notification');
     }
 
 });

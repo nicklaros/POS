@@ -13,12 +13,11 @@ Ext.define('Ext.fn.Util', {
         // Listen WebSocket
         Ext.fn.WebSocket.listen(Ext.ws.Main);
 
-        // instantiate store
-
         // Give the store a proxy
         Ext.fn.Util.applyProxy();
 
-        // load store
+        // wait until websocket connection is opened and then load store
+        this.waitAndLoadStore();
 
         // show some stuff
         //Ext.ComponentQuery.query('home container#refresh')[0].show();
@@ -35,10 +34,7 @@ Ext.define('Ext.fn.Util', {
         if (Ext.ws.Main && Ext.ws.Main.getStatus() == 1) Ext.ws.Main.close();
 
         // clear store
-        //Ext.getStore('chart.transaksi.Last30d').loadData([
-        //    {tanggal: 1, total: 0}
-        //]);
-        //Ext.getStore('laporan.JasaPopulerLast30d').removeAll();
+        POS.app.getStore('POS.store.Notification').removeAll();
 
         // hide some stuff
         //Ext.ComponentQuery.query('home container#refresh')[0].hide();
@@ -135,6 +131,19 @@ Ext.define('Ext.fn.Util', {
             websocket: Ext.ws.Main,
             api: {
                 read: 'purchase/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+
+        POS.app.getStore('POS.store.Notification').setProxy({
+            type: 'websocket',
+            storeId: 'POS.store.Notification',
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'notification/read'
             },
             reader: {
                 type: 'json',
@@ -484,5 +493,16 @@ Ext.define('Ext.fn.Util', {
         }
 
         return binb2hex(binarray);
+    },
+    
+    waitAndLoadStore: function(){
+        var me = this;
+        if (Ext.ws.Main.getStatus() == 1) {
+            POS.app.getStore('POS.store.Notification').load();
+        } else {
+            setTimeout(function(){
+                me.waitAndLoadStore();
+            }, 100);
+        }
     }
 });

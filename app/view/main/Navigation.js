@@ -13,12 +13,13 @@ Ext.define('POS.view.main.Navigation' ,{
     },
     tpl: Ext.create('Ext.tpl.MainNavigation'),
 
-    collapsible: true,
+    autoScroll: true,
     border: 0,
     bodyStyle: {
         border: '0 !important',
         'background-color': '#789'
     },
+    collapsible: true,
     margins: '0 0 0 0',
     width: 200
 });

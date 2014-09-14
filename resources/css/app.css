@@ -88,6 +88,34 @@ html{
 }
 
 
+/* notification */
+.notification-block{
+    color: #868686;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+    padding: 3px 10px;
+    white-space: normal;
+    width: auto;
+}
+.notification-delete a{
+    color: #868686;
+    cursor: pointer;
+    display: block;
+    float: right;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 8px;
+    padding: 5px 10px;
+}
+.notification-delete a:hover{
+    color: #333;
+    background-color: #ddd;
+    border: 1px solid #f3f3f3;
+    border-radius: 2px;
+    padding: 4px 9px;
+}
+
 /* color class */
 .bg-body{
     background-color: #ffffff;
