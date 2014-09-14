@@ -1,9 +1,9 @@
-Ext.define('Ext.tpl.combo.Unit', {
+Ext.define('POS.tpl.combo.StockVariant', {
     extend: 'Ext.XTemplate',
 
     html: [
         '<div class="lst">',
-        '<strong>{name}</strong>',
+        '<strong>{unit_name}</strong> <small>{product_name}</small>',
         '</div>'
     ],
 

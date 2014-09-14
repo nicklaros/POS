@@ -29,14 +29,23 @@ Ext.define('Ext.fn.WebSocket', {
         });
     },
 
-    monitor: function(listener, panel){
+    monitor: function(listener, panel, close){
         listener.panel = panel || '';
+        listener.close = close || true;
         return Ext.defer(function(){
             if (this.observable.hasListener(this.args[0])){
                 Ext.fn.App.setLoading(false);
                 this.destroy();
                 Ext.fn.App.notification('Ups', 'Gagal menghubungi server pemrosesan data...');
-                if (panel = Ext.getCmp(this.panel.id)) panel.close();
+                
+                if (this.panel != '') {
+                    var panel = Ext.getCmp(this.panel.id);
+                    
+                    if (!Ext.isEmpty(panel)) {
+                        panel.setLoading(false);
+                        if (this.close == true) panel.close();
+                    }
+                }
             }
         }, 10000, listener);
     }

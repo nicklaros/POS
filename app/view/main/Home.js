@@ -13,7 +13,7 @@ Ext.define('POS.view.main.Home' ,{
     bodyStyle: {
         'background-color': '#e9eaed',
         border: '0 !important',
-        padding: '25px'
+        padding: '25px 0'
     },
 
     initComponent: function(){
@@ -52,6 +52,7 @@ Ext.define('POS.view.main.Home' ,{
                         cls: 'panel-header'
                     },{
                         xtype: 'login',
+                        reference: 'login',
                         width: 208
                     }]
                 },{

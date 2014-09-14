@@ -13,6 +13,10 @@ Ext.define('POS.view.stock.EditController', {
     close: function(){
         this.getView().close();
     },
+    
+    onChangeUnlimited: function(field, value){
+        this.lookupReference('amount').setDisabled(value);
+    },
 
     load: function(id){
         var panel = this.getView(),
@@ -27,12 +31,12 @@ Ext.define('POS.view.stock.EditController', {
                 if (result.success){
                     var product = new POS.model.Product;
                     product.set('id', result.data.product_id);
-                    product.set('name', result.data.product);
+                    product.set('name', result.data.product_name);
                     result.data.product_id = product;
                 
                     var unit = new POS.model.Unit;
                     unit.set('id', result.data.unit_id);
-                    unit.set('name', result.data.unit);
+                    unit.set('name', result.data.unit_name);
                     result.data.unit_id = unit;
                 
                     form.getForm().setValues(result.data);

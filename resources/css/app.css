@@ -53,7 +53,7 @@ html{
 
 /* panel class */
 .panel{
-    border:1px solid #d3d3d3;
+    border: 1px solid #d3d3d3;
     border-radius: 2px;
     padding: 0;
     background-color: #ffffff;
@@ -77,6 +77,44 @@ html{
     color: #868686;
 }
 
+
+/* window class */
+.window{
+    border:0 !important;
+    border-radius: 3px !important;
+}
+.window-header{
+    border-bottom: solid #d3d3d3;
+}
+
+
+/* notification */
+.notification-block{
+    color: #868686;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow: hidden;
+    padding: 3px 10px;
+    white-space: normal;
+    width: auto;
+}
+.notification-delete a{
+    color: #868686;
+    cursor: pointer;
+    display: block;
+    float: right;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 8px;
+    padding: 5px 10px;
+}
+.notification-delete a:hover{
+    color: #333;
+    background-color: #ddd;
+    border: 1px solid #f3f3f3;
+    border-radius: 2px;
+    padding: 4px 9px;
+}
 
 /* color class */
 .bg-body{
@@ -114,6 +152,22 @@ html{
     font-weight: bold;
     color: #666;
     line-height: 1;
+}
+.detail-block{
+    font-family: tahoma, arial, sans-serif;
+    float: left;
+    font-size: 12px;
+    white-space: normal;
+    color: #838383;
+    padding: 1.5px;
+    width: 380px;
+    line-height: 2;
+    border-right: 1px solid #dfdfdf;
+    margin-right: 10px;
+}
+.detail-block:last-child{
+    border-right: 0;
+    margin-right: 0;
 }
 .glyph{
     font-size:18px !important;
@@ -234,4 +288,11 @@ html{
     border:2px solid #193f4b;
     padding: 10px;
     margin: 10px 0;
+}
+
+.right{
+    text-align: right;
+}
+.left{
+    text-align: left;
 }

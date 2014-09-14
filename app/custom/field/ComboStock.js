@@ -3,15 +3,15 @@ Ext.define('POS.custom.field.ComboStock', {
     alias: 'widget.combo-stock',
 
     requires: [
-        'Ext.tpl.combo.Stock',
-        'POS.store.combo.Stock'
+        'POS.store.combo.Stock',
+        'POS.tpl.combo.Stock'
     ],
 
     displayField: 'product_name',
     valueField: 'stock_id',
 
     anyMatch: true,
-    autoSelect: true,
+    autoSelect: false,
     enableKeyEvents: true,
     forceSelection: true,
     hideTrigger: true,
@@ -27,7 +27,7 @@ Ext.define('POS.custom.field.ComboStock', {
         this.store = POS.app.getStore('POS.store.combo.Stock');
 
         this.listConfig = {
-            itemTpl: new Ext.tpl.combo.Stock
+            itemTpl: Ext.create('POS.tpl.combo.Stock')
         };
 
         this.callParent(arguments);

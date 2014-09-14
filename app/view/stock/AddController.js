@@ -25,6 +25,10 @@ Ext.define('POS.view.stock.AddController', {
     close: function(){
         this.getView().close();
     },
+    
+    onChangeUnlimited: function(field, value){
+        this.lookupReference('amount').setDisabled(value);
+    },
 
     save: function(){
         var panel = this.getView(),

@@ -11,13 +11,13 @@ Ext.define('Ext.fn.App', {
         // Initiating
         Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(App.init);
 
-        if(App.init.state == 1){ // if already loged in then
+        if (App.init.state == 1) { // if already loged in then
             Ext.fn.Util.afterLogin();
         }
 
         console.log('Application successfully initiated.');
     },
-
+    
     mnChangeBiodata: function(){
         Ext.widget('ubah-biodata');
     },
@@ -36,6 +36,11 @@ Ext.define('Ext.fn.App', {
 
     mnListProduct: function(){
         var panel = this.newTab('list-product');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListPurchase: function(){
+        var panel = this.newTab('list-purchase');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
@@ -127,6 +132,33 @@ Ext.define('Ext.fn.App', {
 
     printNotaSales: function(id){
         window.open("remote/print/nota-sales.php?id=" + id, "_blank");
+    },
+    
+    removeNotification: function(id){
+        var panel = Ext.ComponentQuery.query('list-notification')[0];
+        
+        if (panel) panel.setLoading(true);
+        var monitor = Ext.fn.WebSocket.monitor(
+            Ext.ws.Main.on('notification/destroy', function(websocket, data){
+                clearTimeout(monitor);
+                panel.setLoading(false);
+                if (data.success){
+                    var store = POS.app.getStore('POS.store.Notification');
+                    
+                    id.forEach(function(id){
+                        store.remove(store.getById(id));
+                    });
+                }else{
+                    Ext.fn.App.notification('Ups', data.errmsg);
+                }
+            }, this, {
+                single: true,
+                destroyable: true
+            }),
+            panel,
+            false
+        );
+        Ext.ws.Main.send('notification/destroy', {id: id});
     },
 
     setLoading: function(bool){

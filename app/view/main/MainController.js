@@ -21,8 +21,35 @@ Ext.define('POS.view.main.MainController', {
                 Ext.main.ViewModel = panel.getViewModel();
                 
                 this.keyMap(panel);
+                
+                var user = this.lookupReference('login').down('[name = user]');
+                setTimeout(function(){
+                    user.focus();
+                }, 10);
             }
         }
+    },
+    
+    isKeyBlocked: function(){
+        return !(
+            App.init.state == 1
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-sales-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase-detail'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase'))
+            &&
+            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase-detail'))
+        );
     },
     
     keyMap: function(panel){
@@ -31,24 +58,27 @@ Ext.define('POS.view.main.MainController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 112, // F1
+                key: 112, // F1 ---> dedicated for add-sales module
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
-                    // lets rock it
-                    if (Ext.isEmpty(Ext.ComponentQuery.query('list-sales')[0])) {
-                        // if list-sales is not open then open it
-                        Ext.fn.App.mnListSales();
-                    } else if (
-                        Ext.isEmpty(Ext.ComponentQuery.query('add-sales')[0])
-                        &&
-                        Ext.isEmpty(Ext.ComponentQuery.query('edit-sales')[0])
-                    ) {
-                        // if list-sales opened but add-sales is not open then open it
+                    if (!me.isKeyBlocked()) {
                         Ext.fn.App.window('add-sales');
+                    }
+                }
+            },{
+                key: 113, // F2 ---> dedicated for add-purchase module
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    if (!me.isKeyBlocked()) {
+                        Ext.fn.App.window('add-purchase');
                     }
                 }
             }]
         });
+    },
+    
+    openNotification: function(){
+        Ext.widget('list-notification');
     }
 
 });

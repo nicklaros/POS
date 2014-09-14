@@ -31,24 +31,18 @@ Ext.define('POS.view.stock.Edit' ,{
                 xtype: 'hidden',
                 name: 'id'
             },{
-                xtype: 'combo-product',
-                fieldLabel: 'Ketik nama / kode barang',
-                name: 'product_id',
-                reference: 'product',
-                afterLabelTextTpl: REQUIRED,
-                allowBlank: false,
-                width: 350
-            },{
                 xtype: 'container',
                 anchor: '100%',
                 layout: 'hbox',
                 margin: '0 0 10 0',
                 items:[{
-                    xtype: 'field-stock-amount',
-                    fieldLabel: 'Jumlah Stock',
-                    name: 'amount',
-                    saveOnEnter: true,
-                    width: 100
+                    xtype: 'combo-product',
+                    fieldLabel: 'Ketik nama / kode barang',
+                    name: 'product_id',
+                    reference: 'product',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    width: 350
                 },{
                     xtype: 'combo-unit',
                     fieldLabel: 'Satuan',
@@ -58,6 +52,32 @@ Ext.define('POS.view.stock.Edit' ,{
                     allowBlank: false,
                     margin: '0 0 0 20',
                     width: 150
+                }]
+            },{
+                xtype: 'container',
+                anchor: '100%',
+                layout: 'hbox',
+                margin: '0 0 10 0',
+                items:[{
+                    xtype: 'field-stock-amount',
+                    fieldLabel: 'Jumlah Stock',
+                    name: 'amount',
+                    reference: 'amount',
+                    saveOnEnter: true,
+                    width: 100
+                },{
+                    xtype: 'container',
+                    html: 'atau',
+                    margin: '30 0 0 30'
+                },{
+                    xtype: 'checkbox',
+                    boxLabel: 'Tak terhingga',
+                    name: 'unlimited',
+                    inputValue: true,
+                    margin: '26 0 0 30',
+                    listeners: {
+                        'change': 'onChangeUnlimited'
+                    }
                 }]
             },{
                 xtype: 'field-price',

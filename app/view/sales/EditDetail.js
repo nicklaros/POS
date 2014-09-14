@@ -19,6 +19,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
         border: '0 !important',
         padding: '25px'
     },
+    cls: 'window',
     constrain: true,
     layout: 'anchor',
     maximized: true,
@@ -26,7 +27,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dibeli Pelanggan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dijual';
 
         this.items = [{
             xtype: 'form',
@@ -66,8 +67,11 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     fieldLabel: 'Jumlah',
                     name: 'amount',
                     reference: 'amount',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
                     step: 1,
                     tabOnEnter: true,
+                    minValue: 1,
                     value: 1,
                     margin: '0 0 0 50',
                     width: 75

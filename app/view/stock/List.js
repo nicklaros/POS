@@ -30,7 +30,7 @@ Ext.define('POS.view.stock.List' ,{
             {header: 'Kode', dataIndex: 'code', width: 120},
             {header: 'Produk', dataIndex: 'product', width: 275},
             {header: 'Satuan', dataIndex: 'unit', width: 100},
-            {header: 'Stock', dataIndex: 'amount', width: 70, align: 'right'},
+            {header: 'Stock', dataIndex: 'amount', width: 70, renderer: Ext.fn.Render.amountOnGrid, align: 'right'},
             {header: 'Harga<br />Beli', dataIndex: 'buy', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
             {
                 text: 'Harga Jual',

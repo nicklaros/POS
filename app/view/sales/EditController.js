@@ -74,18 +74,21 @@ Ext.define('POS.view.sales.EditController', {
 
     keyMap: function(panel){
         var me = this;
-
+        
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 112, // F1
+                key: 65, // Ctrl + A
+                ctrl: true,
                 defaultEventAction: 'preventDefault',
-                fn: function(){
+                fn: function(){ 
                     me.add();
                 }
             },{
-                key: 113, // F2
-                fn: function(){
+                key: 83, // Ctrl + S
+                ctrl: true,
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
                     me.lookupReference('paid').focus(true);
                 }
             }]

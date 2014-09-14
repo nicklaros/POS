@@ -5,19 +5,24 @@ Ext.define('POS.view.sales.ListController', {
     control: {
         '#': {
             boxready: function(panel){
-                
+                var add = this.lookupReference('add');
+                setTimeout(function(){
+                    add.focus();
+                }, 10);
             },
             selectionchange: function(sm, selected){
-                var btnEdit = this.lookupReference('edit'),
-                    btnDelete = this.lookupReference('delete'),
+                var btnDetail = this.lookupReference('detail'),
+                    btnEdit = this.lookupReference('edit'),
+                    btnDelete = this.lookupReference('cancel'),
                     btnPrint = this.lookupReference('print');
 
+                btnDetail.setDisabled(selected.length !== 1);
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
                 btnPrint.setDisabled(selected.length !== 1);
             },
             celldblclick: function(){
-                this.edit();
+                this.detail();
             }
         }
     },
@@ -26,20 +31,40 @@ Ext.define('POS.view.sales.ListController', {
         Ext.fn.App.window('add-sales');
     },
 
+    detail: function(){
+        var rec     = this.getView().getSelectionModel().getSelection()[0],
+            params  = {
+                id: rec.get('id')
+            };
+
+        var detail = Ext.fn.App.window('detail-sales');
+        detail.getController().load(params);
+    },
+
+    edit: function(){
+        var rec     = this.getView().getSelectionModel().getSelection()[0],
+            params  = {
+                id: rec.get('id')
+            };
+
+        var edit = Ext.fn.App.window('edit-sales');
+        edit.getController().load(params);
+    },
+
     print: function(){
         var rec  = this.getView().getSelectionModel().getSelection()[0];
 
         Ext.fn.App.printNotaSales(rec.get('id'));
     },
     
-    remove: function(){
+    cancel: function(){
         var sm      = this.getView().getSelectionModel(),
             sel     = sm.getSelection(),
             smCount = sm.getCount();
 
         Ext.Msg.confirm(
-            '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
-            '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
+            '<i class="fa fa-exclamation-triangle glyph"></i> Batalkan Penjualan ',
+            '<p><b>Apakah Anda yakin akan membatalkan penjualan (<span style="color:red">' + smCount + ' data</span>)?</b>',
             function(btn){
                 if (btn == 'yes'){
                     var id = [];
@@ -66,16 +91,6 @@ Ext.define('POS.view.sales.ListController', {
                 }
             }
         );
-    },
-
-    edit: function(){
-        var rec     = this.getView().getSelectionModel().getSelection()[0],
-            params  = {
-                id: rec.get('id')
-            };
-
-        var edit = Ext.fn.App.window('edit-sales');
-        edit.getController().load(params);
     },
     
     search: function(){

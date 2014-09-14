@@ -21,6 +21,7 @@ Ext.define('POS.view.sales.Add' ,{
         border: '0 !important',
         padding: '25px'
     },
+    cls: 'window',
     constrain: true,
     layout: 'anchor',
     maximized: true,
@@ -141,7 +142,7 @@ Ext.define('POS.view.sales.Add' ,{
                 width: 900,
                 items: [{
                     xtype: 'container',
-                    html: 'Produk yang Dibeli',
+                    html: 'Produk yang Dijual',
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',

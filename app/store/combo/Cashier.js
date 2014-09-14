@@ -1,5 +1,4 @@
 Ext.define('POS.store.combo.Cashier', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.Cashier',
-    storeId: 'combo-cashier'
+    model: 'POS.model.Cashier'
 })

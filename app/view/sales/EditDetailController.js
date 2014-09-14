@@ -9,7 +9,7 @@ Ext.define('POS.view.sales.EditDetailController', {
                 
                 setTimeout(function(){
                     stock.focus();
-                }, 9);
+                }, 10);
             }
         },
         'textfield[tabOnEnter = true]': {
@@ -50,7 +50,8 @@ Ext.define('POS.view.sales.EditDetailController', {
     
     productSelect: function(combo, record){
         this.lookupReference('form').getForm().setValues(record[0].getData());
-        combo.next('field').focus();
+        this.lookupReference('amount').setValue(1);
+        this.lookupReference('amount').focus(true);
     },
 
     save: function(){

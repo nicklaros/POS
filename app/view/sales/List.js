@@ -8,6 +8,7 @@ Ext.define('POS.view.sales.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.store.Sales',
         'POS.view.sales.Add',
+        'POS.view.sales.Detail',
         'POS.view.sales.Edit',
         'POS.view.sales.ListController',
         'POS.view.sales.Search'
@@ -29,9 +30,9 @@ Ext.define('POS.view.sales.List' ,{
             {header: 'Nota', dataIndex:'id', width: 75},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
             {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
-            {header: 'Total', dataIndex: 'total_price', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Dibayar', dataIndex: 'paid', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
@@ -41,6 +42,11 @@ Ext.define('POS.view.sales.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-credit-card glyph"></i> Detail',
+                reference: 'detail',
+                handler: 'detail',
+                disabled: true
+            },{
                 text: '<i class="fa fa-plus-square glyph"></i> Tambah',
                 reference: 'add',
                 handler: 'add'
@@ -50,9 +56,9 @@ Ext.define('POS.view.sales.List' ,{
                 handler: 'edit',
                 disabled: true
             },{
-                text: '<i class="fa fa-trash-o glyph"></i> Hapus',
-                reference: 'delete',
-                handler: 'remove',
+                text: '<i class="fa fa-undo glyph"></i> Batalkan Penjualan',
+                reference: 'cancel',
+                handler: 'cancel',
                 disabled: true
             },{
                 text: '<i class="fa fa-print glyph"></i> Print',
