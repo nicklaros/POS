@@ -183,7 +183,8 @@ html{
 }
 .home-logo{
     float: left;
-    width: 95px;
+    height: 60px;
+    margin-top: -6px;
     margin-right: 25px;
 }
 .history-trans{
