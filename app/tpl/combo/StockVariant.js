@@ -3,7 +3,7 @@ Ext.define('POS.tpl.combo.StockVariant', {
 
     html: [
         '<div class="lst">',
-        '<strong>{unit_name}</strong> <small>{product_name}</small>',
+            '<strong>{unit_name}</strong> <small>{product_name}</small>',
         '</div>'
     ],
 

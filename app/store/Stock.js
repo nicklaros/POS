@@ -9,6 +9,21 @@ Ext.define('POS.store.Stock', {
         property: 'product',
         direction: 'ASC'
     }],
+    
+    init: function(){
+        this.setProxy({
+            type: 'websocket',
+            storeId: this.getStoreId(),
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'stock/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+    },
 
     search: function(params){
         this.getProxy().extraParams = params;

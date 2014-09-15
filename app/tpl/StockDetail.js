@@ -49,7 +49,7 @@ Ext.define('POS.tpl.StockDetail', {
                     '<td class="right">{[ Ext.fn.Render.currency(values.sell_misc) ]}</td>',
                 '</tr>',
             '</table>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

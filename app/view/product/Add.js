@@ -17,7 +17,7 @@ Ext.define('POS.view.product.Add' ,{
     width: 350,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Data Product';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Data Produk';
 
         this.items = [{
             xtype: 'form',

@@ -29,7 +29,7 @@ Ext.define('POS.tpl.PurchaseDetail', {
                     '<td class="right" style="width: 100px;">{[ Ext.fn.Render.currency(values.total_price) ]}</td>',
                 '</tr>',
             '</table>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

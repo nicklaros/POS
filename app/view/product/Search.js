@@ -15,7 +15,7 @@ Ext.define('POS.view.product.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Product';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Produk';
 
         this.items = [{
             xtype: 'form',

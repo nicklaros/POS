@@ -44,7 +44,7 @@ Ext.define('POS.tpl.SalesDetail', {
                     '<td class="right">{[ Ext.fn.Render.currency(values.balance) ]}</td>',
                 '</tr>',
             '</table>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

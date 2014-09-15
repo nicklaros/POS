@@ -8,7 +8,7 @@ Ext.define('POS.view.notification.ListController', {
                 Ext.fn.App.newTab('list-stock');
                 
                 POS.app.getStore('POS.store.Stock').search({
-                    product_id: record.data.product_id
+                    product_id: record.getData().data.product_id
                 });
                 
                 this.getView().close();

@@ -1,14 +1,10 @@
-Ext.define('POS.store.User', {
+Ext.define('POS.store.chart.transaction.Last30Days', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.User',
-
-    remoteSort: true,
-    pageSize: 100,
-
-    sorters: [{
-        property: 'id',
-        direction: 'DESC'
-    }],
+    fields: [
+        {name: 'date',      type: 'date',   format: 'Y-m-d'},
+        {name: 'sales',     type: 'int'},
+        {name: 'purchase',  type: 'int'}
+    ],
     
     init: function(){
         this.setProxy({
@@ -16,17 +12,13 @@ Ext.define('POS.store.User', {
             storeId: this.getStoreId(),
             websocket: Ext.ws.Main,
             api: {
-                read: 'user/read'
+                read: 'chart/transactionLast30Days'
             },
             reader: {
                 type: 'json',
                 rootProperty: 'data'
             }
         });
-    },
-
-    search: function(params){
-        this.getProxy().extraParams = params;
-        this.loadPage(1);
     }
+    
 });

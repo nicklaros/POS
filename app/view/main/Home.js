@@ -3,6 +3,7 @@ Ext.define('POS.view.main.Home' ,{
     alias : 'widget.home',
 
     requires: [
+        'POS.custom.chart.transaction.Last30Days',
         'POS.view.form.Login',
         'Ext.tpl.ContactDeveloper'
     ],
@@ -63,6 +64,18 @@ Ext.define('POS.view.main.Home' ,{
                     width: 570,
                     height: 249,
                     html: '<img src="resources/images/image_700x300.fw.png" style="width: 562px; height: 241px; border-radius: 2px;" />'
+                }]
+            },{
+                xtype: 'container',
+                itemId: 'dashboard-stats',
+                cls: 'panel',
+                margin: '0 0 25 0',
+                width: 800,
+                bind: {
+                    visible: '{state}'
+                },
+                items:[{
+                    xtype: 'chart-transaction-last30days'
                 }]
             },{
                 xtype: 'container',
