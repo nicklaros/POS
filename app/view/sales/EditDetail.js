@@ -3,13 +3,17 @@ Ext.define('POS.view.sales.EditDetail' ,{
     alias : 'widget.edit-sales-detail',
     id: 'edit-sales-detail',
     controller: 'edit-sales-detail',
+    viewModel: {
+        type: 'edit-sales-detail'
+    },
 
     requires: [
         'POS.custom.field.ComboStock',
         'POS.custom.field.StockAmount',
         'POS.custom.field.ComboSellType',
         'POS.custom.field.Price',
-        'POS.view.sales.EditDetailController'
+        'POS.view.sales.EditDetailController',
+        'POS.view.sales.EditDetailModel'
     ],
 
 	autoScroll: true,
@@ -25,6 +29,8 @@ Ext.define('POS.view.sales.EditDetail' ,{
     maximized: true,
     modal: true,
     resizable: false,
+    
+    record: null,
 
     initComponent: function(){
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dijual';
@@ -76,12 +82,10 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     margin: '0 0 0 50',
                     width: 75
                 },{
-                    xtype: 'textfield',
-                    fieldLabel: 'Unit',
-                    name: 'unit_name',
-                    readOnly: true,
-                    tabOnEnter: true,
-                    width: 75
+                    xtype: 'label',
+                    reference: 'unit',
+                    html: 'unit',
+                    margin: '30 0 0 10'
                 },{
                     xtype: 'combo-sell-type',
                     fieldLabel: 'Tipe',

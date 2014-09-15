@@ -1,5 +1,14 @@
 Ext.define('Ext.fn.Util', {
     singleton: true,
+    
+    addNativeFunction: function(){
+        // add function to Date object used to add or sub the date
+        Date.prototype.addDays = function(days){
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+    },
 
     afterLogin: function(){
         // Create WebSocket connection
@@ -39,12 +48,17 @@ Ext.define('Ext.fn.Util', {
             'POS.store.combo.Stock',
             'POS.store.combo.Supplier',
             'POS.store.combo.Unit',
+            'POS.store.chart.transaction.CustomSalesVsPurchase',
             'POS.store.chart.transaction.Last30Days',
             'POS.store.chart.transaction.Monthly',
             'POS.store.chart.transaction.MonthlySalesVsPurchase',
             'POS.store.Notification',
             'POS.store.Product',
             'POS.store.Purchase',
+            'POS.store.report.CustomPurchasedProduct',
+            'POS.store.report.CustomSaledProduct',
+            'POS.store.report.MonthlyPurchasedProduct',
+            'POS.store.report.MonthlySaledProduct',
             'POS.store.Sales',
             'POS.store.Stock',
             'POS.store.User'

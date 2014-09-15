@@ -2,7 +2,6 @@ Ext.define('POS.model.Stock', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id',                type: 'int'},
-        {name: 'code',              type: 'string'},
         {name: 'product_id',        type: 'int'},
         {name: 'product_code',      type: 'string'},
         {name: 'product_name',      type: 'string'},

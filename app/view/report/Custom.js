@@ -1,21 +1,20 @@
-Ext.define('POS.view.report.Monthly' ,{
+Ext.define('POS.view.report.Custom' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.monthly-report',
-    id: 'monthly-report',
-    controller: 'monthly-report',
+    alias : 'widget.custom-report',
+    id: 'custom-report',
+    controller: 'custom-report',
     viewModel: {
-        type: 'monthly-report'
+        type: 'custom-report'
     },
 
     requires: [
-        'Ext.ux.form.field.Month',
         'POS.custom.chart.transaction.SalesVsPurchase',
-        'POS.custom.chart.transaction.Transaction',
+        'POS.custom.field.Date',
         'POS.custom.grid.PurchasedProduct',
         'POS.custom.grid.SaledProduct',
         'POS.custom.panel.ReportStats',
-        'POS.view.report.MonthlyController',
-        'POS.view.report.MonthlyModel'
+        'POS.view.report.CustomController',
+        'POS.view.report.CustomModel'
     ],
 
     layout: 'anchor',
@@ -47,7 +46,7 @@ Ext.define('POS.view.report.Monthly' ,{
             anchor: '100%',
             items: [{
                 xtype: 'container',
-                html: '<i class="fa fa-book glyph"></i> Laporan Bulanan',
+                html: '<i class="fa fa-book glyph"></i> Laporan Dalam Rentang Waktu',
                 flex: 1
             },{
                 xtype: 'buttonsegment',
@@ -71,14 +70,29 @@ Ext.define('POS.view.report.Monthly' ,{
                 },
                 margin: '5 0 0 0'
             },{
-                xtype: 'monthfield', 
-                reference: 'month', 
-                editable: false,
-                format: 'F Y',
-                submitFormat: 'Y-m-d',
-                value: new Date(), 
+                xtype: 'field-date',
+                reference: 'start',
+                allowBlank: false,
+                msgTarget: 'side',
+                value: new Date().addDays(-6),
                 margin: '0 0 0 10',
-                width: 150
+                width: 130
+            },{
+                xtype: 'container',
+                html: 'hingga',
+                style: {
+                    color: '#fff',
+                    'font-weight': 'bold'
+                },
+                margin: '5 0 0 10'
+            },{
+                xtype: 'field-date',
+                reference: 'until',
+                allowBlank: false,
+                msgTarget: 'side',
+                value: new Date(),
+                margin: '0 0 0 10',
+                width: 130
             },{
                 xtype: 'button',
                 text:'<i class="fa fa-binoculars glyph"></i> Lihat laporan',
@@ -113,10 +127,6 @@ Ext.define('POS.view.report.Monthly' ,{
                     flex: 1
                 }]
             },{
-                xtype: 'chart-transaction',
-                margin: '0 0 25 0',
-                width: 850
-            },{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 25 0',
@@ -127,7 +137,7 @@ Ext.define('POS.view.report.Monthly' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-saled-product',
-                    store: POS.app.getStore('POS.store.report.MonthlySaledProduct'),
+                    store: POS.app.getStore('POS.store.report.CustomSaledProduct'),
                     flex: 1
                 }]
             },{
@@ -141,7 +151,7 @@ Ext.define('POS.view.report.Monthly' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchased-product',
-                    store: POS.app.getStore('POS.store.report.MonthlyPurchasedProduct'),
+                    store: POS.app.getStore('POS.store.report.CustomPurchasedProduct'),
                     flex: 1
                 }]
             }]

@@ -1,4 +1,4 @@
-Ext.define('POS.tpl.report.MonthlyStats', {
+Ext.define('POS.tpl.report.Stats', {
     extend: 'Ext.XTemplate',
 
     html: [

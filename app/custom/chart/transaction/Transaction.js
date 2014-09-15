@@ -59,7 +59,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                     style: 'background: #fff',
                     renderer: function(storeItem, item) {
                         var title = item.series.getTitle();
-                        this.setHtml(title + ' tanggal ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                        this.setHtml(title + ' hari ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
                     }
                 }
             },{
@@ -87,7 +87,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                     style: 'background: #fff',
                     renderer: function(storeItem, item) {
                         var title = item.series.getTitle();
-                        this.setHtml(title + ' tanggal ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                        this.setHtml(title + ' hari ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
                     }
                 }
             }],

@@ -2,6 +2,9 @@ Ext.define('Ext.fn.App', {
     singleton: true,
 
     init: function(){
+        // Add native javascript function
+        Ext.fn.Util.addNativeFunction();
+        
         // Create WebSocket container
         Ext.ws = {};
 
@@ -84,8 +87,18 @@ Ext.define('Ext.fn.App', {
         });
     },
 
-    mnReportMonthly: function(){
-        var panel = Ext.widget('monthly-report');
+    mnMonthlyReport: function(){
+        var report = Ext.widget('monthly-report');
+        
+        this.setLoading(true);
+        report.getController().viewReport();
+    },
+
+    mnCustomReport: function(){
+        var report = Ext.widget('custom-report');
+        
+        this.setLoading(true);
+        report.getController().viewReport();
     },
 
     newTab: function(alias, state){

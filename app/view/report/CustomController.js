@@ -1,15 +1,12 @@
-Ext.define('POS.view.report.MonthlyController', {
+Ext.define('POS.view.report.CustomController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.monthly-report',
+    alias: 'controller.custom-report',
 
     control: {
         '#': {
             boxready: function(){
-                var store = POS.app.getStore('POS.store.chart.transaction.MonthlySalesVsPurchase');
+                var store = POS.app.getStore('POS.store.chart.transaction.CustomSalesVsPurchase');
                 this.getView().down('chart-sales-vs-purchase polar').setStore(store);
-                
-                var store = POS.app.getStore('POS.store.chart.transaction.Monthly');
-                this.getView().down('chart-transaction chart').setStore(store);
             }
         }
     },
@@ -18,16 +15,13 @@ Ext.define('POS.view.report.MonthlyController', {
         this.getView().close();
     },
     
-    process: function(month){
+    process: function(params){
         var me      = this,
-            panel   = this.getView(),
-            params  = {
-                month: month
-            };
+            panel   = this.getView();
         
         panel.setLoading(true);
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('report/monthly', function(websocket, result){
+            Ext.ws.Main.on('report/custom', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 panel.setLoading(false);
@@ -46,18 +40,22 @@ Ext.define('POS.view.report.MonthlyController', {
             panel,
             false
         );
-        Ext.ws.Main.send('report/monthly', params);
+        Ext.ws.Main.send('report/custom', params);
     },
     
     viewReport: function(){
-        var month = this.lookupReference('month').getSubmitValue();
+        var start   = this.lookupReference('start').getSubmitValue(),
+            until   = this.lookupReference('until').getSubmitValue(),
+            params  = {
+                start: start,
+                until: until
+            };
         
-        POS.app.getStore('POS.store.chart.transaction.Monthly').removeAll();
-        POS.app.getStore('POS.store.chart.transaction.MonthlySalesVsPurchase').removeAll();
-        POS.app.getStore('POS.store.report.MonthlyPurchasedProduct').removeAll();
-        POS.app.getStore('POS.store.report.MonthlySaledProduct').removeAll();
+        POS.app.getStore('POS.store.chart.transaction.CustomSalesVsPurchase').removeAll();
+        POS.app.getStore('POS.store.report.CustomPurchasedProduct').removeAll();
+        POS.app.getStore('POS.store.report.CustomSaledProduct').removeAll();
         
-        this.process(month);
+        this.process(params);
     }
     
 });

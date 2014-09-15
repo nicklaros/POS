@@ -1,9 +1,9 @@
-Ext.define('POS.custom.panel.MonthlyReportStats', {
+Ext.define('POS.custom.panel.ReportStats', {
     extend: 'Ext.container.Container',
-    alias: 'widget.monthly-report-stats',
+    alias: 'widget.report-stats',
 
     requires: [
-        'POS.tpl.report.MonthlyStats'
+        'POS.tpl.report.Stats'
     ],
     
     cls: 'panel',
@@ -13,7 +13,7 @@ Ext.define('POS.custom.panel.MonthlyReportStats', {
     
 
     initComponent: function(){
-        this.tpl = Ext.create('POS.tpl.report.MonthlyStats');
+        this.tpl = Ext.create('POS.tpl.report.Stats');
         
         this.callParent(arguments);
     }
