@@ -26,6 +26,10 @@ Ext.define('POS.view.main.MainController', {
                 setTimeout(function(){
                     user.focus();
                 }, 10);
+                
+                var store = POS.app.getStore('POS.store.chart.transaction.Last30Days');
+                this.getView().down('chart-transaction chart').setStore(store);
+                
             }
         }
     },

@@ -40,6 +40,8 @@ Ext.define('Ext.fn.Util', {
             'POS.store.combo.Supplier',
             'POS.store.combo.Unit',
             'POS.store.chart.transaction.Last30Days',
+            'POS.store.chart.transaction.Monthly',
+            'POS.store.chart.transaction.MonthlySalesVsPurchase',
             'POS.store.Notification',
             'POS.store.Product',
             'POS.store.Purchase',

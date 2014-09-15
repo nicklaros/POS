@@ -23,14 +23,11 @@ Ext.define('POS.Application', {
         'Ext.ux.window.Notification'
     ],
 
-    stores: [
-
-    ],
-
     views: [
         'POS.view.notification.List',
         'POS.view.product.List',
         'POS.view.purchase.List',
+        'POS.view.report.Monthly',
         'POS.view.sales.List',
         'POS.view.stock.List',
         'POS.view.user.List'

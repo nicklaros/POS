@@ -3,7 +3,7 @@ Ext.define('POS.view.main.Home' ,{
     alias : 'widget.home',
 
     requires: [
-        'POS.custom.chart.transaction.Last30Days',
+        'POS.custom.chart.transaction.Transaction',
         'POS.view.form.Login',
         'POS.tpl.AppHeader',
         'POS.tpl.ContactDeveloper'
@@ -74,7 +74,8 @@ Ext.define('POS.view.main.Home' ,{
                     visible: '{state}'
                 },
                 items:[{
-                    xtype: 'chart-transaction-last30days'
+                    xtype: 'chart-transaction',
+                    width: 800
                 }]
             },{
                 xtype: 'container',

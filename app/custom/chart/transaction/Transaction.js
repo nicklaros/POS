@@ -1,16 +1,12 @@
-Ext.define('POS.custom.chart.transaction.Last30Days', {
+Ext.define('POS.custom.chart.transaction.Transaction', {
     extend: 'Ext.container.Container',
-    alias: 'widget.chart-transaction-last30days',
+    alias: 'widget.chart-transaction',
 
     requires: [
-        'Ext.fn.Render',
-        'POS.store.chart.transaction.Last30Days'
+        'Ext.fn.Render'
     ],
     
     cls: 'panel',
-    
-    width: 800,
-    
 
     initComponent: function(){
         this.items = [{
@@ -23,7 +19,6 @@ Ext.define('POS.custom.chart.transaction.Last30Days', {
             legend: {
                 docked: 'right'
             },
-            store: POS.app.getStore('POS.store.chart.transaction.Last30Days'),
 
             axes: [{
                 type: 'numeric',
@@ -52,9 +47,10 @@ Ext.define('POS.custom.chart.transaction.Last30Days', {
                 marker: {
                     radius: 2
                 },
-                highlight: {
+                highlight: true,
+                highlightCfg: {
                     fillStyle: '#000',
-                    radius: 1,
+                    radius: 3,
                     lineWidth: 2,
                     strokeStyle: '#fff'
                 },
@@ -79,9 +75,10 @@ Ext.define('POS.custom.chart.transaction.Last30Days', {
                 marker: {
                     radius: 2
                 },
-                highlight: {
+                highlight: true,
+                highlightCfg: {
                     fillStyle: '#000',
-                    radius: 1,
+                    radius: 3,
                     lineWidth: 2,
                     strokeStyle: '#fff'
                 },

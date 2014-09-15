@@ -84,6 +84,10 @@ Ext.define('Ext.fn.App', {
         });
     },
 
+    mnReportMonthly: function(){
+        var panel = Ext.widget('monthly-report');
+    },
+
     newTab: function(alias, state){
         var main = Ext.ComponentQuery.query('app-main')[0].getViewModel(),
             tab = Ext.ComponentQuery.query('app-tab')[0],
