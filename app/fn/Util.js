@@ -14,19 +14,7 @@ Ext.define('Ext.fn.Util', {
         Ext.fn.WebSocket.listen(Ext.ws.Main);
         
         // Initialize store
-        POS.app.getStore('POS.store.combo.Cashier').init();
-        POS.app.getStore('POS.store.combo.Customer').init();
-        POS.app.getStore('POS.store.combo.Product').init();
-        POS.app.getStore('POS.store.combo.Stock').init();
-        POS.app.getStore('POS.store.combo.Supplier').init();
-        POS.app.getStore('POS.store.combo.Unit').init();
-        POS.app.getStore('POS.store.chart.transaction.Last30Days').init();
-        POS.app.getStore('POS.store.Notification').init();
-        POS.app.getStore('POS.store.Product').init();
-        POS.app.getStore('POS.store.Purchase').init();
-        POS.app.getStore('POS.store.Sales').init();
-        POS.app.getStore('POS.store.Stock').init();
-        POS.app.getStore('POS.store.User').init();
+        this.initStore();
 
         // Wait until websocket connection is opened and then load store
         this.waitAndLoadStore();
@@ -42,6 +30,27 @@ Ext.define('Ext.fn.Util', {
         POS.app.getStore('POS.store.Notification').removeAll();
 
         // Stop some task
+    },
+    
+    initStore: function(){
+        var stores = [
+            'POS.store.combo.Cashier',
+            'POS.store.combo.Product',
+            'POS.store.combo.Stock',
+            'POS.store.combo.Supplier',
+            'POS.store.combo.Unit',
+            'POS.store.chart.transaction.Last30Days',
+            'POS.store.Notification',
+            'POS.store.Product',
+            'POS.store.Purchase',
+            'POS.store.Sales',
+            'POS.store.Stock',
+            'POS.store.User'
+        ];
+
+        for (i=0; i<stores.length; i++) {
+            POS.app.getStore(stores[i]).init();
+        }
     },
 
     overrides: function(){
@@ -338,7 +347,14 @@ Ext.define('Ext.fn.Util', {
     waitAndLoadStore: function(){
         var me = this;
         if (Ext.ws.Main.getStatus() == 1) {
-            POS.app.getStore('POS.store.Notification').load();
+            var stores = [
+                'POS.store.chart.transaction.Last30Days',
+                'POS.store.Notification'
+            ];
+            
+            for (i=0; i<stores.length; i++) {
+                POS.app.getStore(stores[i]).load();
+            }
         } else {
             setTimeout(function(){
                 me.waitAndLoadStore();

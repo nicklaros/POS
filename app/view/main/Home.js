@@ -5,7 +5,8 @@ Ext.define('POS.view.main.Home' ,{
     requires: [
         'POS.custom.chart.transaction.Last30Days',
         'POS.view.form.Login',
-        'Ext.tpl.ContactDeveloper'
+        'POS.tpl.AppHeader',
+        'POS.tpl.ContactDeveloper'
     ],
 	
 	autoScroll: true,
@@ -32,7 +33,7 @@ Ext.define('POS.view.main.Home' ,{
                 bind: {
                     data: '{info}'
                 },
-                tpl: Ext.create('Ext.tpl.AppHeader'),
+                tpl: Ext.create('POS.tpl.AppHeader'),
                 margin: '0 0 25 0',
                 width: 800
             },{
@@ -67,8 +68,6 @@ Ext.define('POS.view.main.Home' ,{
                 }]
             },{
                 xtype: 'container',
-                itemId: 'dashboard-stats',
-                cls: 'panel',
                 margin: '0 0 25 0',
                 width: 800,
                 bind: {
@@ -95,7 +94,7 @@ Ext.define('POS.view.main.Home' ,{
                     bind: {
                         data: '{info}'
                     },
-                    tpl: Ext.create('Ext.tpl.ContactDeveloper')
+                    tpl: Ext.create('POS.tpl.ContactDeveloper')
                 }]
             }]
         }];

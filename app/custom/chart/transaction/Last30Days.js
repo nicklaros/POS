@@ -19,58 +19,80 @@ Ext.define('POS.custom.chart.transaction.Last30Days', {
             cls: 'panel-header'
         },{
             xtype: 'chart',
+            interactions: ['itemhighlight', 'iteminfo'],
             legend: {
-                position: 'bottom'
+                docked: 'right'
             },
             store: POS.app.getStore('POS.store.chart.transaction.Last30Days'),
 
             axes: [{
                 type: 'numeric',
                 position: 'left',
-                label: {
-                    renderer: Ext.fn.Render.currency
-                },
+                fields: ['sales', 'purchase'],
                 grid: true,
-                minimum: 0
+                minimum: 0,
+                renderer: Ext.fn.Render.currency
             },{
                 type: 'category',
                 position: 'bottom',
-                fields: ['date'],
-                label: {
-                    renderer: Ext.util.Format.dateRenderer("d")
-                }
+                fields: 'date',
+                renderer: Ext.util.Format.dateRenderer("d")
             }],
 
             series: [{
                 type: 'line',
                 axis: 'left',
-                highlight: true,
-                smooth: true,
-                tips: {
-                    trackMouse: true,
-                    renderer: function(rec, item) {
-                        this.setTitle('Penjualan');
-                        this.update(Ext.fn.Render.date(rec.get('date'), true) + ' <br /> ' +
-                            'Transaksi sebesar ' + Ext.fn.Render.currency(rec.get('sales')));
-                    }
-                },
+                title: 'Penjualan',
                 yField: 'sales',
-                xField: 'date'
+                xField: 'date',
+                smooth: true,
+                style: {
+                    lineWidth: 3
+                },
+                marker: {
+                    radius: 2
+                },
+                highlight: {
+                    fillStyle: '#000',
+                    radius: 1,
+                    lineWidth: 2,
+                    strokeStyle: '#fff'
+                },
+                tooltip: {
+                    trackMouse: true,
+                    style: 'background: #fff',
+                    renderer: function(storeItem, item) {
+                        var title = item.series.getTitle();
+                        this.setHtml(title + ' tanggal ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                    }
+                }
             },{
                 type: 'line',
                 axis: 'left',
-                highlight: true,
+                title: 'Pembelian',
+                yField: 'purchase',
+                xField: 'date',
                 smooth: true,
-                tips: {
-                    trackMouse: true,
-                    renderer: function(rec, item) {
-                        this.setTitle('Pembelian');
-                        this.update(Ext.fn.Render.date(rec.get('date'), true) + ' <br /> ' +
-                            'Transaksi sebesar ' + renderCurrency(rec.get('purchase')));
-                    }
+                style: {
+                    lineWidth: 3
                 },
-                xField: 'purchase',
-                yField: 'date'
+                marker: {
+                    radius: 2
+                },
+                highlight: {
+                    fillStyle: '#000',
+                    radius: 1,
+                    lineWidth: 2,
+                    strokeStyle: '#fff'
+                },
+                tooltip: {
+                    trackMouse: true,
+                    style: 'background: #fff',
+                    renderer: function(storeItem, item) {
+                        var title = item.series.getTitle();
+                        this.setHtml(title + ' tanggal ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                    }
+                }
             }],
 
             flex: 1,
