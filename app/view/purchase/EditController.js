@@ -75,15 +75,15 @@ Ext.define('POS.view.purchase.EditController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 65, // Ctrl + A
-                ctrl: true,
+                key: 84, // Ctrl + T
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
                 key: 83, // Ctrl + S
-                ctrl: true,
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.save();

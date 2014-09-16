@@ -9,6 +9,7 @@ Ext.define('POS.view.purchase.Add' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.PurchaseDetail',
+        'POS.custom.panel.hint.Purchase',
         'POS.view.purchase.AddController',
         'POS.view.purchase.AddDetail'
     ],
@@ -28,7 +29,7 @@ Ext.define('POS.view.purchase.Add' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-truck glyph"></i> Tambah Data Pembelian';
+        this.title = '<i class="fa fa-truck glyph"></i> Pembelian Baru';
 
         this.items = [{
             xtype: 'container',
@@ -38,6 +39,13 @@ Ext.define('POS.view.purchase.Add' ,{
             },
             width: 900,
             items: [{
+                xtype: 'purchase-hint',
+                bind: {
+                    data: '{shortcutKeys}'
+                },
+                margin: '0 0 20 0',
+                width: 900
+            },{
                 xtype: 'form',
                 bodyPadding: 10,
                 cls: 'panel',

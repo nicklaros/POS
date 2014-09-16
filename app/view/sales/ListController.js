@@ -73,21 +73,21 @@ Ext.define('POS.view.sales.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('sales/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('sales/destroy', function(websocket, data){
+                        Ext.ws.Main.on('sales/cancel', function(websocket, result){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
-                            if (data.success){
+                            if (result.success){
                                 POS.app.getStore('POS.store.Sales').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                Ext.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
                             destroyable: true
                         })
                     );
+                    Ext.ws.Main.send('sales/cancel', {id: id});
                 }
             }
         );

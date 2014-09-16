@@ -5,25 +5,26 @@ Ext.define('POS.view.sales.AddController', {
     control: {
         '#': {
             boxready: function(panel){
+                var me = this;
+                
                 var customer = Ext.create('POS.model.Customer', {
                     id: 0,
                     name: '-'
                 });
                 
-                this.lookupReference('customer').setValue(customer);
+                me.lookupReference('customer').setValue(customer);
                 
                 var cashier = Ext.create('POS.model.Cashier', {
                     id: Ext.main.ViewModel.data.current_user.id,
                     name: Ext.main.ViewModel.data.current_user.name
                 });
                 
-                this.lookupReference('cashier').setValue(cashier);   
+                me.lookupReference('cashier').setValue(cashier);   
 
-                this.keyMap(panel);
+                me.keyMap(panel);
             
-                var add = this.lookupReference('add');
                 setTimeout(function(){
-                    add.focus();
+                    me.add();
                 }, 10);
             },
             close: function(){
@@ -97,22 +98,22 @@ Ext.define('POS.view.sales.AddController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 65, // Ctrl + A
-                ctrl: true,
+                key: 84, // Ctrl + T
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
                 key: 66, // Ctrl + B
-                ctrl: true,
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.lookupReference('paid').focus(true);
                 }
             },{
                 key: 83, // Ctrl + S
-                ctrl: true,
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.save();

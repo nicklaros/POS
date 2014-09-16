@@ -10,6 +10,7 @@ Ext.define('POS.view.sales.Add' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
+        'POS.custom.panel.hint.Sales',
         'POS.view.sales.AddController',
         'POS.view.sales.AddDetail'
     ],
@@ -29,7 +30,7 @@ Ext.define('POS.view.sales.Add' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambah Data Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan Baru';
 
         this.items = [{
             xtype: 'container',
@@ -39,6 +40,13 @@ Ext.define('POS.view.sales.Add' ,{
             },
             width: 900,
             items: [{
+                xtype: 'sales-hint',
+                bind: {
+                    data: '{shortcutKeys}'
+                },
+                margin: '0 0 20 0',
+                width: 900
+            },{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 10 0',

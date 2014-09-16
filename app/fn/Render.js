@@ -11,6 +11,12 @@ Ext.define('Ext.fn.Render', {
     amountOnGrid: function(value, meta, record){
         return (record.get('unlimited') == true ? '~' : value);
     },
+    
+    creditBalance: function(value){
+        value = parseInt(value);
+        
+        return (value <= 0 ? 'Lunas' : Ext.fn.Render.currency(value));
+    },
 
     currency: function(value){
         value = parseInt(value);
@@ -26,5 +32,11 @@ Ext.define('Ext.fn.Render', {
 
     discount: function(value){
         return value + ' %';
+    },
+    
+    time: function(value){
+        var format = 'l, d F Y H:i:s';
+        
+        return Ext.util.Format.date(value, format);
     }
 });

@@ -65,9 +65,8 @@ Ext.define('POS.view.purchase.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('purchase/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('purchase/destroy', function(websocket, data){
+                        Ext.ws.Main.on('purchase/cancel', function(websocket, data){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
                             if (data.success){
@@ -80,6 +79,7 @@ Ext.define('POS.view.purchase.ListController', {
                             destroyable: true
                         })
                     );
+                    Ext.ws.Main.send('purchase/cancel', {id: id});
                 }
             }
         );

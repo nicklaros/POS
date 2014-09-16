@@ -52,6 +52,8 @@ Ext.define('Ext.fn.Util', {
             'POS.store.chart.transaction.Last30Days',
             'POS.store.chart.transaction.Monthly',
             'POS.store.chart.transaction.MonthlySalesVsPurchase',
+            'Credit',
+            'CreditPayment',
             'POS.store.Notification',
             'POS.store.Product',
             'POS.store.Purchase',

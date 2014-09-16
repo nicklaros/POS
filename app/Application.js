@@ -24,14 +24,18 @@ Ext.define('POS.Application', {
     ],
 
     views: [
-        'POS.view.notification.List',
-        'POS.view.product.List',
-        'POS.view.purchase.List',
-        'POS.view.report.Custom',
-        'POS.view.report.Monthly',
-        'POS.view.sales.List',
-        'POS.view.stock.List',
-        'POS.view.user.List'
+        'credit.List',
+        'currentuser.ChangePassword',
+        'currentuser.UpdateBiodata',
+        'DeveloperInfo',
+        'notification.List',
+        'product.List',
+        'purchase.List',
+        'report.Custom',
+        'report.Monthly',
+        'sales.List',
+        'stock.List',
+        'user.List'
     ],
     
     launch: function () {

@@ -4,6 +4,7 @@ Ext.define('POS.view.main.Home' ,{
 
     requires: [
         'POS.custom.chart.transaction.Transaction',
+        'POS.custom.panel.hint.Dashboard',
         'POS.view.form.Login',
         'POS.tpl.AppHeader',
         'POS.tpl.ContactDeveloper'
@@ -74,6 +75,13 @@ Ext.define('POS.view.main.Home' ,{
                     visible: '{state}'
                 },
                 items:[{
+                    xtype: 'dashboard-hint',
+                    bind: {
+                        data: '{shortcutKeys}'
+                    },
+                    margin: '0 0 20 0',
+                    width: 800
+                },{
                     xtype: 'chart-transaction',
                     width: 800
                 }]

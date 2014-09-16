@@ -20,13 +20,16 @@ Ext.define('Ext.fn.App', {
 
         console.log('Application successfully initiated.');
     },
-    
-    mnChangeBiodata: function(){
-        Ext.widget('ubah-biodata');
-    },
 
     mnChangePassword: function(){
-        Ext.widget('ubah-password');
+        Ext.widget('change-password');
+    },
+
+    mnCustomReport: function(){
+        var report = Ext.widget('custom-report');
+        
+        this.setLoading(true);
+        report.getController().viewReport();
     },
 
     mnDashboard: function(){
@@ -34,7 +37,12 @@ Ext.define('Ext.fn.App', {
     },
 
     mnDeveloperInfo: function(){
-        Ext.widget('about-dev');
+        Ext.widget('developer-info');
+    },
+
+    mnListCredit: function(){
+        var panel = this.newTab('list-credit');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
     mnListProduct: function(){
@@ -93,16 +101,13 @@ Ext.define('Ext.fn.App', {
         this.setLoading(true);
         report.getController().viewReport();
     },
-
-    mnCustomReport: function(){
-        var report = Ext.widget('custom-report');
-        
-        this.setLoading(true);
-        report.getController().viewReport();
+    
+    mnUpdateBiodata: function(){
+        Ext.widget('update-biodata');
     },
 
     newTab: function(alias, state){
-        var main = Ext.ComponentQuery.query('app-main')[0].getViewModel(),
+        var main = Ext.main.ViewModel,
             tab = Ext.ComponentQuery.query('app-tab')[0],
             panel = Ext.ComponentQuery.query(alias)[0];
 

@@ -6,6 +6,12 @@ Ext.define('POS.store.chart.transaction.Last30Days', {
         {name: 'purchase',  type: 'int'}
     ],
     
+    listeners: {
+        'beforeload': function(store){
+            store.removeAll();
+        }
+    },
+    
     init: function(){
         this.setProxy({
             type: 'websocket',

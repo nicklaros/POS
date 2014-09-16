@@ -87,11 +87,28 @@ html{
     border-bottom: solid #d3d3d3;
 }
 
+/* hint */
+.hint-container{
+    color: #838383;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    height: auto;
+    line-height: 2;
+    white-space: normal;
+}
+.hint-container .block{
+    float: left;
+    width: 200px;
+}
+
 
 /* notification */
-.notification-block{
+.notification-container{
     color: #868686;
     font-family: tahoma, arial, sans-serif;
+    width: 570px;
+}
+.notification-container .body{
     font-size: 12px;
     line-height: 1.5;
     overflow: hidden;
@@ -99,16 +116,17 @@ html{
     white-space: normal;
     width: auto;
 }
-.notification-delete a{
-    color: #868686;
+.notification-container .body .time{
+    font-size: 10px;
+}
+.notification-container .delete a{
     cursor: pointer;
     display: block;
     float: right;
-    font-family: tahoma, arial, sans-serif;
     font-size: 8px;
     padding: 5px 10px;
 }
-.notification-delete a:hover{
+.notification-container .delete a:hover{
     color: #333;
     background-color: #ddd;
     border: 1px solid #f3f3f3;

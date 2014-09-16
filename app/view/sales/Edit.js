@@ -10,6 +10,7 @@ Ext.define('POS.view.sales.Edit' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
+        'POS.custom.panel.hint.Sales',
         'POS.view.sales.EditController',
         'POS.view.sales.EditDetail'
     ],
@@ -39,6 +40,13 @@ Ext.define('POS.view.sales.Edit' ,{
             },
             width: 900,
             items: [{
+                xtype: 'sales-hint',
+                bind: {
+                    data: '{shortcutKeys}'
+                },
+                margin: '0 0 20 0',
+                width: 900
+            },{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 10 0',

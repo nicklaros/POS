@@ -38,6 +38,28 @@ try{
 
     $root['info'] = $info;
     
+    // get shortcut key from database
+    $shortcutKeys = [];
+    $keys = OptionQuery::create()
+        ->filterByName([
+            'sales_key',
+            'sales_add_key',
+            'sales_pay_key',
+            'sales_save_key',
+            'sales_cancel_key',
+            'purchase_key',
+            'purchase_add_key',
+            'purchase_save_key',
+            'purchase_cancel_key'
+        ])
+        ->find($con);
+
+    foreach($keys as $key){
+        $shortcutKeys[$key->getName()] = $key->getValue();
+    }
+
+    $root['shortcutKeys'] = $shortcutKeys;
+    
     // Check previous session
     try{
         if (
@@ -57,6 +79,8 @@ try{
             ])
             ->leftJoin('Detail')
             ->withColumn('Detail.Name', 'name')
+            ->withColumn('Detail.Address', 'address')
+            ->withColumn('Detail.Phone', 'phone')
             ->findOne($con);
         if(!$user) throw new Exception();
 

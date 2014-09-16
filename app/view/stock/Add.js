@@ -13,9 +13,10 @@ Ext.define('POS.view.stock.Add' ,{
         'POS.view.stock.AddController'
     ],
 
+    layout: 'anchor',
+    
     autoShow: true,
     constrain: true,
-    layout: 'anchor',
     resizable: false,
     width: 600,
 

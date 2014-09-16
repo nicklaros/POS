@@ -131,6 +131,7 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
                         saveOnEnter: true,
+                        selectOnFocus: true,
                         margin: '0 0 0 50',
                         width: 150,
                         listeners: {
