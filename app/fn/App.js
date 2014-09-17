@@ -129,58 +129,20 @@ Ext.define('Ext.fn.App', {
         }
     },
 
-    notify: function(title, message, manager, icon){
-        return this.notification(title, message, manager, icon);
+    notify: function(title, message, icon, manager){
+        Ext.fn.Notification.show(title, message, icon, manager);
     },
 
-    notification: function(title, message, manager, icon){
-        setTimeout(function(){
-            Ext.create('widget.uxNotification', {
-                title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
-                autoCloseDelay: 5000,
-                cls: 'ux-notification-light',
-                hideDuration: 50,
-                html: message,
-                manager: (manager || Ext.getBody()),
-                position: 'br',
-                slideBackAnimation: 'bounceOut',
-                slideBackDuration: 500,
-                slideInAnimation: 'bounceOut',
-                slideInDuration: 1000,
-                maxWidth: 350
-            }).show();
-        }, 10);
+    notification: function(title, message, icon, manager){
+        Ext.fn.Notification.show(title, message, icon, manager);
+    },
+
+    printNotaCredit: function(id){
+        window.open("remote/print/nota-credit.php?id=" + id, "_blank");
     },
 
     printNotaSales: function(id){
         window.open("remote/print/nota-sales.php?id=" + id, "_blank");
-    },
-    
-    removeNotification: function(id){
-        var panel = Ext.ComponentQuery.query('list-notification')[0];
-        
-        if (panel) panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('notification/destroy', function(websocket, data){
-                clearTimeout(monitor);
-                panel.setLoading(false);
-                if (data.success){
-                    var store = POS.app.getStore('POS.store.Notification');
-                    
-                    id.forEach(function(id){
-                        store.remove(store.getById(id));
-                    });
-                }else{
-                    Ext.fn.App.notification('Ups', data.errmsg);
-                }
-            }, this, {
-                single: true,
-                destroyable: true
-            }),
-            panel,
-            false
-        );
-        Ext.ws.Main.send('notification/destroy', {id: id});
     },
 
     setLoading: function(bool){

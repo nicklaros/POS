@@ -119,6 +119,15 @@ html{
 .notification-container .body .time{
     font-size: 10px;
 }
+.notification-container .body a{
+    color: #ADB6CC;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: normal;
+}
+.notification-container .body a:hover{
+    color: #223AB4;
+}
 .notification-container .delete a{
     cursor: pointer;
     display: block;

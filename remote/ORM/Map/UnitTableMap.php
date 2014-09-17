@@ -141,7 +141,6 @@ class UnitTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Sales', '\\ORM\\SalesDetail', RelationMap::ONE_TO_MANY, array('id' => 'unit_id', ), 'NO ACTION', 'RESTRICT', 'Saless');
         $this->addRelation('Stock', '\\ORM\\Stock', RelationMap::ONE_TO_MANY, array('id' => 'unit_id', ), 'NO ACTION', 'RESTRICT', 'Stocks');
     } // buildRelations()
 

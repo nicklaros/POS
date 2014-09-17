@@ -25,7 +25,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetailQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method     ChildSalesDetailQuery orderByStockId($order = Criteria::ASC) Order by the stock_id column
  * @method     ChildSalesDetailQuery orderByAmount($order = Criteria::ASC) Order by the amount column
- * @method     ChildSalesDetailQuery orderByUnitId($order = Criteria::ASC) Order by the unit_id column
  * @method     ChildSalesDetailQuery orderByUnitPrice($order = Criteria::ASC) Order by the unit_price column
  * @method     ChildSalesDetailQuery orderByDiscount($order = Criteria::ASC) Order by the discount column
  * @method     ChildSalesDetailQuery orderByTotalPrice($order = Criteria::ASC) Order by the total_price column
@@ -40,7 +39,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetailQuery groupByType() Group by the type column
  * @method     ChildSalesDetailQuery groupByStockId() Group by the stock_id column
  * @method     ChildSalesDetailQuery groupByAmount() Group by the amount column
- * @method     ChildSalesDetailQuery groupByUnitId() Group by the unit_id column
  * @method     ChildSalesDetailQuery groupByUnitPrice() Group by the unit_price column
  * @method     ChildSalesDetailQuery groupByDiscount() Group by the discount column
  * @method     ChildSalesDetailQuery groupByTotalPrice() Group by the total_price column
@@ -62,11 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetailQuery rightJoinStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stock relation
  * @method     ChildSalesDetailQuery innerJoinStock($relationAlias = null) Adds a INNER JOIN clause to the query using the Stock relation
  *
- * @method     ChildSalesDetailQuery leftJoinUnit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Unit relation
- * @method     ChildSalesDetailQuery rightJoinUnit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Unit relation
- * @method     ChildSalesDetailQuery innerJoinUnit($relationAlias = null) Adds a INNER JOIN clause to the query using the Unit relation
- *
- * @method     \ORM\SalesQuery|\ORM\StockQuery|\ORM\UnitQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\SalesQuery|\ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildSalesDetail findOne(ConnectionInterface $con = null) Return the first ChildSalesDetail matching the query
  * @method     ChildSalesDetail findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSalesDetail matching the query, or a new ChildSalesDetail object populated from the query conditions when no match is found
@@ -76,7 +70,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail findOneByType(string $type) Return the first ChildSalesDetail filtered by the type column
  * @method     ChildSalesDetail findOneByStockId(string $stock_id) Return the first ChildSalesDetail filtered by the stock_id column
  * @method     ChildSalesDetail findOneByAmount(int $amount) Return the first ChildSalesDetail filtered by the amount column
- * @method     ChildSalesDetail findOneByUnitId(string $unit_id) Return the first ChildSalesDetail filtered by the unit_id column
  * @method     ChildSalesDetail findOneByUnitPrice(int $unit_price) Return the first ChildSalesDetail filtered by the unit_price column
  * @method     ChildSalesDetail findOneByDiscount(int $discount) Return the first ChildSalesDetail filtered by the discount column
  * @method     ChildSalesDetail findOneByTotalPrice(int $total_price) Return the first ChildSalesDetail filtered by the total_price column
@@ -92,7 +85,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail[]|ObjectCollection findByType(string $type) Return ChildSalesDetail objects filtered by the type column
  * @method     ChildSalesDetail[]|ObjectCollection findByStockId(string $stock_id) Return ChildSalesDetail objects filtered by the stock_id column
  * @method     ChildSalesDetail[]|ObjectCollection findByAmount(int $amount) Return ChildSalesDetail objects filtered by the amount column
- * @method     ChildSalesDetail[]|ObjectCollection findByUnitId(string $unit_id) Return ChildSalesDetail objects filtered by the unit_id column
  * @method     ChildSalesDetail[]|ObjectCollection findByUnitPrice(int $unit_price) Return ChildSalesDetail objects filtered by the unit_price column
  * @method     ChildSalesDetail[]|ObjectCollection findByDiscount(int $discount) Return ChildSalesDetail objects filtered by the discount column
  * @method     ChildSalesDetail[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildSalesDetail objects filtered by the total_price column
@@ -190,7 +182,7 @@ abstract class SalesDetailQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, SALES_ID, TYPE, STOCK_ID, AMOUNT, UNIT_ID, UNIT_PRICE, DISCOUNT, TOTAL_PRICE, BUY, SELL_PUBLIC, SELL_DISTRIBUTOR, SELL_MISC, STATUS FROM sales_detail WHERE ID = :p0';
+        $sql = 'SELECT ID, SALES_ID, TYPE, STOCK_ID, AMOUNT, UNIT_PRICE, DISCOUNT, TOTAL_PRICE, BUY, SELL_PUBLIC, SELL_DISTRIBUTOR, SELL_MISC, STATUS FROM sales_detail WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -475,49 +467,6 @@ abstract class SalesDetailQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SalesDetailTableMap::COL_AMOUNT, $amount, $comparison);
-    }
-
-    /**
-     * Filter the query on the unit_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUnitId(1234); // WHERE unit_id = 1234
-     * $query->filterByUnitId(array(12, 34)); // WHERE unit_id IN (12, 34)
-     * $query->filterByUnitId(array('min' => 12)); // WHERE unit_id > 12
-     * </code>
-     *
-     * @see       filterByUnit()
-     *
-     * @param     mixed $unitId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildSalesDetailQuery The current query, for fluid interface
-     */
-    public function filterByUnitId($unitId = null, $comparison = null)
-    {
-        if (is_array($unitId)) {
-            $useMinMax = false;
-            if (isset($unitId['min'])) {
-                $this->addUsingAlias(SalesDetailTableMap::COL_UNIT_ID, $unitId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($unitId['max'])) {
-                $this->addUsingAlias(SalesDetailTableMap::COL_UNIT_ID, $unitId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(SalesDetailTableMap::COL_UNIT_ID, $unitId, $comparison);
     }
 
     /**
@@ -984,81 +933,6 @@ abstract class SalesDetailQuery extends ModelCriteria
         return $this
             ->joinStock($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Stock', '\ORM\StockQuery');
-    }
-
-    /**
-     * Filter the query by a related \ORM\Unit object
-     *
-     * @param \ORM\Unit|ObjectCollection $unit The related object(s) to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildSalesDetailQuery The current query, for fluid interface
-     */
-    public function filterByUnit($unit, $comparison = null)
-    {
-        if ($unit instanceof \ORM\Unit) {
-            return $this
-                ->addUsingAlias(SalesDetailTableMap::COL_UNIT_ID, $unit->getId(), $comparison);
-        } elseif ($unit instanceof ObjectCollection) {
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-
-            return $this
-                ->addUsingAlias(SalesDetailTableMap::COL_UNIT_ID, $unit->toKeyValue('PrimaryKey', 'Id'), $comparison);
-        } else {
-            throw new PropelException('filterByUnit() only accepts arguments of type \ORM\Unit or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Unit relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildSalesDetailQuery The current query, for fluid interface
-     */
-    public function joinUnit($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Unit');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Unit');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Unit relation Unit object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \ORM\UnitQuery A secondary query class using the current class as primary query
-     */
-    public function useUnitQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinUnit($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Unit', '\ORM\UnitQuery');
     }
 
     /**

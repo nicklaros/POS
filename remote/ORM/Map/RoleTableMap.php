@@ -141,6 +141,7 @@ class RoleTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('NotificationOption', '\\ORM\\NotificationOption', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), 'CASCADE', 'RESTRICT', 'NotificationOptions');
         $this->addRelation('Permission', '\\ORM\\RolePermission', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
         $this->addRelation('User', '\\ORM\\User', RelationMap::ONE_TO_MANY, array('id' => 'role_id', ), 'NO ACTION', 'RESTRICT', 'Users');
     } // buildRelations()
@@ -151,6 +152,7 @@ class RoleTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        NotificationOptionTableMap::clearInstancePool();
         RolePermissionTableMap::clearInstancePool();
     }
 

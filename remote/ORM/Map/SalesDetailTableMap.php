@@ -59,7 +59,7 @@ class SalesDetailTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class SalesDetailTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the ID field
@@ -95,11 +95,6 @@ class SalesDetailTableMap extends TableMap
      * the column name for the AMOUNT field
      */
     const COL_AMOUNT = 'sales_detail.AMOUNT';
-
-    /**
-     * the column name for the UNIT_ID field
-     */
-    const COL_UNIT_ID = 'sales_detail.UNIT_ID';
 
     /**
      * the column name for the UNIT_PRICE field
@@ -153,12 +148,12 @@ class SalesDetailTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'SalesId', 'Type', 'StockId', 'Amount', 'UnitId', 'UnitPrice', 'Discount', 'TotalPrice', 'Buy', 'SellPublic', 'SellDistributor', 'SellMisc', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'salesId', 'type', 'stockId', 'amount', 'unitId', 'unitPrice', 'discount', 'totalPrice', 'buy', 'sellPublic', 'sellDistributor', 'sellMisc', 'status', ),
-        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID, SalesDetailTableMap::COL_SALES_ID, SalesDetailTableMap::COL_TYPE, SalesDetailTableMap::COL_STOCK_ID, SalesDetailTableMap::COL_AMOUNT, SalesDetailTableMap::COL_UNIT_ID, SalesDetailTableMap::COL_UNIT_PRICE, SalesDetailTableMap::COL_DISCOUNT, SalesDetailTableMap::COL_TOTAL_PRICE, SalesDetailTableMap::COL_BUY, SalesDetailTableMap::COL_SELL_PUBLIC, SalesDetailTableMap::COL_SELL_DISTRIBUTOR, SalesDetailTableMap::COL_SELL_MISC, SalesDetailTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SALES_ID', 'COL_TYPE', 'COL_STOCK_ID', 'COL_AMOUNT', 'COL_UNIT_ID', 'COL_UNIT_PRICE', 'COL_DISCOUNT', 'COL_TOTAL_PRICE', 'COL_BUY', 'COL_SELL_PUBLIC', 'COL_SELL_DISTRIBUTOR', 'COL_SELL_MISC', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'sales_id', 'type', 'stock_id', 'amount', 'unit_id', 'unit_price', 'discount', 'total_price', 'buy', 'sell_public', 'sell_distributor', 'sell_misc', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id', 'SalesId', 'Type', 'StockId', 'Amount', 'UnitPrice', 'Discount', 'TotalPrice', 'Buy', 'SellPublic', 'SellDistributor', 'SellMisc', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'salesId', 'type', 'stockId', 'amount', 'unitPrice', 'discount', 'totalPrice', 'buy', 'sellPublic', 'sellDistributor', 'sellMisc', 'status', ),
+        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID, SalesDetailTableMap::COL_SALES_ID, SalesDetailTableMap::COL_TYPE, SalesDetailTableMap::COL_STOCK_ID, SalesDetailTableMap::COL_AMOUNT, SalesDetailTableMap::COL_UNIT_PRICE, SalesDetailTableMap::COL_DISCOUNT, SalesDetailTableMap::COL_TOTAL_PRICE, SalesDetailTableMap::COL_BUY, SalesDetailTableMap::COL_SELL_PUBLIC, SalesDetailTableMap::COL_SELL_DISTRIBUTOR, SalesDetailTableMap::COL_SELL_MISC, SalesDetailTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SALES_ID', 'COL_TYPE', 'COL_STOCK_ID', 'COL_AMOUNT', 'COL_UNIT_PRICE', 'COL_DISCOUNT', 'COL_TOTAL_PRICE', 'COL_BUY', 'COL_SELL_PUBLIC', 'COL_SELL_DISTRIBUTOR', 'COL_SELL_MISC', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'sales_id', 'type', 'stock_id', 'amount', 'unit_price', 'discount', 'total_price', 'buy', 'sell_public', 'sell_distributor', 'sell_misc', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -168,12 +163,12 @@ class SalesDetailTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'SalesId' => 1, 'Type' => 2, 'StockId' => 3, 'Amount' => 4, 'UnitId' => 5, 'UnitPrice' => 6, 'Discount' => 7, 'TotalPrice' => 8, 'Buy' => 9, 'SellPublic' => 10, 'SellDistributor' => 11, 'SellMisc' => 12, 'Status' => 13, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'salesId' => 1, 'type' => 2, 'stockId' => 3, 'amount' => 4, 'unitId' => 5, 'unitPrice' => 6, 'discount' => 7, 'totalPrice' => 8, 'buy' => 9, 'sellPublic' => 10, 'sellDistributor' => 11, 'sellMisc' => 12, 'status' => 13, ),
-        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID => 0, SalesDetailTableMap::COL_SALES_ID => 1, SalesDetailTableMap::COL_TYPE => 2, SalesDetailTableMap::COL_STOCK_ID => 3, SalesDetailTableMap::COL_AMOUNT => 4, SalesDetailTableMap::COL_UNIT_ID => 5, SalesDetailTableMap::COL_UNIT_PRICE => 6, SalesDetailTableMap::COL_DISCOUNT => 7, SalesDetailTableMap::COL_TOTAL_PRICE => 8, SalesDetailTableMap::COL_BUY => 9, SalesDetailTableMap::COL_SELL_PUBLIC => 10, SalesDetailTableMap::COL_SELL_DISTRIBUTOR => 11, SalesDetailTableMap::COL_SELL_MISC => 12, SalesDetailTableMap::COL_STATUS => 13, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SALES_ID' => 1, 'COL_TYPE' => 2, 'COL_STOCK_ID' => 3, 'COL_AMOUNT' => 4, 'COL_UNIT_ID' => 5, 'COL_UNIT_PRICE' => 6, 'COL_DISCOUNT' => 7, 'COL_TOTAL_PRICE' => 8, 'COL_BUY' => 9, 'COL_SELL_PUBLIC' => 10, 'COL_SELL_DISTRIBUTOR' => 11, 'COL_SELL_MISC' => 12, 'COL_STATUS' => 13, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'sales_id' => 1, 'type' => 2, 'stock_id' => 3, 'amount' => 4, 'unit_id' => 5, 'unit_price' => 6, 'discount' => 7, 'total_price' => 8, 'buy' => 9, 'sell_public' => 10, 'sell_distributor' => 11, 'sell_misc' => 12, 'status' => 13, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SalesId' => 1, 'Type' => 2, 'StockId' => 3, 'Amount' => 4, 'UnitPrice' => 5, 'Discount' => 6, 'TotalPrice' => 7, 'Buy' => 8, 'SellPublic' => 9, 'SellDistributor' => 10, 'SellMisc' => 11, 'Status' => 12, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'salesId' => 1, 'type' => 2, 'stockId' => 3, 'amount' => 4, 'unitPrice' => 5, 'discount' => 6, 'totalPrice' => 7, 'buy' => 8, 'sellPublic' => 9, 'sellDistributor' => 10, 'sellMisc' => 11, 'status' => 12, ),
+        self::TYPE_COLNAME       => array(SalesDetailTableMap::COL_ID => 0, SalesDetailTableMap::COL_SALES_ID => 1, SalesDetailTableMap::COL_TYPE => 2, SalesDetailTableMap::COL_STOCK_ID => 3, SalesDetailTableMap::COL_AMOUNT => 4, SalesDetailTableMap::COL_UNIT_PRICE => 5, SalesDetailTableMap::COL_DISCOUNT => 6, SalesDetailTableMap::COL_TOTAL_PRICE => 7, SalesDetailTableMap::COL_BUY => 8, SalesDetailTableMap::COL_SELL_PUBLIC => 9, SalesDetailTableMap::COL_SELL_DISTRIBUTOR => 10, SalesDetailTableMap::COL_SELL_MISC => 11, SalesDetailTableMap::COL_STATUS => 12, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SALES_ID' => 1, 'COL_TYPE' => 2, 'COL_STOCK_ID' => 3, 'COL_AMOUNT' => 4, 'COL_UNIT_PRICE' => 5, 'COL_DISCOUNT' => 6, 'COL_TOTAL_PRICE' => 7, 'COL_BUY' => 8, 'COL_SELL_PUBLIC' => 9, 'COL_SELL_DISTRIBUTOR' => 10, 'COL_SELL_MISC' => 11, 'COL_STATUS' => 12, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'sales_id' => 1, 'type' => 2, 'stock_id' => 3, 'amount' => 4, 'unit_price' => 5, 'discount' => 6, 'total_price' => 7, 'buy' => 8, 'sell_public' => 9, 'sell_distributor' => 10, 'sell_misc' => 11, 'status' => 12, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -197,7 +192,6 @@ class SalesDetailTableMap extends TableMap
         $this->addColumn('TYPE', 'Type', 'CHAR', false, null, null);
         $this->addForeignKey('STOCK_ID', 'StockId', 'BIGINT', 'stock', 'ID', false, 20, null);
         $this->addColumn('AMOUNT', 'Amount', 'TINYINT', false, 3, null);
-        $this->addForeignKey('UNIT_ID', 'UnitId', 'BIGINT', 'unit', 'ID', false, 20, null);
         $this->addColumn('UNIT_PRICE', 'UnitPrice', 'INTEGER', false, 10, null);
         $this->addColumn('DISCOUNT', 'Discount', 'TINYINT', false, 3, null);
         $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);
@@ -215,7 +209,6 @@ class SalesDetailTableMap extends TableMap
     {
         $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::MANY_TO_ONE, array('sales_id' => 'id', ), 'CASCADE', 'RESTRICT');
         $this->addRelation('Stock', '\\ORM\\Stock', RelationMap::MANY_TO_ONE, array('stock_id' => 'id', ), 'RESTRICT', 'RESTRICT');
-        $this->addRelation('Unit', '\\ORM\\Unit', RelationMap::MANY_TO_ONE, array('unit_id' => 'id', ), 'NO ACTION', 'RESTRICT');
     } // buildRelations()
 
     /**
@@ -364,7 +357,6 @@ class SalesDetailTableMap extends TableMap
             $criteria->addSelectColumn(SalesDetailTableMap::COL_TYPE);
             $criteria->addSelectColumn(SalesDetailTableMap::COL_STOCK_ID);
             $criteria->addSelectColumn(SalesDetailTableMap::COL_AMOUNT);
-            $criteria->addSelectColumn(SalesDetailTableMap::COL_UNIT_ID);
             $criteria->addSelectColumn(SalesDetailTableMap::COL_UNIT_PRICE);
             $criteria->addSelectColumn(SalesDetailTableMap::COL_DISCOUNT);
             $criteria->addSelectColumn(SalesDetailTableMap::COL_TOTAL_PRICE);
@@ -379,7 +371,6 @@ class SalesDetailTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.TYPE');
             $criteria->addSelectColumn($alias . '.STOCK_ID');
             $criteria->addSelectColumn($alias . '.AMOUNT');
-            $criteria->addSelectColumn($alias . '.UNIT_ID');
             $criteria->addSelectColumn($alias . '.UNIT_PRICE');
             $criteria->addSelectColumn($alias . '.DISCOUNT');
             $criteria->addSelectColumn($alias . '.TOTAL_PRICE');

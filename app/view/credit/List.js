@@ -8,7 +8,8 @@ Ext.define('POS.view.credit.List' ,{
         'Ext.ux.container.ButtonSegment',
         'POS.view.credit.ListController',
         'POS.view.credit.ListPayment',
-        'POS.view.credit.Pay'
+        'POS.view.credit.Pay',
+        'POS.view.credit.Search'
     ],
 
     autoScroll: true,
@@ -39,18 +40,23 @@ Ext.define('POS.view.credit.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-calculator glyph"></i> Data Pembayaran',
+                handler: 'listPayment'
+            },'-',{
+                text: '<i class="fa fa-money glyph"></i> Bayar',
+                reference: 'pay',
+                handler: 'pay',
+                disabled: true
+            },{
                 text: '<i class="fa fa-credit-card glyph"></i> Detail Penjualan',
                 reference: 'sales_detail',
                 handler: 'salesDetail',
                 disabled: true
             },{
-                text: '<i class="fa fa-credit-card glyph"></i> Bayar',
-                reference: 'pay',
-                handler: 'pay',
+                text: '<i class="fa fa-print glyph"></i> Print',
+                reference: 'print',
+                handler: 'print',
                 disabled: true
-            },{
-                text: '<i class="fa fa-credit-card glyph"></i> Data Pembayaran',
-                handler: 'listPayment'
             },{
                 xtype: 'buttonsegment',
                 items: [{

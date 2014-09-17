@@ -177,7 +177,7 @@ class CustomerTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::ONE_TO_MANY, array('id' => 'customer_id', ), 'NO ACTION', 'RESTRICT', 'Saless');
+        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::ONE_TO_MANY, array('id' => 'customer_id', ), 'RESTRICT', 'RESTRICT', 'Saless');
     } // buildRelations()
 
     /**

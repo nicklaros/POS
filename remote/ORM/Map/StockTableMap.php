@@ -59,7 +59,7 @@ class StockTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 11;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class StockTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 11;
 
     /**
      * the column name for the ID field
@@ -117,6 +117,11 @@ class StockTableMap extends TableMap
     const COL_DISCOUNT = 'stock.DISCOUNT';
 
     /**
+     * the column name for the UNLIMITED field
+     */
+    const COL_UNLIMITED = 'stock.UNLIMITED';
+
+    /**
      * the column name for the STATUS field
      */
     const COL_STATUS = 'stock.STATUS';
@@ -133,12 +138,12 @@ class StockTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'ProductId', 'Amount', 'UnitId', 'Buy', 'SellPublic', 'SellDistributor', 'SellMisc', 'Discount', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'productId', 'amount', 'unitId', 'buy', 'sellPublic', 'sellDistributor', 'sellMisc', 'discount', 'status', ),
-        self::TYPE_COLNAME       => array(StockTableMap::COL_ID, StockTableMap::COL_PRODUCT_ID, StockTableMap::COL_AMOUNT, StockTableMap::COL_UNIT_ID, StockTableMap::COL_BUY, StockTableMap::COL_SELL_PUBLIC, StockTableMap::COL_SELL_DISTRIBUTOR, StockTableMap::COL_SELL_MISC, StockTableMap::COL_DISCOUNT, StockTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_PRODUCT_ID', 'COL_AMOUNT', 'COL_UNIT_ID', 'COL_BUY', 'COL_SELL_PUBLIC', 'COL_SELL_DISTRIBUTOR', 'COL_SELL_MISC', 'COL_DISCOUNT', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'product_id', 'amount', 'unit_id', 'buy', 'sell_public', 'sell_distributor', 'sell_misc', 'discount', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id', 'ProductId', 'Amount', 'UnitId', 'Buy', 'SellPublic', 'SellDistributor', 'SellMisc', 'Discount', 'Unlimited', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'productId', 'amount', 'unitId', 'buy', 'sellPublic', 'sellDistributor', 'sellMisc', 'discount', 'unlimited', 'status', ),
+        self::TYPE_COLNAME       => array(StockTableMap::COL_ID, StockTableMap::COL_PRODUCT_ID, StockTableMap::COL_AMOUNT, StockTableMap::COL_UNIT_ID, StockTableMap::COL_BUY, StockTableMap::COL_SELL_PUBLIC, StockTableMap::COL_SELL_DISTRIBUTOR, StockTableMap::COL_SELL_MISC, StockTableMap::COL_DISCOUNT, StockTableMap::COL_UNLIMITED, StockTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_PRODUCT_ID', 'COL_AMOUNT', 'COL_UNIT_ID', 'COL_BUY', 'COL_SELL_PUBLIC', 'COL_SELL_DISTRIBUTOR', 'COL_SELL_MISC', 'COL_DISCOUNT', 'COL_UNLIMITED', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'product_id', 'amount', 'unit_id', 'buy', 'sell_public', 'sell_distributor', 'sell_misc', 'discount', 'unlimited', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -148,12 +153,12 @@ class StockTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'ProductId' => 1, 'Amount' => 2, 'UnitId' => 3, 'Buy' => 4, 'SellPublic' => 5, 'SellDistributor' => 6, 'SellMisc' => 7, 'Discount' => 8, 'Status' => 9, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'productId' => 1, 'amount' => 2, 'unitId' => 3, 'buy' => 4, 'sellPublic' => 5, 'sellDistributor' => 6, 'sellMisc' => 7, 'discount' => 8, 'status' => 9, ),
-        self::TYPE_COLNAME       => array(StockTableMap::COL_ID => 0, StockTableMap::COL_PRODUCT_ID => 1, StockTableMap::COL_AMOUNT => 2, StockTableMap::COL_UNIT_ID => 3, StockTableMap::COL_BUY => 4, StockTableMap::COL_SELL_PUBLIC => 5, StockTableMap::COL_SELL_DISTRIBUTOR => 6, StockTableMap::COL_SELL_MISC => 7, StockTableMap::COL_DISCOUNT => 8, StockTableMap::COL_STATUS => 9, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_PRODUCT_ID' => 1, 'COL_AMOUNT' => 2, 'COL_UNIT_ID' => 3, 'COL_BUY' => 4, 'COL_SELL_PUBLIC' => 5, 'COL_SELL_DISTRIBUTOR' => 6, 'COL_SELL_MISC' => 7, 'COL_DISCOUNT' => 8, 'COL_STATUS' => 9, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'product_id' => 1, 'amount' => 2, 'unit_id' => 3, 'buy' => 4, 'sell_public' => 5, 'sell_distributor' => 6, 'sell_misc' => 7, 'discount' => 8, 'status' => 9, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'ProductId' => 1, 'Amount' => 2, 'UnitId' => 3, 'Buy' => 4, 'SellPublic' => 5, 'SellDistributor' => 6, 'SellMisc' => 7, 'Discount' => 8, 'Unlimited' => 9, 'Status' => 10, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'productId' => 1, 'amount' => 2, 'unitId' => 3, 'buy' => 4, 'sellPublic' => 5, 'sellDistributor' => 6, 'sellMisc' => 7, 'discount' => 8, 'unlimited' => 9, 'status' => 10, ),
+        self::TYPE_COLNAME       => array(StockTableMap::COL_ID => 0, StockTableMap::COL_PRODUCT_ID => 1, StockTableMap::COL_AMOUNT => 2, StockTableMap::COL_UNIT_ID => 3, StockTableMap::COL_BUY => 4, StockTableMap::COL_SELL_PUBLIC => 5, StockTableMap::COL_SELL_DISTRIBUTOR => 6, StockTableMap::COL_SELL_MISC => 7, StockTableMap::COL_DISCOUNT => 8, StockTableMap::COL_UNLIMITED => 9, StockTableMap::COL_STATUS => 10, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_PRODUCT_ID' => 1, 'COL_AMOUNT' => 2, 'COL_UNIT_ID' => 3, 'COL_BUY' => 4, 'COL_SELL_PUBLIC' => 5, 'COL_SELL_DISTRIBUTOR' => 6, 'COL_SELL_MISC' => 7, 'COL_DISCOUNT' => 8, 'COL_UNLIMITED' => 9, 'COL_STATUS' => 10, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'product_id' => 1, 'amount' => 2, 'unit_id' => 3, 'buy' => 4, 'sell_public' => 5, 'sell_distributor' => 6, 'sell_misc' => 7, 'discount' => 8, 'unlimited' => 9, 'status' => 10, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
     /**
@@ -181,6 +186,7 @@ class StockTableMap extends TableMap
         $this->addColumn('SELL_DISTRIBUTOR', 'SellDistributor', 'INTEGER', false, 10, null);
         $this->addColumn('SELL_MISC', 'SellMisc', 'INTEGER', false, 10, null);
         $this->addColumn('DISCOUNT', 'Discount', 'TINYINT', false, 3, null);
+        $this->addColumn('UNLIMITED', 'Unlimited', 'BOOLEAN', false, 1, null);
         $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
@@ -191,6 +197,7 @@ class StockTableMap extends TableMap
     {
         $this->addRelation('Product', '\\ORM\\Product', RelationMap::MANY_TO_ONE, array('product_id' => 'id', ), 'CASCADE', 'RESTRICT');
         $this->addRelation('Unit', '\\ORM\\Unit', RelationMap::MANY_TO_ONE, array('unit_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('Purchase', '\\ORM\\PurchaseDetail', RelationMap::ONE_TO_MANY, array('id' => 'stock_id', ), 'RESTRICT', 'RESTRICT', 'Purchases');
         $this->addRelation('Sales', '\\ORM\\SalesDetail', RelationMap::ONE_TO_MANY, array('id' => 'stock_id', ), 'RESTRICT', 'RESTRICT', 'Saless');
     } // buildRelations()
 
@@ -344,6 +351,7 @@ class StockTableMap extends TableMap
             $criteria->addSelectColumn(StockTableMap::COL_SELL_DISTRIBUTOR);
             $criteria->addSelectColumn(StockTableMap::COL_SELL_MISC);
             $criteria->addSelectColumn(StockTableMap::COL_DISCOUNT);
+            $criteria->addSelectColumn(StockTableMap::COL_UNLIMITED);
             $criteria->addSelectColumn(StockTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
@@ -355,6 +363,7 @@ class StockTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.SELL_DISTRIBUTOR');
             $criteria->addSelectColumn($alias . '.SELL_MISC');
             $criteria->addSelectColumn($alias . '.DISCOUNT');
+            $criteria->addSelectColumn($alias . '.UNLIMITED');
             $criteria->addSelectColumn($alias . '.STATUS');
         }
     }

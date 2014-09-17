@@ -45,6 +45,7 @@ $info = (object) $session->get('pos/info');
             'note'
         ))
         ->withColumn('Customer.Name', 'customer_name')
+        ->withColumn('Cashier.Id', 'cashier_id')
         ->withColumn('Cashier.Name', 'cashier_name')
         ->findOne($con);
 
@@ -53,7 +54,6 @@ $info = (object) $session->get('pos/info');
     $sales = (object) $sales;
 
     $salesDetails = SalesDetailQuery::create()
-        ->leftJoin('Unit')
         ->filterBySalesId($sales->id)
         ->select(array(
             'amount',
@@ -63,9 +63,10 @@ $info = (object) $session->get('pos/info');
         ))
         ->useStockQuery()
             ->leftJoin('Product')
+            ->leftJoin('Unit')
             ->withColumn('Product.Name', 'product_name')
+            ->withColumn('Unit.Name', 'unit_name')
         ->endUse()
-        ->withColumn('Unit.Name', 'unit_name')
         ->find($con);
 ?>
 
@@ -135,6 +136,6 @@ $info = (object) $session->get('pos/info');
 <div style="margin-top: 25px; text-align: center; font-size: 17px; font-weight: bold;">
     Terima Kasih Atas Kunjungan Anda
 </div>
-<div style="text-align: center;"><small>Kasir: <?php echo $sales->cashier_name; ?></small></div>
+<div style="text-align: center;"><small>Kasir: <?php echo $sales->cashier_id . '. ' . $sales->cashier_name; ?></small></div>
 </body>
 </html>

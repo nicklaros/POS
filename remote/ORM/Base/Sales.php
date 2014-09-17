@@ -5,11 +5,15 @@ namespace ORM\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use ORM\Credit as ChildCredit;
+use ORM\CreditQuery as ChildCreditQuery;
 use ORM\Customer as ChildCustomer;
 use ORM\CustomerQuery as ChildCustomerQuery;
 use ORM\Sales as ChildSales;
 use ORM\SalesDetail as ChildSalesDetail;
 use ORM\SalesDetailQuery as ChildSalesDetailQuery;
+use ORM\SalesHistory as ChildSalesHistory;
+use ORM\SalesHistoryQuery as ChildSalesHistoryQuery;
 use ORM\SalesQuery as ChildSalesQuery;
 use ORM\UserDetail as ChildUserDetail;
 use ORM\UserDetailQuery as ChildUserDetailQuery;
@@ -127,10 +131,22 @@ abstract class Sales implements ActiveRecordInterface
     protected $aCashier;
 
     /**
+     * @var        ObjectCollection|ChildCredit[] Collection to store aggregation of ChildCredit objects.
+     */
+    protected $collCredits;
+    protected $collCreditsPartial;
+
+    /**
      * @var        ObjectCollection|ChildSalesDetail[] Collection to store aggregation of ChildSalesDetail objects.
      */
     protected $collDetails;
     protected $collDetailsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSalesHistory[] Collection to store aggregation of ChildSalesHistory objects.
+     */
+    protected $collHistories;
+    protected $collHistoriesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -142,9 +158,21 @@ abstract class Sales implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildCredit[]
+     */
+    protected $creditsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildSalesDetail[]
      */
     protected $detailsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSalesHistory[]
+     */
+    protected $historiesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of ORM\Base\Sales object.
@@ -793,7 +821,11 @@ abstract class Sales implements ActiveRecordInterface
 
             $this->aCustomer = null;
             $this->aCashier = null;
+            $this->collCredits = null;
+
             $this->collDetails = null;
+
+            $this->collHistories = null;
 
         } // if (deep)
     }
@@ -924,6 +956,23 @@ abstract class Sales implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->creditsScheduledForDeletion !== null) {
+                if (!$this->creditsScheduledForDeletion->isEmpty()) {
+                    \ORM\CreditQuery::create()
+                        ->filterByPrimaryKeys($this->creditsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->creditsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCredits !== null) {
+                foreach ($this->collCredits as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->detailsScheduledForDeletion !== null) {
                 if (!$this->detailsScheduledForDeletion->isEmpty()) {
                     \ORM\SalesDetailQuery::create()
@@ -935,6 +984,24 @@ abstract class Sales implements ActiveRecordInterface
 
             if ($this->collDetails !== null) {
                 foreach ($this->collDetails as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->historiesScheduledForDeletion !== null) {
+                if (!$this->historiesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->historiesScheduledForDeletion as $history) {
+                        // need to save related object because we set the relation to null
+                        $history->save($con);
+                    }
+                    $this->historiesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHistories !== null) {
+                foreach ($this->collHistories as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1172,8 +1239,14 @@ abstract class Sales implements ActiveRecordInterface
             if (null !== $this->aCashier) {
                 $result['Cashier'] = $this->aCashier->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
+            if (null !== $this->collCredits) {
+                $result['Credits'] = $this->collCredits->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collDetails) {
                 $result['Details'] = $this->collDetails->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collHistories) {
+                $result['Histories'] = $this->collHistories->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1451,9 +1524,21 @@ abstract class Sales implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getCredits() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCredit($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getDetails() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addDetail($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getHistories() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHistory($relObj->copy($deepCopy));
                 }
             }
 
@@ -1600,9 +1685,233 @@ abstract class Sales implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Credit' == $relationName) {
+            return $this->initCredits();
+        }
         if ('Detail' == $relationName) {
             return $this->initDetails();
         }
+        if ('History' == $relationName) {
+            return $this->initHistories();
+        }
+    }
+
+    /**
+     * Clears out the collCredits collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addCredits()
+     */
+    public function clearCredits()
+    {
+        $this->collCredits = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collCredits collection loaded partially.
+     */
+    public function resetPartialCredits($v = true)
+    {
+        $this->collCreditsPartial = $v;
+    }
+
+    /**
+     * Initializes the collCredits collection.
+     *
+     * By default this just sets the collCredits collection to an empty array (like clearcollCredits());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCredits($overrideExisting = true)
+    {
+        if (null !== $this->collCredits && !$overrideExisting) {
+            return;
+        }
+        $this->collCredits = new ObjectCollection();
+        $this->collCredits->setModel('\ORM\Credit');
+    }
+
+    /**
+     * Gets an array of ChildCredit objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildSales is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildCredit[] List of ChildCredit objects
+     * @throws PropelException
+     */
+    public function getCredits(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCreditsPartial && !$this->isNew();
+        if (null === $this->collCredits || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCredits) {
+                // return empty collection
+                $this->initCredits();
+            } else {
+                $collCredits = ChildCreditQuery::create(null, $criteria)
+                    ->filterBySales($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collCreditsPartial && count($collCredits)) {
+                        $this->initCredits(false);
+
+                        foreach ($collCredits as $obj) {
+                            if (false == $this->collCredits->contains($obj)) {
+                                $this->collCredits->append($obj);
+                            }
+                        }
+
+                        $this->collCreditsPartial = true;
+                    }
+
+                    return $collCredits;
+                }
+
+                if ($partial && $this->collCredits) {
+                    foreach ($this->collCredits as $obj) {
+                        if ($obj->isNew()) {
+                            $collCredits[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCredits = $collCredits;
+                $this->collCreditsPartial = false;
+            }
+        }
+
+        return $this->collCredits;
+    }
+
+    /**
+     * Sets a collection of ChildCredit objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $credits A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildSales The current object (for fluent API support)
+     */
+    public function setCredits(Collection $credits, ConnectionInterface $con = null)
+    {
+        /** @var ChildCredit[] $creditsToDelete */
+        $creditsToDelete = $this->getCredits(new Criteria(), $con)->diff($credits);
+
+
+        $this->creditsScheduledForDeletion = $creditsToDelete;
+
+        foreach ($creditsToDelete as $creditRemoved) {
+            $creditRemoved->setSales(null);
+        }
+
+        $this->collCredits = null;
+        foreach ($credits as $credit) {
+            $this->addCredit($credit);
+        }
+
+        $this->collCredits = $credits;
+        $this->collCreditsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Credit objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Credit objects.
+     * @throws PropelException
+     */
+    public function countCredits(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collCreditsPartial && !$this->isNew();
+        if (null === $this->collCredits || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCredits) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCredits());
+            }
+
+            $query = ChildCreditQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterBySales($this)
+                ->count($con);
+        }
+
+        return count($this->collCredits);
+    }
+
+    /**
+     * Method called to associate a ChildCredit object to this object
+     * through the ChildCredit foreign key attribute.
+     *
+     * @param  ChildCredit $l ChildCredit
+     * @return $this|\ORM\Sales The current object (for fluent API support)
+     */
+    public function addCredit(ChildCredit $l)
+    {
+        if ($this->collCredits === null) {
+            $this->initCredits();
+            $this->collCreditsPartial = true;
+        }
+
+        if (!$this->collCredits->contains($l)) {
+            $this->doAddCredit($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildCredit $credit The ChildCredit object to add.
+     */
+    protected function doAddCredit(ChildCredit $credit)
+    {
+        $this->collCredits[]= $credit;
+        $credit->setSales($this);
+    }
+
+    /**
+     * @param  ChildCredit $credit The ChildCredit object to remove.
+     * @return $this|ChildSales The current object (for fluent API support)
+     */
+    public function removeCredit(ChildCredit $credit)
+    {
+        if ($this->getCredits()->contains($credit)) {
+            $pos = $this->collCredits->search($credit);
+            $this->collCredits->remove($pos);
+            if (null === $this->creditsScheduledForDeletion) {
+                $this->creditsScheduledForDeletion = clone $this->collCredits;
+                $this->creditsScheduledForDeletion->clear();
+            }
+            $this->creditsScheduledForDeletion[]= $credit;
+            $credit->setSales(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1848,13 +2157,231 @@ abstract class Sales implements ActiveRecordInterface
         return $this->getDetails($query, $con);
     }
 
+    /**
+     * Clears out the collHistories collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addHistories()
+     */
+    public function clearHistories()
+    {
+        $this->collHistories = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collHistories collection loaded partially.
+     */
+    public function resetPartialHistories($v = true)
+    {
+        $this->collHistoriesPartial = $v;
+    }
+
+    /**
+     * Initializes the collHistories collection.
+     *
+     * By default this just sets the collHistories collection to an empty array (like clearcollHistories());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHistories($overrideExisting = true)
+    {
+        if (null !== $this->collHistories && !$overrideExisting) {
+            return;
+        }
+        $this->collHistories = new ObjectCollection();
+        $this->collHistories->setModel('\ORM\SalesHistory');
+    }
+
+    /**
+     * Gets an array of ChildSalesHistory objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildSales is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSalesHistory[] List of ChildSalesHistory objects
+     * @throws PropelException
+     */
+    public function getHistories(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collHistoriesPartial && !$this->isNew();
+        if (null === $this->collHistories || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHistories) {
+                // return empty collection
+                $this->initHistories();
+            } else {
+                $collHistories = ChildSalesHistoryQuery::create(null, $criteria)
+                    ->filterBySales($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collHistoriesPartial && count($collHistories)) {
+                        $this->initHistories(false);
+
+                        foreach ($collHistories as $obj) {
+                            if (false == $this->collHistories->contains($obj)) {
+                                $this->collHistories->append($obj);
+                            }
+                        }
+
+                        $this->collHistoriesPartial = true;
+                    }
+
+                    return $collHistories;
+                }
+
+                if ($partial && $this->collHistories) {
+                    foreach ($this->collHistories as $obj) {
+                        if ($obj->isNew()) {
+                            $collHistories[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHistories = $collHistories;
+                $this->collHistoriesPartial = false;
+            }
+        }
+
+        return $this->collHistories;
+    }
+
+    /**
+     * Sets a collection of ChildSalesHistory objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $histories A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildSales The current object (for fluent API support)
+     */
+    public function setHistories(Collection $histories, ConnectionInterface $con = null)
+    {
+        /** @var ChildSalesHistory[] $historiesToDelete */
+        $historiesToDelete = $this->getHistories(new Criteria(), $con)->diff($histories);
+
+
+        $this->historiesScheduledForDeletion = $historiesToDelete;
+
+        foreach ($historiesToDelete as $historyRemoved) {
+            $historyRemoved->setSales(null);
+        }
+
+        $this->collHistories = null;
+        foreach ($histories as $history) {
+            $this->addHistory($history);
+        }
+
+        $this->collHistories = $histories;
+        $this->collHistoriesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related SalesHistory objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related SalesHistory objects.
+     * @throws PropelException
+     */
+    public function countHistories(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collHistoriesPartial && !$this->isNew();
+        if (null === $this->collHistories || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHistories) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHistories());
+            }
+
+            $query = ChildSalesHistoryQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterBySales($this)
+                ->count($con);
+        }
+
+        return count($this->collHistories);
+    }
+
+    /**
+     * Method called to associate a ChildSalesHistory object to this object
+     * through the ChildSalesHistory foreign key attribute.
+     *
+     * @param  ChildSalesHistory $l ChildSalesHistory
+     * @return $this|\ORM\Sales The current object (for fluent API support)
+     */
+    public function addHistory(ChildSalesHistory $l)
+    {
+        if ($this->collHistories === null) {
+            $this->initHistories();
+            $this->collHistoriesPartial = true;
+        }
+
+        if (!$this->collHistories->contains($l)) {
+            $this->doAddHistory($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSalesHistory $history The ChildSalesHistory object to add.
+     */
+    protected function doAddHistory(ChildSalesHistory $history)
+    {
+        $this->collHistories[]= $history;
+        $history->setSales($this);
+    }
+
+    /**
+     * @param  ChildSalesHistory $history The ChildSalesHistory object to remove.
+     * @return $this|ChildSales The current object (for fluent API support)
+     */
+    public function removeHistory(ChildSalesHistory $history)
+    {
+        if ($this->getHistories()->contains($history)) {
+            $pos = $this->collHistories->search($history);
+            $this->collHistories->remove($pos);
+            if (null === $this->historiesScheduledForDeletion) {
+                $this->historiesScheduledForDeletion = clone $this->collHistories;
+                $this->historiesScheduledForDeletion->clear();
+            }
+            $this->historiesScheduledForDeletion[]= $history;
+            $history->setSales(null);
+        }
+
+        return $this;
+    }
+
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
      * Otherwise if this Sales is new, it will return
      * an empty collection; or if this Sales has previously
-     * been saved, it will retrieve related Details from storage.
+     * been saved, it will retrieve related Histories from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
@@ -1863,14 +2390,14 @@ abstract class Sales implements ActiveRecordInterface
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSalesDetail[] List of ChildSalesDetail objects
+     * @return ObjectCollection|ChildSalesHistory[] List of ChildSalesHistory objects
      */
-    public function getDetailsJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getHistoriesJoinUserDetail(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildSalesDetailQuery::create(null, $criteria);
-        $query->joinWith('Unit', $joinBehavior);
+        $query = ChildSalesHistoryQuery::create(null, $criteria);
+        $query->joinWith('UserDetail', $joinBehavior);
 
-        return $this->getDetails($query, $con);
+        return $this->getHistories($query, $con);
     }
 
     /**
@@ -1913,14 +2440,26 @@ abstract class Sales implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collCredits) {
+                foreach ($this->collCredits as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collDetails) {
                 foreach ($this->collDetails as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collHistories) {
+                foreach ($this->collHistories as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collCredits = null;
         $this->collDetails = null;
+        $this->collHistories = null;
         $this->aCustomer = null;
         $this->aCashier = null;
     }

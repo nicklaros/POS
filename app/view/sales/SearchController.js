@@ -9,9 +9,9 @@ Ext.define('POS.view.sales.SearchController', {
 
                 this.lookupReference('form').getForm().setValues(params);
 
-                var nota = this.lookupReference('nota');
+                var id = this.lookupReference('id');
                 setTimeout(function(){
-                    nota.focus();
+                    id.focus();
                 }, 10);
             }
         },

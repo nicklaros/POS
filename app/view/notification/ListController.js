@@ -2,20 +2,6 @@ Ext.define('POS.view.notification.ListController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.list-notification',
 
-    control: {
-        'grid-notification': {
-            itemclick: function(view, record){
-                Ext.fn.App.newTab('list-stock');
-                
-                POS.app.getStore('POS.store.Stock').search({
-                    product_id: record.getData().data.product_id
-                });
-                
-                this.getView().close();
-            }
-        }
-    },
-
     clear: function(){
         Ext.Msg.confirm(
             '<i class="fa fa-exclamation-triangle glyph"></i> Bersihkan Pemberitahuan',
@@ -24,7 +10,7 @@ Ext.define('POS.view.notification.ListController', {
                 if (btn == 'yes'){
                     var store = POS.app.getStore('POS.store.Notification');
                     
-                    var id = []
+                    var id = [];
                     store.each(function(record){
                         id.push(record.get('id'));
                     });

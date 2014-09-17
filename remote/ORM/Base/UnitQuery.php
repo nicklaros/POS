@@ -30,15 +30,11 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUnitQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUnitQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUnitQuery leftJoinSales($relationAlias = null) Adds a LEFT JOIN clause to the query using the Sales relation
- * @method     ChildUnitQuery rightJoinSales($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Sales relation
- * @method     ChildUnitQuery innerJoinSales($relationAlias = null) Adds a INNER JOIN clause to the query using the Sales relation
- *
  * @method     ChildUnitQuery leftJoinStock($relationAlias = null) Adds a LEFT JOIN clause to the query using the Stock relation
  * @method     ChildUnitQuery rightJoinStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stock relation
  * @method     ChildUnitQuery innerJoinStock($relationAlias = null) Adds a INNER JOIN clause to the query using the Stock relation
  *
- * @method     \ORM\SalesDetailQuery|\ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUnit findOne(ConnectionInterface $con = null) Return the first ChildUnit matching the query
  * @method     ChildUnit findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUnit matching the query, or a new ChildUnit object populated from the query conditions when no match is found
@@ -296,79 +292,6 @@ abstract class UnitQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UnitTableMap::COL_NAME, $name, $comparison);
-    }
-
-    /**
-     * Filter the query by a related \ORM\SalesDetail object
-     *
-     * @param \ORM\SalesDetail|ObjectCollection $salesDetail  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUnitQuery The current query, for fluid interface
-     */
-    public function filterBySales($salesDetail, $comparison = null)
-    {
-        if ($salesDetail instanceof \ORM\SalesDetail) {
-            return $this
-                ->addUsingAlias(UnitTableMap::COL_ID, $salesDetail->getUnitId(), $comparison);
-        } elseif ($salesDetail instanceof ObjectCollection) {
-            return $this
-                ->useSalesQuery()
-                ->filterByPrimaryKeys($salesDetail->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySales() only accepts arguments of type \ORM\SalesDetail or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Sales relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUnitQuery The current query, for fluid interface
-     */
-    public function joinSales($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Sales');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Sales');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Sales relation SalesDetail object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \ORM\SalesDetailQuery A secondary query class using the current class as primary query
-     */
-    public function useSalesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinSales($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Sales', '\ORM\SalesDetailQuery');
     }
 
     /**

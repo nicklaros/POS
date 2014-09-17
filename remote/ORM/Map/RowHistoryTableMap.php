@@ -165,7 +165,7 @@ class RowHistoryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('UserDetail', '\\ORM\\UserDetail', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('UserDetail', '\\ORM\\UserDetail', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', 'RESTRICT');
     } // buildRelations()
 
     /**

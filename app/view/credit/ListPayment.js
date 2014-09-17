@@ -6,7 +6,8 @@ Ext.define('POS.view.credit.ListPayment' ,{
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.view.credit.ListPaymentController'
+        'POS.view.credit.ListPaymentController',
+        'POS.view.credit.SearchPayment'
     ],
 
     autoScroll: true,
@@ -34,6 +35,11 @@ Ext.define('POS.view.credit.ListPayment' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-undo glyph"></i> Batalkan Penjualan',
+                reference: 'cancel',
+                handler: 'cancel',
+                disabled: true
+            },{
                 xtype: 'buttonsegment',
                 items: [{
                     text: '<i class="fa fa-search glyph"></i> Cari',

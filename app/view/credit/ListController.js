@@ -4,17 +4,16 @@ Ext.define('POS.view.credit.ListController', {
 
     control: {
         '#': {
-            boxready: function(panel){
-                
-            },
             selectionchange: function(sm, selected){
-                var salesDetail = this.lookupReference('sales_detail'),
-                    pay         = this.lookupReference('pay');
+                var pay         = this.lookupReference('pay'),
+                    print       = this.lookupReference('print'),
+                    salesDetail = this.lookupReference('sales_detail');
 
-                salesDetail.setDisabled(selected.length !== 1);
                 pay.setDisabled(selected.length !== 1 || selected[0].get('balance') <= 0);
+                print.setDisabled(selected.length !== 1);
+                salesDetail.setDisabled(selected.length !== 1);
             },
-            celldblclick: 'salesDetail'
+            celldblclick: 'pay'
         }
     },
     
@@ -28,9 +27,18 @@ Ext.define('POS.view.credit.ListController', {
             params  = {
                 credit_id: rec.get('id')
             };
-        
-        var panel = Ext.fn.App.window('pay-credit');
-        panel.getController().load(params);
+        if (rec.get('balance') > 0) {
+            var panel = Ext.fn.App.window('pay-credit');
+            panel.getController().load(params);
+        } else {
+            Ext.fn.Notification.show('Lunas', 'Piutang ini sudah dilunasi.');
+        }
+    },
+    
+    print: function(){
+        var rec  = this.getView().getSelectionModel().getSelection()[0];
+
+        Ext.fn.App.printNotaCredit(rec.get('id'));
     },
 
     salesDetail: function(){

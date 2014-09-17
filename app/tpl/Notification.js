@@ -3,7 +3,7 @@ Ext.define('POS.tpl.Notification', {
 
     html: [
         '<div class="notification-container">',
-            '<div class="delete"><a onClick="Ext.fn.App.removeNotification([{id}])"><i class="fa fa-close"></i></a></div>',
+            '<div class="delete"><a onClick="Ext.fn.Notification.remove([{id}])"><i class="fa fa-close"></i></a></div>',
             '<div class="body">',
                 '<tpl switch="type">',
                     '<tpl case="price">',
@@ -14,7 +14,8 @@ Ext.define('POS.tpl.Notification', {
                             '<tpl case="down">',
                                 '<span class="green"> <i class="fa fa-caret-down"></i> turun </span>',
                         '</tpl>',
-                        ' sebesar {[ Ext.fn.Render.currency(values.data.difference) ]} menjadi {[ Ext.fn.Render.currency(values.data.to_price) ]} per {data.unit_name}. <br />',
+                        'sebesar {[ Ext.fn.Render.currency(values.data.difference) ]} menjadi {[ Ext.fn.Render.currency(values.data.to_price) ]} per {data.unit_name}. ',
+                        '<a onClick="Ext.fn.Notification.checkProductPrice({data.product_id})">Cek harga</a>',
                     '<tpl default>',
                         'tipe pemberitahuan default.',
                 '</tpl>',
