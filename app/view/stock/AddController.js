@@ -11,6 +11,11 @@ Ext.define('POS.view.stock.AddController', {
                 }, 10);
             }
         },
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.save();
@@ -26,8 +31,28 @@ Ext.define('POS.view.stock.AddController', {
         this.getView().close();
     },
     
+    onKeyAmount: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('buy').focus(true);
+    },
+    
+    onKeyBuy: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('sell_public').focus(true);
+    },
+    
+    onKeyMisc: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('discount').focus(true);
+    },
+    
     onChangeUnlimited: function(field, value){
         this.lookupReference('amount').setDisabled(value);
+    },
+    
+    onSelectProduct: function(combo, record){
+        this.lookupReference('unit').focus(true);
+    },
+    
+    onSelectUnit: function(combo, record){
+        this.lookupReference('amount').focus(true);
     },
 
     save: function(){

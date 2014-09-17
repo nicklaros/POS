@@ -120,7 +120,7 @@ Ext.define('POS.view.sales.Add' ,{
                             fieldLabel: 'Sisa',
                             name: 'balance',
                             reference: 'balance',
-                            raedOnly: true,
+                            readOnly: true,
                             saveOnEnter: true,
                             margin: '0 0 0 20',
                             width: 150

@@ -19,6 +19,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     minChars: 1,
     queryDelay: 50,
     queryMode: 'remote',
+    selectOnFocus: true,
     triggerAction: 'query',
     typeAhead: false,
     typeAheadDelay: 250,

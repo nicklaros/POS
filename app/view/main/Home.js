@@ -5,9 +5,10 @@ Ext.define('POS.view.main.Home' ,{
     requires: [
         'POS.custom.chart.transaction.Transaction',
         'POS.custom.panel.hint.Dashboard',
-        'POS.view.form.Login',
+        'POS.store.chart.transaction.Last30Days',
         'POS.tpl.AppHeader',
-        'POS.tpl.ContactDeveloper'
+        'POS.tpl.ContactDeveloper',
+        'POS.view.form.Login'
     ],
 	
 	autoScroll: true,

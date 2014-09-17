@@ -37,12 +37,15 @@ Ext.define('POS.view.stock.Edit' ,{
                 margin: '0 0 10 0',
                 items:[{
                     xtype: 'combo-product',
-                    fieldLabel: 'Ketik nama / kode barang',
+                    fieldLabel: 'Ketik nama / kode produk',
                     name: 'product_id',
                     reference: 'product',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
-                    width: 350
+                    width: 350,
+                    listeners: {
+                        'select': 'onSelectProduct'
+                    }
                 },{
                     xtype: 'combo-unit',
                     fieldLabel: 'Satuan',
@@ -50,8 +53,12 @@ Ext.define('POS.view.stock.Edit' ,{
                     reference: 'unit',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
+                    selectOnFocus: true,
                     margin: '0 0 0 20',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        'select': 'onSelectUnit'
+                    }
                 }]
             },{
                 xtype: 'container',
@@ -63,8 +70,10 @@ Ext.define('POS.view.stock.Edit' ,{
                     fieldLabel: 'Jumlah Stock',
                     name: 'amount',
                     reference: 'amount',
-                    saveOnEnter: true,
-                    width: 100
+                    width: 100,
+                    listeners: {
+                        'specialkey': 'onKeyAmount'
+                    }
                 },{
                     xtype: 'container',
                     html: 'atau',
@@ -83,8 +92,11 @@ Ext.define('POS.view.stock.Edit' ,{
                 xtype: 'field-price',
                 fieldLabel: 'Harga Beli',
                 name: 'buy',
-                saveOnEnter: true,
-                width: 150
+                reference: 'buy',
+                width: 150,
+                listeners: {
+                    'specialkey': 'onKeyBuy'
+                }
             },{
                 xtype: 'fieldset',
                 title: 'Harga Jual',
@@ -96,27 +108,33 @@ Ext.define('POS.view.stock.Edit' ,{
                     xtype: 'field-price',
                     fieldLabel: 'Biasa',
                     name: 'sell_public',
-                    saveOnEnter: true,
+                    reference: 'sell_public',
+                    tabOnEnter: true,
                     width: 150
                 },{
                     xtype: 'field-price',
                     fieldLabel: 'Grosir',
                     name: 'sell_distributor',
-                    saveOnEnter: true,
+                    reference: 'sell_distributor',
+                    tabOnEnter: true,
                     margin: '0 0 0 20',
                     width: 150
                 },{
                     xtype: 'field-price',
                     fieldLabel: 'Lain',
                     name: 'sell_misc',
-                    saveOnEnter: true,
+                    reference: 'sell_misc',
                     margin: '0 0 0 20',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        'specialkey': 'onKeyMisc'
+                    }
                 }]
             },{
                 xtype: 'field-discount',
                 fieldLabel: 'Diskon (%)',
                 name: 'discount',
+                reference: 'discount',
                 saveOnEnter: true,
                 width:150
             }]

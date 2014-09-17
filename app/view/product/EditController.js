@@ -3,6 +3,11 @@ Ext.define('POS.view.product.EditController', {
     alias: 'controller.edit-product',
 
     control: {
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.save();

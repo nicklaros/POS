@@ -18,6 +18,7 @@ Ext.define('POS.custom.field.ComboCustomer', {
     minChars: 1,
     queryDelay: 50,
     queryMode: 'remote',
+    selectOnFocus: true,
     triggerAction: 'query',
     typeAhead: true,
     typeAheadDelay: 250,

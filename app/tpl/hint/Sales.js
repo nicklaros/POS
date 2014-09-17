@@ -7,7 +7,7 @@ Ext.define('POS.tpl.hint.Sales', {
             '<div class="block">[<strong>{sales_pay_key}</strong>] Bayar</div>',
             '<div class="block">[<strong>{sales_save_key}</strong>] Simpan</div>',
             '<div class="block">[<strong>{sales_cancel_key}</strong>] Batal</div>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

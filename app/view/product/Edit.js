@@ -32,7 +32,7 @@ Ext.define('POS.view.product.Edit' ,{
                 fieldLabel: 'Kode produk',
                 name: 'code',
                 reference: 'code',
-                saveOnEnter: true,
+                tabOnEnter: true,
                 width: 150
             },{
                 xtype: 'field-product-name',

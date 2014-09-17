@@ -19,6 +19,7 @@ Ext.define('POS.custom.field.ComboStockVariant', {
     minChars: 1,
     queryDelay: 0,
     queryMode: 'local',
+    selectOnFocus: true,
     triggerAction: 'all',
     typeAhead: false,
     typeAheadDelay: 250,

@@ -6,16 +6,21 @@ Ext.define('POS.view.form.Login' ,{
     requires: [
         'POS.view.form.LoginController'
     ],
+    
+    layout: 'anchor',
 
     monitorValid:true,
+    
     padding: '10 25',
+    
     items: [{
         xtype: 'textfield',
         fieldLabel: 'User ID',
         labelAlign: 'top',
         name: 'user',
         allowBlank: false,
-        msgTarget: 'side',
+        msgTarget: 'under',
+        tabOnEnter: true,
         anchor: '100%'
     },{
         xtype: 'textfield',
@@ -25,7 +30,8 @@ Ext.define('POS.view.form.Login' ,{
         inputType:'password',
         submitValue: false,
         allowBlank: false,
-        msgTarget: 'side',
+        msgTarget: 'under',
+        saveOnEnter: true,
         anchor: '100%',
         listeners: {
             blur: 'blurPass'

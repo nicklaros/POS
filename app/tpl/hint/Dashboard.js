@@ -5,7 +5,7 @@ Ext.define('POS.tpl.hint.Dashboard', {
         '<div class="hint-container">',
             '<div class="block">[<strong>{sales_key}</strong>] Penjualan Baru</div>',
             '<div class="block">[<strong>{purchase_key}</strong>] Pembelian Baru</div>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

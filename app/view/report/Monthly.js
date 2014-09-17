@@ -14,6 +14,10 @@ Ext.define('POS.view.report.Monthly' ,{
         'POS.custom.grid.PurchasedProduct',
         'POS.custom.grid.SaledProduct',
         'POS.custom.panel.ReportStats',
+        'POS.store.chart.transaction.Monthly',
+        'POS.store.chart.transaction.MonthlySalesVsPurchase',
+        'POS.store.report.MonthlyPurchasedProduct',
+        'POS.store.report.MonthlySaledProduct',
         'POS.view.report.MonthlyController',
         'POS.view.report.MonthlyModel'
     ],
@@ -64,7 +68,7 @@ Ext.define('POS.view.report.Monthly' ,{
             },
             items: [{
                 xtype: 'container',
-                html: 'Mulai tanggal',
+                html: 'Bulan',
                 style: {
                     color: '#fff',
                     'font-weight': 'bold'

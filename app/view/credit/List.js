@@ -6,6 +6,7 @@ Ext.define('POS.view.credit.List' ,{
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
+        'POS.store.Credit',
         'POS.view.credit.ListController',
         'POS.view.credit.ListPayment',
         'POS.view.credit.Pay',

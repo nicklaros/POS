@@ -6,12 +6,20 @@
 
 Ext.Loader.setPath('Ext.fn', 'app/fn');
 Ext.Loader.setPath('Ext.tpl', 'app/tpl');
+Ext.Loader.setPath('Overrides', 'overrides');
 
 Ext.define('POS.Application', {
     extend: 'Ext.app.Application',
     name: 'POS',
 
     requires: [
+        'Ext.chart.axis.Numeric',
+        'Ext.chart.axis.Category',
+        'Ext.chart.series.Line',
+        'Ext.chart.series.Pie',
+        'Ext.chart.CartesianChart',
+        'Ext.chart.interactions.ItemHighlight',
+        'Ext.chart.interactions.ItemInfo',
         'Ext.data.proxy.Direct',
         'Ext.direct.*',
         'Ext.fn.App',
@@ -20,7 +28,8 @@ Ext.define('POS.Application', {
         'Ext.ux.data.proxy.WebSocket',
         'Ext.ux.WebSocket',
         'Ext.ux.WebSocketManager',
-        'Ext.ux.window.Notification'
+        'Ext.ux.window.Notification',
+        'Overrides.view.BoundListKeyNav'
     ],
 
     views: [

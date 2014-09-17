@@ -36,7 +36,7 @@ Ext.define('POS.view.main.MainController', {
     
     isKeyBlocked: function(){
         return !(
-            App.init.state == 1
+            Ext.main.ViewModel.get('state') == 1
             &&
             Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
             &&
@@ -60,7 +60,7 @@ Ext.define('POS.view.main.MainController', {
         var me = this;
         
         new Ext.util.KeyMap({
-            target: panel.getEl(),
+            target: Ext.getDoc(),
             binding: [{
                 key: 112, // F1 ---> dedicated for add-sales module
                 defaultEventAction: 'preventDefault',
