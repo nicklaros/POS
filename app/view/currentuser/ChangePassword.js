@@ -30,6 +30,7 @@ Ext.define('POS.view.currentuser.ChangePassword' ,{
                 inputType: 'password',
                 minLength: 4,
                 submitValue: false,
+                tabOnEnter: true,
                 width: 275
             },{
                 xtype: 'textfield',
@@ -40,6 +41,7 @@ Ext.define('POS.view.currentuser.ChangePassword' ,{
                 inputType: 'password',
                 minLength: 4,
                 submitValue: false,
+                tabOnEnter: true,
                 width: 275
             },{
                 xtype: 'textfield',
@@ -49,6 +51,7 @@ Ext.define('POS.view.currentuser.ChangePassword' ,{
                 allowBlank: false,
                 inputType: 'password',
                 minLength: 4,
+                saveOnEnter: true,
                 submitValue: false,
                 width: 275,
                 validator: function(value) {

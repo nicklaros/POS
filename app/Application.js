@@ -44,6 +44,7 @@ Ext.define('POS.Application', {
         'report.Monthly',
         'sales.List',
         'stock.List',
+        'unit.List',
         'user.List'
     ],
     

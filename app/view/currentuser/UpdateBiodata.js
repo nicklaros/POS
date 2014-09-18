@@ -29,6 +29,7 @@ Ext.define('POS.view.currentuser.UpdateBiodata' ,{
                 afterLabelTextTpl: REQUIRED,
                 maskRe: MASK_RE_0,
                 maxLength: 128,
+                tabOnEnter: true,
                 width: 350
             },{
                 xtype: 'textfield',
@@ -36,6 +37,7 @@ Ext.define('POS.view.currentuser.UpdateBiodata' ,{
                 name: 'address',
                 maskRe: MASK_RE_0,
                 maxLength: 128,
+                tabOnEnter: true,
                 width: 350
             },{
                 xtype: 'textfield',
@@ -43,6 +45,7 @@ Ext.define('POS.view.currentuser.UpdateBiodata' ,{
                 name: 'phone',
                 maskRe: MASK_RE_2,
                 maxLength: 20,
+                saveOnEnter: true,
                 width: 200
             }],
             dockedItems: [{

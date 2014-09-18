@@ -23,6 +23,18 @@ Ext.define('POS.view.stock.AddController', {
         }
     },
 
+    addProduct: function(){
+        var panel = Ext.fn.App.window('add-product');
+
+        panel.bindCombo = this.lookupReference('product').getId();
+    },
+
+    addUnit: function(){
+        var panel = Ext.fn.App.window('add-unit');
+
+        panel.bindCombo = this.lookupReference('unit').getId();
+    },
+
     comboChange: function(combo){
         if (combo.getValue() == null) combo.reset();
     },

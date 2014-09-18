@@ -42,10 +42,15 @@ Ext.define('POS.view.stock.Edit' ,{
                     reference: 'product',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
-                    width: 350,
+                    width: 300,
                     listeners: {
                         'select': 'onSelectProduct'
                     }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    handler: 'addProduct',
+                    margin: '25 0 0 5'
                 },{
                     xtype: 'combo-unit',
                     fieldLabel: 'Satuan',
@@ -59,6 +64,11 @@ Ext.define('POS.view.stock.Edit' ,{
                     listeners: {
                         'select': 'onSelectUnit'
                     }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    handler: 'addUnit',
+                    margin: '25 0 0 5'
                 }]
             },{
                 xtype: 'container',
@@ -77,13 +87,13 @@ Ext.define('POS.view.stock.Edit' ,{
                 },{
                     xtype: 'container',
                     html: 'atau',
-                    margin: '30 0 0 30'
+                    margin: '30 0 0 15'
                 },{
                     xtype: 'checkbox',
                     boxLabel: 'Tak terhingga',
                     name: 'unlimited',
                     inputValue: true,
-                    margin: '26 0 0 30',
+                    margin: '26 0 0 15',
                     listeners: {
                         'change': 'onChangeUnlimited'
                     }
@@ -101,34 +111,45 @@ Ext.define('POS.view.stock.Edit' ,{
                 xtype: 'fieldset',
                 title: 'Harga Jual',
                 anchor: '100%',
-                layout: 'hbox',
+                layout: 'vbox',
                 margin: '10 0 10 0',
                 padding: 10,
                 items:[{
-                    xtype: 'field-price',
-                    fieldLabel: 'Biasa',
-                    name: 'sell_public',
-                    reference: 'sell_public',
-                    tabOnEnter: true,
-                    width: 150
+                    xtype: 'container',
+                    anchor: '100%',
+                    layout: 'hbox',
+                    margin: '0 0 10 0',
+                    items:[{
+                        xtype: 'field-price',
+                        fieldLabel: 'Biasa',
+                        name: 'sell_public',
+                        reference: 'sell_public',
+                        tabOnEnter: true,
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Grosir',
+                        name: 'sell_distributor',
+                        reference: 'sell_distributor',
+                        tabOnEnter: true,
+                        margin: '0 0 0 20',
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Lain',
+                        name: 'sell_misc',
+                        reference: 'sell_misc',
+                        margin: '0 0 0 20',
+                        width: 150,
+                        listeners: {
+                            'specialkey': 'onKeyMisc'
+                        }
+                    }]
                 },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Grosir',
-                    name: 'sell_distributor',
-                    reference: 'sell_distributor',
-                    tabOnEnter: true,
-                    margin: '0 0 0 20',
-                    width: 150
-                },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Lain',
-                    name: 'sell_misc',
-                    reference: 'sell_misc',
-                    margin: '0 0 0 20',
-                    width: 150,
-                    listeners: {
-                        'specialkey': 'onKeyMisc'
-                    }
+                    xtype: 'container',
+                    cls: 'hint-text',
+                    html: STOCK_HINT_0,
+                    width: '100%'
                 }]
             },{
                 xtype: 'field-discount',

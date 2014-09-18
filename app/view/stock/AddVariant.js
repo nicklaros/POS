@@ -18,7 +18,7 @@ Ext.define('POS.view.stock.AddVariant' ,{
     constrain: true,
     layout: 'anchor',
     maximized: false,
-    modal: true,
+    modal: false,
     resizable: false,
     
     bindTo: null,

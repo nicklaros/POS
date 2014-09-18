@@ -1,13 +1,13 @@
-Ext.define('POS.view.product.SearchController', {
+Ext.define('POS.view.unit.SearchController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.search-product',
+    alias: 'controller.search-unit',
 
     control: {
         '#': {
             boxready: function(panel){
-                var params = POS.app.getStore('POS.store.Product').getProxy().extraParams;
+                var params = POS.app.getStore('Unit').getProxy().extraParams;
 
-                this.lookupReference('form').getForm().setValues(params);
+                panel.down('form').getForm().setValues(params);
 
                 var name = this.lookupReference('name');
                 setTimeout(function(){
@@ -28,14 +28,14 @@ Ext.define('POS.view.product.SearchController', {
     },
 
     search: function(){
-        var panel = this.getView(),
-            params = this.lookupReference('form').getValues();
+        var panel   = this.getView(),
+            params  = panel.down('form').getValues();
 
         for (var i in params) {
             if (params[i] === null || params[i] === "") delete params[i];
         }
 
-        POS.app.getStore('POS.store.Product').search(params);
+        POS.app.getStore('Unit').search(params);
         panel.close();
     }
 });

@@ -27,14 +27,20 @@ Ext.define('POS.view.purchase.EditDetailController', {
         }
     },
 
+    addProduct: function(){
+        var panel = Ext.fn.App.window('add-product');
+
+        panel.bindCombo = this.lookupReference('product').getId();
+    },
+
     addVariant: function(){
         var product = this.lookupReference('product').getSelectedRecord();
             
         // make sure product is selected
         if (!Ext.isEmpty(product)) {
-            var panel = Ext.widget('add-stock-variant')
+            var panel = Ext.fn.App.window('add-stock-variant');
             
-            panel.bindCombo = this.lookupReference('stock');
+            panel.bindCombo = this.lookupReference('stock').getId();
             panel.setTitle(panel.getTitle() + product.get('name'));
             panel.down('[name = product_id]').setValue(product.get('id'));
         } else {
@@ -91,7 +97,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
             Ext.ws.Main.on('stock/getOne', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    this.onStockSetValue(result.data);
+                    this.onSetValueStock(result.data);
                 }else{
                     Ext.fn.App.notification('Ups', result.errmsg);
                 }
@@ -103,21 +109,21 @@ Ext.define('POS.view.purchase.EditDetailController', {
         Ext.ws.Main.send('stock/getOne', params);
     },
     
-    onProductChange: function(combo){
+    onChangeProduct: function(combo){
         if (combo.getRawValue() == '') {
             combo.clear();
-            this.onProductClear();
+            this.onClearProduct();
         }
     },
     
-    onProductClear: function(){
+    onClearProduct: function(){
         var stock = this.lookupReference('stock');
         
         stock.clear();
         stock.getStore().removeAll();
     },
     
-    onProductSelect: function(combo, record){
+    onSelectProduct: function(combo, record){
         var params = {
             product_id: record[0].getData().id
         }
@@ -126,14 +132,14 @@ Ext.define('POS.view.purchase.EditDetailController', {
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    this.onProductClear();
+                    this.onClearProduct();
                     
                     POS.app.getStore('POS.store.combo.Stock').loadData(result.data);
                     
                     var resultLength = result.data.length;
                     
                     if (resultLength == 0) {
-                        this.lookupReference('add_variant').focus();
+                        this.addVariant();
                         
                     } else if (resultLength == 1) {
                         var stock = Ext.create('POS.model.Stock', result.data[0]);
@@ -157,16 +163,16 @@ Ext.define('POS.view.purchase.EditDetailController', {
         Ext.ws.Main.send('populate/stock', params);
     },
     
-    onStockClear: function(){
+    onClearStock: function(){
         this.lookupReference('unit').setHtml('');        
         this.lookupReference('detail_container').hide();
     },
     
-    onStockSelect: function(combo, record){
-        this.onStockSetValue(record[0].getData());
+    onSelectStock: function(combo, record){
+        this.onSetValueStock(record[0].getData());
     },
     
-    onStockSetValue: function(value){
+    onSetValueStock: function(value){
         this.getViewModel().set('stock', value);
         
         this.setUnitPrice();

@@ -1,44 +1,37 @@
-Ext.define('POS.view.product.Add' ,{
+Ext.define('POS.view.unit.Add' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.add-product',
-    id: 'add-product',
-    controller: 'add-product',
+    alias : 'widget.add-unit',
+    id: 'add-unit',
+    controller: 'add-unit',
 
     requires: [
-        'POS.custom.field.ProductCode',
-        'POS.custom.field.ProductName',
-        'POS.view.product.AddController'
+        'POS.custom.field.UnitName',
+        'POS.view.unit.AddController'
     ],
 
+    layout: 'anchor',
+    
     autoShow: true,
     constrain: true,
-    layout: 'anchor',
     resizable: false,
     width: 350,
     
     bindCombo: null,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Data Produk';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Satuan';
 
         this.items = [{
             xtype: 'form',
             monitorValid: true,
             bodyPadding: 10,
             items: [{
-                xtype: 'field-product-code',
-                fieldLabel: 'Kode produk',
-                name: 'code',
-                reference: 'code',
-                tabOnEnter: true,
-                width: 150
-            },{
-                xtype: 'field-product-name',
-                fieldLabel: 'Nama produk',
+                xtype: 'field-unit-name',
+                fieldLabel: 'Nama Satuan',
                 name: 'name',
                 reference: 'name',
                 saveOnEnter: true,
-                anchor: '100%'
+                width: '100%'
             }]
         }];
 

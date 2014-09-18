@@ -21,7 +21,7 @@ Ext.define('POS.view.form.Login' ,{
         allowBlank: false,
         msgTarget: 'under',
         tabOnEnter: true,
-        anchor: '100%'
+        width: '100%'
     },{
         xtype: 'textfield',
         fieldLabel: 'Password',
@@ -32,7 +32,7 @@ Ext.define('POS.view.form.Login' ,{
         allowBlank: false,
         msgTarget: 'under',
         saveOnEnter: true,
-        anchor: '100%',
+        width: '100%',
         listeners: {
             blur: 'blurPass'
         }

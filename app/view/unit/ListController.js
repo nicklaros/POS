@@ -1,6 +1,6 @@
-Ext.define('POS.view.product.ListController', {
+Ext.define('POS.view.unit.ListController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.list-product',
+    alias: 'controller.list-unit',
 
     requires: [
         'Ext.fn.Util'
@@ -20,7 +20,7 @@ Ext.define('POS.view.product.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-product');
+        Ext.fn.App.window('add-unit');
     },
     
     remove: function(){
@@ -36,23 +36,26 @@ Ext.define('POS.view.product.ListController', {
                     for(i=0;i<smCount;i++){
                         id.push(sel[i].get('id'));
                     }
+                    var params = {
+                        id: id
+                    }
 
                     Ext.fn.App.setLoading(true);
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('product/destroy', function(websocket, data){
+                        Ext.ws.Main.on('unit/destroy', function(websocket, result){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
-                            if (data.success){
-                                POS.app.getStore('POS.store.Product').load();
+                            if (result.success){
+                                POS.app.getStore('Unit').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                Ext.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
                             destroyable: true
                         })
                     );
-                    Ext.ws.Main.send('product/destroy', {id: id});
+                    Ext.ws.Main.send('unit/destroy', params);
                 }
             }
         );
@@ -61,7 +64,7 @@ Ext.define('POS.view.product.ListController', {
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-product');
+        var edit = Ext.fn.App.window('edit-unit');
         edit.getController().load(rec.get('id'));
     },
     
@@ -70,7 +73,7 @@ Ext.define('POS.view.product.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-product');
+        Ext.fn.App.window('search-unit');
     }
     
 });

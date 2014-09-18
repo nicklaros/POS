@@ -30,6 +30,15 @@ html{
 }
 
 
+.glyph{
+    font-size:18px !important;
+    margin-right: 5px;
+}
+.glyph-closer{
+    font-size:18px !important;
+}
+
+
 /* field class */
 .field-highlight{
     background-color: antiquewhite;
@@ -99,6 +108,10 @@ html{
 .hint-container .block{
     float: left;
     width: 200px;
+}
+.hint-text{
+    font-size: 12px;
+    color: #7C7C7C;
 }
 
 
@@ -195,10 +208,6 @@ html{
 .detail-block:last-child{
     border-right: 0;
     margin-right: 0;
-}
-.glyph{
-    font-size:18px !important;
-    margin-right: 5px;
 }
 .harga{
     border: 1px solid rgb(151, 151, 151);

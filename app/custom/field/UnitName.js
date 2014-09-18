@@ -1,10 +1,10 @@
-Ext.define('POS.custom.field.ProductName', {
+Ext.define('POS.custom.field.UnitName', {
     extend: 'Ext.form.field.Text',
-    alias: 'widget.field-product-name',
+    alias: 'widget.field-unit-name',
 
     afterLabelTextTpl: REQUIRED,
     allowBlank: false,
-    maxLength: 64,
+    maxLength: 32,
     
     initComponent: function(){
         this.maskRe = MASK_RE_0;

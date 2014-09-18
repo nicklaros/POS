@@ -63,6 +63,7 @@ Ext.define('Ext.fn.Util', {
             'POS.store.report.MonthlySaledProduct',
             'POS.store.Sales',
             'POS.store.Stock',
+            'Unit',
             'POS.store.User'
         ];
 

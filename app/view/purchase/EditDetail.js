@@ -72,10 +72,15 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         allowBlank: false,
                         width: 300,
                         listeners: {
-                            'change': 'onProductChange',
-                            'clear': 'onProductClear',
-                            'select': 'onProductSelect'
+                            'change': 'onChangeProduct',
+                            'clear': 'onClearProduct',
+                            'select': 'onSelectProduct'
                         }
+                    },{
+                        xtype: 'button',
+                        text: '<i class="fa fa-plus"></i>',
+                        handler: 'addProduct',
+                        margin: '25 0 0 5'
                     },{
                         xtype: 'combo-stock-variant',
                         fieldLabel: 'Stock Variant',
@@ -83,20 +88,16 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         reference: 'stock',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
-                        margin: '0 0 0 20',
+                        margin: '0 0 0 50',
                         width: 200,
                         listeners: {
-                            'clear': 'onStockClear',
-                            'select': 'onStockSelect',
-                            'setvalue': 'onStockSetValue'
+                            'clear': 'onClearStock',
+                            'select': 'onSelectStock',
+                            'setvalue': 'onSetValueStock'
                         }
                     },{
-                        xtype: 'label',
-                        html: 'atau',
-                        margin: '30 0 0 10'
-                    },{
                         xtype: 'button',
-                        text: 'Tambah Variant',
+                        text: '<i class="fa fa-plus"></i>',
                         reference: 'add_variant',
                         handler: 'addVariant',
                         margin: '25 0 0 10'

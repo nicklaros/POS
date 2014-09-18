@@ -1,19 +1,14 @@
-Ext.define('POS.view.product.AddController', {
+Ext.define('POS.view.unit.AddController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.add-product',
+    alias: 'controller.add-unit',
 
     control: {
         '#': {
             boxready: function(){
-                var code = this.lookupReference('code');
+                var name = this.lookupReference('name');
                 setTimeout(function(){
-                    code.focus();
+                    name.focus();
                 }, 10);
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -35,35 +30,41 @@ Ext.define('POS.view.product.AddController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
+            panel.setLoading(true);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('product/create', function(websocket, result){
+                Ext.ws.Main.on('unit/create', function(websocket, result){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    panel.setLoading(false);
                     if (result.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Product').load();
+                        POS.app.getStore('Unit').load();
                         
                         var bindCombo = Ext.getCmp(panel.bindCombo);
                         
-                        if (!Ext.isEmpty(bindCombo) && (bindCombo.xtype == 'combo-product')) {                            
-                            var product = Ext.create('POS.model.Product', result.data);
+                        if (!Ext.isEmpty(bindCombo) && (bindCombo.xtype == 'combo-unit')) {                            
+                            var unit = Ext.create('POS.model.Unit', result.data);
                             
-                            bindCombo.getStore().add(product);
+                            bindCombo.getStore().add(unit);
                             
-                            bindCombo.select(product);
+                            bindCombo.select(unit);
                             
-                            bindCombo.fireEvent('select', bindCombo, [product]);
+                            bindCombo.fireEvent('select', bindCombo, [unit]);
                         }
                     }else{
                         Ext.fn.App.notification('Ups', result.errmsg);
+                        var name = this.lookupReference('name');
+                        setTimeout(function(){
+                            name.focus();
+                        }, 10);
                     }
                 }, this, {
                     single: true,
                     destroyable: true
-                })
+                }),
+                panel,
+                false
             );
-            Ext.ws.Main.send('product/create', values);
+            Ext.ws.Main.send('unit/create', values);
         }
     }
 });

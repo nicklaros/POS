@@ -1,13 +1,8 @@
-Ext.define('POS.view.product.EditController', {
+Ext.define('POS.view.unit.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edit-product',
+    alias: 'controller.edit-unit',
 
     control: {
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
-            }
-        },
         'textfield[saveOnEnter = true]': {
             specialkey: function(field, e){
                 field.fireEvent('blur', field);
@@ -21,16 +16,20 @@ Ext.define('POS.view.product.EditController', {
     },
 
     load: function(id){
-        var panel = this.getView(),
-            form = this.lookupReference('form');
+        var panel   = this.getView(),
+            form    = panel.down('form'),
+            params  = {
+                id: id
+            };
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('product/loadFormEdit', {id: id});
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('product/loadFormEdit', function(websocket, result){
+            Ext.ws.Main.on('unit/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
+                    panel.show();
+                    
                     form.getForm().setValues(result.data);
                     
                     this.lookupReference('name').focus();
@@ -42,8 +41,10 @@ Ext.define('POS.view.product.EditController', {
                 single: true,
                 destroyable: true
             }),
-            panel
+            panel,
+            true
         );
+        Ext.ws.Main.send('unit/loadFormEdit', params);
     },
 
     save: function(){
@@ -53,23 +54,30 @@ Ext.define('POS.view.product.EditController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('product/update', values);
+            panel.setLoading(true);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('product/update', function(websocket, data){
+                Ext.ws.Main.on('unit/update', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    panel.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Product').load();
+                        
+                        POS.app.getStore('Unit').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
+                        var name = this.lookupReference('name');
+                        setTimeout(function(){
+                            name.focus();
+                        }, 10);
                     }
                 }, this, {
                     single: true,
                     destroyable: true
-                })
+                }),
+                panel,
+                false
             );
+            Ext.ws.Main.send('unit/update', values);
         }
     }
 });

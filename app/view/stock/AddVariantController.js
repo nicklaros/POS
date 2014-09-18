@@ -35,7 +35,7 @@ Ext.define('POS.view.stock.AddVariantController', {
                     if (result.success){
                         panel.close();
                         
-                        var bindCombo = panel.bindCombo;
+                        var bindCombo = Ext.getCmp(panel.bindCombo);
                         
                         if (!Ext.isEmpty(bindCombo) && (bindCombo.xtype == 'combo-stock-variant')) {
                             result.data.stock_id = result.data.id;

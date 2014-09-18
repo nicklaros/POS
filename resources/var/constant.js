@@ -24,3 +24,6 @@ var REGEX_ERROR_1 = "Tipe file yang Anda upload ditolak.  Tipe file yang diizink
 
 // Miscellineous
 var REQUIRED = "<span style='color: red;'>*</span>"
+
+// Stock Hint
+var STOCK_HINT_0 = 'Apabila Harga Grosir atau Harga Lain dikosongi, maka akan disamakan dengan Harga Biasa';
