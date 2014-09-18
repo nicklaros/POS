@@ -23,7 +23,7 @@ Ext.define('POS.view.purchase.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-truck glyph"></i> Pembelian';
 
-        var store = POS.app.getStore('POS.store.Purchase');
+        var store = POS.app.getStore('Purchase');
         this.store = store;
 
         this.columns = [

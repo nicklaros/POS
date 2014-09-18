@@ -36,35 +36,38 @@ Ext.define('Ext.fn.Util', {
         if (Ext.ws.Main && Ext.ws.Main.getStatus() == 1) Ext.ws.Main.close();
 
         // Clear store
-        POS.app.getStore('POS.store.Notification').removeAll();
+        POS.app.getStore('Notification').removeAll();
 
         // Stop some task
     },
     
     initStore: function(){
         var stores = [
-            'POS.store.combo.Cashier',
-            'POS.store.combo.Product',
-            'POS.store.combo.Stock',
-            'POS.store.combo.Supplier',
-            'POS.store.combo.Unit',
-            'POS.store.chart.transaction.CustomSalesVsPurchase',
-            'POS.store.chart.transaction.Last30Days',
-            'POS.store.chart.transaction.Monthly',
-            'POS.store.chart.transaction.MonthlySalesVsPurchase',
+            'combo.Customer',
+            'combo.Cashier',
+            'combo.Product',
+            'combo.Stock',
+            'combo.Supplier',
+            'combo.Unit',
+            'chart.transaction.CustomSalesVsPurchase',
+            'chart.transaction.Last30Days',
+            'chart.transaction.Monthly',
+            'chart.transaction.MonthlySalesVsPurchase',
             'Credit',
             'CreditPayment',
-            'POS.store.Notification',
-            'POS.store.Product',
-            'POS.store.Purchase',
-            'POS.store.report.CustomPurchasedProduct',
-            'POS.store.report.CustomSaledProduct',
-            'POS.store.report.MonthlyPurchasedProduct',
-            'POS.store.report.MonthlySaledProduct',
-            'POS.store.Sales',
-            'POS.store.Stock',
+            'Customer',
+            'Notification',
+            'Product',
+            'Purchase',
+            'report.CustomPurchasedProduct',
+            'report.CustomSaledProduct',
+            'report.MonthlyPurchasedProduct',
+            'report.MonthlySaledProduct',
+            'Sales',
+            'Stock',
+            'Supplier',
             'Unit',
-            'POS.store.User'
+            'User'
         ];
 
         for (i=0; i<stores.length; i++) {
@@ -367,8 +370,8 @@ Ext.define('Ext.fn.Util', {
         var me = this;
         if (Ext.ws.Main.getStatus() == 1) {
             var stores = [
-                'POS.store.chart.transaction.Last30Days',
-                'POS.store.Notification'
+                'chart.transaction.Last30Days',
+                'Notification'
             ];
             
             for (i=0; i<stores.length; i++) {

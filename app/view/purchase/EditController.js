@@ -167,7 +167,7 @@ Ext.define('POS.view.purchase.EditController', {
                         Ext.fn.App.setLoading(false);
                         if (result.success){
                             panel.close();
-                            POS.app.getStore('POS.store.Purchase').load();
+                            POS.app.getStore('Purchase').load();
                         }else{
                             Ext.fn.App.notification('Ups', result.errmsg);
                         }

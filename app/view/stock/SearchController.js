@@ -5,7 +5,7 @@ Ext.define('POS.view.stock.SearchController', {
     control: {
         '#': {
             boxready: function(panel){
-                var params = POS.app.getStore('POS.store.Stock').getProxy().extraParams;
+                var params = POS.app.getStore('Stock').getProxy().extraParams;
 
                 this.lookupReference('form').getForm().setValues(params);
 
@@ -34,7 +34,7 @@ Ext.define('POS.view.stock.SearchController', {
             if (params[i] === null || params[i] === "") delete params[i];
         }
 
-        POS.app.getStore('POS.store.Stock').search(params);
+        POS.app.getStore('Stock').search(params);
         panel.close();
     }
 });

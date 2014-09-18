@@ -11,7 +11,7 @@ Ext.define('POS.custom.field.ComboStock', {
     valueField: 'stock_id',
 
     anyMatch: true,
-    autoSelect: false,
+    autoSelect: true,
     enableKeyEvents: true,
     forceSelection: true,
     hideTrigger: true,
@@ -21,11 +21,11 @@ Ext.define('POS.custom.field.ComboStock', {
     queryMode: 'remote',
     selectOnFocus: true,
     triggerAction: 'query',
-    typeAhead: false,
+    typeAhead: true,
     typeAheadDelay: 250,
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Stock');
+        this.store = POS.app.getStore('combo.Stock');
 
         this.listConfig = {
             itemTpl: Ext.create('POS.tpl.combo.Stock')

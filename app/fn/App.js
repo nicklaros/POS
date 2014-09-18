@@ -45,6 +45,11 @@ Ext.define('Ext.fn.App', {
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
+    mnListCustomer: function(){
+        var panel = this.newTab('list-customer');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
     mnListProduct: function(){
         var panel = this.newTab('list-product');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
@@ -62,6 +67,11 @@ Ext.define('Ext.fn.App', {
 
     mnListStock: function(){
         var panel = this.newTab('list-stock');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListSupplier: function(){
+        var panel = this.newTab('list-supplier');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 

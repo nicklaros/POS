@@ -12,7 +12,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
                 }, 10);
             },
             close: function(){
-                POS.app.getStore('POS.store.combo.Stock').removeAll();
+                POS.app.getStore('combo.Stock').removeAll();
             }
         },
         'textfield[tabOnEnter = true]': {
@@ -79,7 +79,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    POS.app.getStore('POS.store.combo.Stock').loadData(result.data);
+                    POS.app.getStore('combo.Stock').loadData(result.data);
                 }else{
                     Ext.fn.App.notification('Ups', result.errmsg);
                 }
@@ -134,7 +134,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
                 if (result.success){
                     this.onClearProduct();
                     
-                    POS.app.getStore('POS.store.combo.Stock').loadData(result.data);
+                    POS.app.getStore('combo.Stock').loadData(result.data);
                     
                     var resultLength = result.data.length;
                     

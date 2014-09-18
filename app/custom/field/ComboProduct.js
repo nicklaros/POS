@@ -11,7 +11,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     valueField: 'id',
 
     anyMatch: true,
-    autoSelect: false,
+    autoSelect: true,
     enableKeyEvents: true,
     forceSelection: true,
     hideTrigger: true,
@@ -21,7 +21,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     queryMode: 'remote',
     selectOnFocus: true,
     triggerAction: 'query',
-    typeAhead: false,
+    typeAhead: true,
     typeAheadDelay: 250,
     listeners: {
         keydown: function(field){
@@ -32,7 +32,7 @@ Ext.define('POS.custom.field.ComboProduct', {
     },
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Product');
+        this.store = POS.app.getStore('combo.Product');
 
         this.listConfig = {
             itemTpl: Ext.create('POS.tpl.combo.Product')

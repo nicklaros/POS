@@ -4,7 +4,7 @@ Ext.define('Ext.fn.Notification', {
     checkProductPrice: function(productId){
         Ext.fn.App.newTab('list-stock');
                 
-        POS.app.getStore('POS.store.Stock').search({
+        POS.app.getStore('Stock').search({
             product_id: productId
         });
 
@@ -21,7 +21,7 @@ Ext.define('Ext.fn.Notification', {
                 clearTimeout(monitor);
                 panel.setLoading(false);
                 if (data.success){
-                    var store = POS.app.getStore('POS.store.Notification');
+                    var store = POS.app.getStore('Notification');
                     
                     id.forEach(function(id){
                         store.remove(store.getById(id));

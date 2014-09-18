@@ -8,7 +8,7 @@ Ext.define('POS.view.notification.ListController', {
             'Apakah Anda yakin akan membersihkan semua pemberitahuan?',
             function(btn){
                 if (btn == 'yes'){
-                    var store = POS.app.getStore('POS.store.Notification');
+                    var store = POS.app.getStore('Notification');
                     
                     var id = [];
                     store.each(function(record){

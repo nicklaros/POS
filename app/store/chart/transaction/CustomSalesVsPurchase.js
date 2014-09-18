@@ -18,6 +18,12 @@ Ext.define('POS.store.chart.transaction.CustomSalesVsPurchase', {
                 rootProperty: 'data'
             }
         });
+    },
+    
+    listeners: {
+        'beforepush': function(store){
+            store.removeAll();
+        }
     }
     
 });

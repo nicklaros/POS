@@ -43,7 +43,7 @@ Ext.define('POS.view.product.ListController', {
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
                             if (data.success){
-                                POS.app.getStore('POS.store.Product').load();
+                                POS.app.getStore('Product').load();
                             }else{
                                 Ext.fn.App.notification('Ups', data.errmsg);
                             }

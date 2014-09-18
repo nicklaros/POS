@@ -395,7 +395,7 @@ Ext.define('Ext.ux.data.proxy.WebSocket', {
                 store.commitChanges();
             }
             else {
-                store.fireEvent('beforeload', store);
+                store.fireEvent('beforepush', store);
                 store.loadData(resultSet.records, true);
                 store.fireEvent('load', store, resultSet.records);
             }

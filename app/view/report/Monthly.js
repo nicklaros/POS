@@ -131,7 +131,7 @@ Ext.define('POS.view.report.Monthly' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-saled-product',
-                    store: POS.app.getStore('POS.store.report.MonthlySaledProduct'),
+                    store: POS.app.getStore('report.MonthlySaledProduct'),
                     flex: 1
                 }]
             },{
@@ -145,7 +145,7 @@ Ext.define('POS.view.report.Monthly' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchased-product',
-                    store: POS.app.getStore('POS.store.report.MonthlyPurchasedProduct'),
+                    store: POS.app.getStore('report.MonthlyPurchasedProduct'),
                     flex: 1
                 }]
             }]

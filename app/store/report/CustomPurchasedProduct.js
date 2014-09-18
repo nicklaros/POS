@@ -20,5 +20,11 @@ Ext.define('POS.store.report.CustomPurchasedProduct', {
                 rootProperty: 'data'
             }
         });
+    },
+    
+    listeners: {
+        'beforepush': function(store){
+            store.removeAll();
+        }
     }
 });

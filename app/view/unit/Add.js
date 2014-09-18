@@ -19,7 +19,7 @@ Ext.define('POS.view.unit.Add' ,{
     bindCombo: null,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Satuan';
+        this.title = '<i class="fa fa-cubes glyph"></i> Tambah Satuan';
 
         this.items = [{
             xtype: 'form',

@@ -19,7 +19,7 @@ Ext.define('POS.view.unit.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Satuan';
+        this.title = '<i class="fa fa-cubes glyph"></i> Satuan';
 
         var store = POS.app.getStore('Unit');
         this.store = store;

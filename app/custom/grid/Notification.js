@@ -14,7 +14,7 @@ Ext.define('POS.custom.grid.Notification', {
     minHeight: 150,
     
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.Notification');
+        this.store = POS.app.getStore('Notification');
 
         this.columns = [{
             xtype   : 'templatecolumn', 

@@ -36,6 +36,7 @@ Ext.define('POS.Application', {
         'credit.List',
         'currentuser.ChangePassword',
         'currentuser.UpdateBiodata',
+        'customer.List',
         'DeveloperInfo',
         'notification.List',
         'product.List',
@@ -44,6 +45,7 @@ Ext.define('POS.Application', {
         'report.Monthly',
         'sales.List',
         'stock.List',
+        'supplier.List',
         'unit.List',
         'user.List'
     ],

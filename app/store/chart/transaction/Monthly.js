@@ -19,6 +19,12 @@ Ext.define('POS.store.chart.transaction.Monthly', {
                 rootProperty: 'data'
             }
         });
+    },
+    
+    listeners: {
+        'beforepush': function(store){
+            store.removeAll();
+        }
     }
     
 });

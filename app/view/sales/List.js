@@ -23,7 +23,7 @@ Ext.define('POS.view.sales.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan';
 
-        var store = POS.app.getStore('POS.store.Sales');
+        var store = POS.app.getStore('Sales');
         this.store = store;
 
         this.columns = [

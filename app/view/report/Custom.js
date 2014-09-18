@@ -138,7 +138,7 @@ Ext.define('POS.view.report.Custom' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-saled-product',
-                    store: POS.app.getStore('POS.store.report.CustomSaledProduct'),
+                    store: POS.app.getStore('report.CustomSaledReport'),
                     flex: 1
                 }]
             },{
@@ -152,7 +152,7 @@ Ext.define('POS.view.report.Custom' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchased-product',
-                    store: POS.app.getStore('POS.store.report.CustomPurchasedProduct'),
+                    store: POS.app.getStore('report.PurchasedProduct'),
                     flex: 1
                 }]
             }]

@@ -5,7 +5,7 @@ Ext.define('POS.view.report.CustomController', {
     control: {
         '#': {
             boxready: function(){
-                var store = POS.app.getStore('POS.store.chart.transaction.CustomSalesVsPurchase');
+                var store = POS.app.getStore('chart.transaction.CustomSalesVsPurchase');
                 this.getView().down('chart-sales-vs-purchase polar').setStore(store);
             }
         }
@@ -50,10 +50,6 @@ Ext.define('POS.view.report.CustomController', {
                 start: start,
                 until: until
             };
-        
-        POS.app.getStore('POS.store.chart.transaction.CustomSalesVsPurchase').removeAll();
-        POS.app.getStore('POS.store.report.CustomPurchasedProduct').removeAll();
-        POS.app.getStore('POS.store.report.CustomSaledProduct').removeAll();
         
         this.process(params);
     }

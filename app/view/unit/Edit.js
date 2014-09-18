@@ -17,7 +17,7 @@ Ext.define('POS.view.unit.Edit' ,{
     width: 350,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Ubah Satuan';
+        this.title = '<i class="fa fa-cubes glyph"></i> Ubah Satuan';
 
         this.items = [{
             xtype: 'form',

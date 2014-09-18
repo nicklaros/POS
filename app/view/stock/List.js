@@ -22,7 +22,7 @@ Ext.define('POS.view.stock.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-tasks glyph"></i> Stock';
 
-        var store = POS.app.getStore('POS.store.Stock');
+        var store = POS.app.getStore('Stock');
         this.store = store;
 
         this.columns = [

@@ -16,7 +16,7 @@ Ext.define('POS.view.unit.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Satuan';
+        this.title = '<i class="fa fa-cubes glyph"></i> Pencarian Satuan';
 
         this.items = [{
             xtype: 'form',

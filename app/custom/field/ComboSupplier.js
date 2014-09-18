@@ -24,7 +24,7 @@ Ext.define('POS.custom.field.ComboSupplier', {
     typeAheadDelay: 250,
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Supplier');
+        this.store = POS.app.getStore('combo.Supplier');
 
         this.callParent(arguments);
     }

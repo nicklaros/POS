@@ -25,7 +25,7 @@ Ext.define('POS.view.user.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-user glyph"></i> User';
 
-        var store = POS.app.getStore('POS.store.User');
+        var store = POS.app.getStore('User');
         this.store = store;
 
         this.columns = [

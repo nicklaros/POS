@@ -82,7 +82,7 @@ Ext.define('POS.view.stock.AddController', {
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Stock').load();
+                        POS.app.getStore('Stock').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

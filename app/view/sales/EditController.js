@@ -180,7 +180,7 @@ Ext.define('POS.view.sales.EditController', {
                         Ext.fn.App.setLoading(false);
                         if (data.success){
                             panel.close();
-                            POS.app.getStore('POS.store.Sales').load();
+                            POS.app.getStore('Sales').load();
 
                             Ext.Msg.confirm(
                                 '<i class="fa fa-exclamation-triangle glyph"></i> Print',

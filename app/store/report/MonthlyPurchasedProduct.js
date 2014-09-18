@@ -20,5 +20,11 @@ Ext.define('POS.store.report.MonthlyPurchasedProduct', {
                 rootProperty: 'data'
             }
         });
+    },
+    
+    listeners: {
+        'beforepush': function(store){
+            store.removeAll();
+        }
     }
 });

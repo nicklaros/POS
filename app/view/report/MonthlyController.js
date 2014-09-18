@@ -5,10 +5,10 @@ Ext.define('POS.view.report.MonthlyController', {
     control: {
         '#': {
             boxready: function(){
-                var store = POS.app.getStore('POS.store.chart.transaction.MonthlySalesVsPurchase');
+                var store = POS.app.getStore('chart.transaction.MonthlySalesVsPurchase');
                 this.getView().down('chart-sales-vs-purchase polar').setStore(store);
                 
-                var store = POS.app.getStore('POS.store.chart.transaction.Monthly');
+                var store = POS.app.getStore('chart.transaction.Monthly');
                 this.getView().down('chart-transaction chart').setStore(store);
             }
         }
@@ -51,11 +51,6 @@ Ext.define('POS.view.report.MonthlyController', {
     
     viewReport: function(){
         var month = this.lookupReference('month').getSubmitValue();
-        
-        POS.app.getStore('POS.store.chart.transaction.Monthly').removeAll();
-        POS.app.getStore('POS.store.chart.transaction.MonthlySalesVsPurchase').removeAll();
-        POS.app.getStore('POS.store.report.MonthlyPurchasedProduct').removeAll();
-        POS.app.getStore('POS.store.report.MonthlySaledProduct').removeAll();
         
         this.process(month);
     }
