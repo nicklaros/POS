@@ -3,7 +3,8 @@ Ext.define('POS.custom.chart.transaction.SalesVsPurchase', {
     alias: 'widget.chart-sales-vs-purchase',
 
     requires: [
-        'Ext.fn.Render'
+        'Ext.fn.Render',
+        'Ext.chart.PolarChart'
     ],
     
     cls: 'panel',

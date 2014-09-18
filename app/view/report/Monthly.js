@@ -11,20 +11,24 @@ Ext.define('POS.view.report.Monthly' ,{
         'Ext.ux.form.field.Month',
         'POS.custom.chart.transaction.SalesVsPurchase',
         'POS.custom.chart.transaction.Transaction',
+        'POS.custom.grid.PurchaseReport',
         'POS.custom.grid.PurchasedProduct',
         'POS.custom.grid.SaledProduct',
+        'POS.custom.grid.SalesReport',
         'POS.custom.panel.ReportStats',
         'POS.store.chart.transaction.Monthly',
         'POS.store.chart.transaction.MonthlySalesVsPurchase',
+        'POS.store.report.MonthlyPurchase',
         'POS.store.report.MonthlyPurchasedProduct',
         'POS.store.report.MonthlySaledProduct',
+        'POS.store.report.MonthlySales',
         'POS.view.report.MonthlyController',
         'POS.view.report.MonthlyModel'
     ],
 
     layout: 'anchor',
     
-	autoScroll: true,
+	autoScroll: false,
     autoShow: false,
     bodyStyle: {
         'background-color': '#e9eaed',
@@ -51,29 +55,8 @@ Ext.define('POS.view.report.Monthly' ,{
             anchor: '100%',
             items: [{
                 xtype: 'container',
-                html: '<i class="fa fa-book glyph"></i> Laporan Bulanan',
-                flex: 1
-            },{
-                xtype: 'buttonsegment',
-                items: [{
-                    text: 'x',
-                    handler: 'close'
-                }]
-            }]
-        },{
-            xtype: 'toolbar',
-            dock: 'top',
-            style: {
-                'background': '#7B8E9B'
-            },
-            items: [{
-                xtype: 'container',
-                html: 'Bulan',
-                style: {
-                    color: '#fff',
-                    'font-weight': 'bold'
-                },
-                margin: '5 0 0 0'
+                margin: '5 0 0 0',
+                html: '<i class="fa fa-book glyph"></i> Laporan Bulan'
             },{
                 xtype: 'monthfield', 
                 reference: 'month', 
@@ -88,66 +71,79 @@ Ext.define('POS.view.report.Monthly' ,{
                 text:'<i class="fa fa-binoculars glyph"></i> Lihat laporan',
                 margin: '0 0 0 10',
                 handler: 'viewReport'
+            },{
+                xtype: 'container',
+                flex: 1
+            },{
+                xtype: 'buttonsegment',
+                items: [{
+                    text: 'x',
+                    handler: 'close'
+                }]
             }]
         }];
         
         this.items = [{
-            xtype: 'container',
-            layout: 'vbox',
-            width: 850,
-            style: {
-                margin: '25px auto'
-            },
+            xtype: 'tabpanel',
+            activeTab: 0,
+			bodyStyle: {
+				border: '0 !important'
+			},
+            maxHeight: Ext.getBody().getViewSize().height - 55,
             items: [{
-                xtype: 'container',
-                layout: 'hbox',
-                margin: '0 0 25 0',
-                width: '100%',
+                xtype: 'panel',
+                title: 'Statistik',
+	            autoScroll: true,
+                bodyStyle: {
+                    'background-color': '#e9eaed',
+                    border: '0 !important'
+                },
                 items: [{
-                    xtype: 'report-stats',
-                    bind: {
-                        data: '{stats}'
+                    xtype: 'container',
+                    layout: 'vbox',
+                    width: 850,
+                    style: {
+                        margin: '25px auto'
                     },
-                    flex: 1
-                },{
-                    xtype: 'container',
-                    width: 20
-                },{
-                    xtype: 'chart-sales-vs-purchase',
-                    flex: 1
+                    items: [{
+                        xtype: 'container',
+                        layout: 'hbox',
+                        margin: '0 0 25 0',
+                        width: '100%',
+                        items: [{
+                            xtype: 'report-stats',
+                            bind: {
+                                data: '{stats}'
+                            },
+                            flex: 1
+                        },{
+                            xtype: 'container',
+                            width: 20
+                        },{
+                            xtype: 'chart-sales-vs-purchase',
+                            flex: 1
+                        }]
+                    },{
+                        xtype: 'chart-transaction',
+                        width: 850
+                    }]
                 }]
             },{
-                xtype: 'chart-transaction',
-                margin: '0 0 25 0',
-                width: 850
+                xtype: 'grid-sales-report',
+                title: 'Penjualan',
+                store: POS.app.getStore('report.MonthlySales')
             },{
-                xtype: 'container',
-                cls: 'panel',
-                margin: '0 0 25 0',
-                width: '100%',
-                items:[{
-                    xtype: 'container',
-                    html: 'Produk yang Terjual',
-                    cls: 'panel-header'
-                },{
-                    xtype: 'grid-saled-product',
-                    store: POS.app.getStore('report.MonthlySaledProduct'),
-                    flex: 1
-                }]
+                xtype: 'grid-saled-product',
+                title: 'Produk yang Terjual',
+                store: POS.app.getStore('report.MonthlySaledProduct')
             },{
-                xtype: 'container',
-                cls: 'panel',
-                margin: '0 0 0 0',
-                width: '100%',
-                items:[{
-                    xtype: 'container',
-                    html: 'Produk yang Dibeli',
-                    cls: 'panel-header'
-                },{
-                    xtype: 'grid-purchased-product',
-                    store: POS.app.getStore('report.MonthlyPurchasedProduct'),
-                    flex: 1
-                }]
+                xtype: 'grid-purchase-report',
+                title: 'Pembelian',
+                store: POS.app.getStore('report.MonthlyPurchase')
+            },{
+                xtype: 'grid-purchased-product',
+                title: 'Produk yang Dibeli',
+                store: POS.app.getStore('report.MonthlyPurchasedProduct')
             }]
         }];
 

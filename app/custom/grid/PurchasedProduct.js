@@ -2,14 +2,18 @@ Ext.define('POS.custom.grid.PurchasedProduct', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.grid-purchased-product',
     
+    requires: [
+        'Ext.grid.column.RowNumberer'
+    ],
+    
     columnLines: true,
+    selType: 'rowmodel',
+    
     features: [{
         ftype: 'summary'
     }],
-    selType: 'rowmodel',
     
-    minHeight: 150,
-    maxHeight: 475,    
+    minHeight: 200,
     
     initComponent: function(){
         this.columns = [

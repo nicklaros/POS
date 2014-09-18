@@ -14,6 +14,8 @@ Ext.define('POS.view.report.Custom' ,{
         'POS.custom.grid.SaledProduct',
         'POS.custom.panel.ReportStats',
         'POS.store.chart.transaction.CustomSalesVsPurchase',
+        'POS.store.report.CustomPurchasedProduct',
+        'POS.store.report.CustomSaledProduct',
         'POS.view.report.CustomController',
         'POS.view.report.CustomModel'
     ],
@@ -48,6 +50,7 @@ Ext.define('POS.view.report.Custom' ,{
             items: [{
                 xtype: 'container',
                 html: '<i class="fa fa-book glyph"></i> Laporan Dalam Rentang Waktu',
+                margin: '5 0 0 0',
                 flex: 1
             },{
                 xtype: 'buttonsegment',
@@ -138,7 +141,7 @@ Ext.define('POS.view.report.Custom' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-saled-product',
-                    store: POS.app.getStore('report.CustomSaledReport'),
+                    store: POS.app.getStore('report.CustomSaledProduct'),
                     flex: 1
                 }]
             },{
@@ -152,7 +155,7 @@ Ext.define('POS.view.report.Custom' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchased-product',
-                    store: POS.app.getStore('report.PurchasedProduct'),
+                    store: POS.app.getStore('report.CustomPurchasedProduct'),
                     flex: 1
                 }]
             }]
