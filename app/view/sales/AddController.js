@@ -59,6 +59,12 @@ Ext.define('POS.view.sales.AddController', {
         Ext.fn.App.window('add-sales-detail');
     },
 
+    addCustomer: function(){
+        var panel = Ext.fn.App.window('add-customer');
+
+        panel.bindCombo = this.lookupReference('customer').getId();
+    },
+
     close: function(){
         this.getView().close();
     },

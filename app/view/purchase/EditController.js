@@ -34,6 +34,12 @@ Ext.define('POS.view.purchase.EditController', {
         Ext.fn.App.window('edit-purchase-detail');
     },
 
+    addSupplier: function(){
+        var panel = Ext.fn.App.window('add-supplier');
+
+        panel.bindCombo = this.lookupReference('supplier').getId();
+    },
+
     close: function(){
         this.getView().close();
     },

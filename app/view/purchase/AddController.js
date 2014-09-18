@@ -47,6 +47,12 @@ Ext.define('POS.view.purchase.AddController', {
         Ext.fn.App.window('add-purchase-detail');
     },
 
+    addSupplier: function(){
+        var panel = Ext.fn.App.window('add-supplier');
+
+        panel.bindCombo = this.lookupReference('supplier').getId();
+    },
+
     close: function(){
         this.getView().close();
     },

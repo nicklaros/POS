@@ -78,6 +78,11 @@ Ext.define('POS.view.sales.Add' ,{
                             margin: '0 0 0 20',
                             width: 200
                         },{
+                            xtype: 'button',
+                            text: '<i class="fa fa-plus"></i>',
+                            handler: 'addCustomer',
+                            margin: '25 0 0 5'
+                        },{
                             xtype: 'textfield',
                             fieldLabel: 'Catatan',
                             name: 'note',
