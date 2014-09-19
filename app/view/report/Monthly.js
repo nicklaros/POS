@@ -11,8 +11,8 @@ Ext.define('POS.view.report.Monthly' ,{
         'Ext.ux.form.field.Month',
         'POS.custom.chart.transaction.SalesVsPurchase',
         'POS.custom.chart.transaction.Transaction',
-        'POS.custom.grid.PurchaseReport',
         'POS.custom.grid.PurchasedProduct',
+        'POS.custom.grid.PurchaseReport',
         'POS.custom.grid.SaledProduct',
         'POS.custom.grid.SalesReport',
         'POS.custom.panel.ReportStats',
@@ -89,7 +89,7 @@ Ext.define('POS.view.report.Monthly' ,{
 			bodyStyle: {
 				border: '0 !important'
 			},
-            maxHeight: Ext.getBody().getViewSize().height - 55,
+            maxHeight: Ext.getBody().getViewSize().height - 52,
             items: [{
                 xtype: 'panel',
                 title: 'Statistik',
@@ -131,19 +131,19 @@ Ext.define('POS.view.report.Monthly' ,{
             },{
                 xtype: 'grid-sales-report',
                 title: 'Penjualan',
-                store: POS.app.getStore('report.MonthlySales')
+                store: 'report.MonthlySales'
             },{
                 xtype: 'grid-saled-product',
                 title: 'Produk yang Terjual',
-                store: POS.app.getStore('report.MonthlySaledProduct')
+                store: 'report.MonthlySaledProduct'
             },{
                 xtype: 'grid-purchase-report',
                 title: 'Pembelian',
-                store: POS.app.getStore('report.MonthlyPurchase')
+                store: 'report.MonthlyPurchase'
             },{
                 xtype: 'grid-purchased-product',
                 title: 'Produk yang Dibeli',
-                store: POS.app.getStore('report.MonthlyPurchasedProduct')
+                store: 'report.MonthlyPurchasedProduct'
             }]
         }];
 

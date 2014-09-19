@@ -11,6 +11,10 @@ Ext.define('Ext.fn.Util', {
     },
 
     afterLogin: function(){
+        setTimeout(function(){
+            Ext.fn.App.setLoading(true);
+        }, 10);
+        
         // Create WebSocket connection
         Ext.ws.Main = Ext.fn.WebSocket.create('ws://pos.localhost:8080/POS/Mains');
 
@@ -25,7 +29,7 @@ Ext.define('Ext.fn.Util', {
         // Initialize store
         this.initStore();
 
-        // Wait until websocket connection is opened and then load store
+        // Wait until websocket connection is opened and then load store and remove application mask
         this.waitAndLoadStore();
         
         // Start some task
@@ -59,8 +63,10 @@ Ext.define('Ext.fn.Util', {
             'Notification',
             'Product',
             'Purchase',
+            'report.CustomPurchase',
             'report.CustomPurchasedProduct',
             'report.CustomSaledProduct',
+            'report.CustomSales',
             'report.MonthlyPurchase',
             'report.MonthlyPurchasedProduct',
             'report.MonthlySaledProduct',
@@ -95,6 +101,10 @@ Ext.define('Ext.fn.Util', {
         Ext.override(Ext.tab.Tab, {
             height: 31
         });
+    },
+    
+    removeAppMask: function(){
+        Ext.fn.App.setLoading(false);
     },
 
     SHA512: function(str){
@@ -379,6 +389,8 @@ Ext.define('Ext.fn.Util', {
             for (i=0; i<stores.length; i++) {
                 POS.app.getStore(stores[i]).load();
             }
+            
+            me.removeAppMask();
         } else {
             setTimeout(function(){
                 me.waitAndLoadStore();

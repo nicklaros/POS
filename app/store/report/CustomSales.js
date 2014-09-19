@@ -1,6 +1,6 @@
-Ext.define('POS.store.report.MonthlyPurchase', {
+Ext.define('POS.store.report.CustomSales', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.Purchase',
+    model: 'POS.model.Sales',
     
     init: function(){
         this.setProxy({
@@ -8,7 +8,7 @@ Ext.define('POS.store.report.MonthlyPurchase', {
             storeId: this.getStoreId(),
             websocket: Ext.ws.Main,
             api: {
-                read: 'report/monthlyPurchase'
+                read: 'report/customSales'
             },
             reader: {
                 type: 'json',

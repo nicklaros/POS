@@ -43,7 +43,7 @@ Ext.define('POS.view.report.MonthlyController', {
                 destroyable: true
             }),
             panel,
-            false
+            true
         );
         Ext.ws.Main.send('report/monthly', params);
     },

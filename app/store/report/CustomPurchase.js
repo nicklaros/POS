@@ -1,4 +1,4 @@
-Ext.define('POS.store.report.MonthlyPurchase', {
+Ext.define('POS.store.report.CustomPurchase', {
     extend: 'Ext.data.Store',
     model: 'POS.model.Purchase',
     
@@ -8,7 +8,7 @@ Ext.define('POS.store.report.MonthlyPurchase', {
             storeId: this.getStoreId(),
             websocket: Ext.ws.Main,
             api: {
-                read: 'report/monthlyPurchase'
+                read: 'report/customPurchase'
             },
             reader: {
                 type: 'json',

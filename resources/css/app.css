@@ -142,6 +142,7 @@ html{
     color: #223AB4;
 }
 .notification-container .delete a{
+    color: #ccc;
     cursor: pointer;
     display: block;
     float: right;

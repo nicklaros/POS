@@ -38,7 +38,7 @@ Ext.define('POS.view.report.CustomController', {
                 destroyable: true
             }),
             panel,
-            false
+            true
         );
         Ext.ws.Main.send('report/custom', params);
     },
