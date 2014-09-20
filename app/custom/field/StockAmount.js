@@ -5,5 +5,6 @@ Ext.define('POS.custom.field.StockAmount', {
     fieldStyle: 'text-align: right;',
     selectOnFocus: true,
     step: 10,
+    submitLocaleSeparator: false,
     value: 0
 });
