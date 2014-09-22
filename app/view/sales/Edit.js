@@ -146,7 +146,7 @@ Ext.define('POS.view.sales.Edit' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    text: '<i class="fa fa-save glyph"></i> Bayar',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',

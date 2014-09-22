@@ -70,7 +70,8 @@ Ext.define('POS.view.sales.AddController', {
     },
     
     remove: function(){
-        var grid    = this.lookupReference('grid-sales-detail'),
+        var me      = this,
+            grid    = me.lookupReference('grid-sales-detail'),
             store   = grid.getStore(),
             sm      = grid.getSelectionModel(),
             sel     = sm.getSelection(),
@@ -85,6 +86,7 @@ Ext.define('POS.view.sales.AddController', {
                     for(i=0;i<smCount;i++){
                         store.remove(sel[i]);
                     }
+                    me.setTotalPrice();
                 }
             }
         );

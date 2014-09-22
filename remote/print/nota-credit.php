@@ -28,6 +28,7 @@ $info = (object) $session->get('pos/info');
 <script>
     setTimeout(function(){
         window.print();
+        window.close();
     }, 10)
 </script>
 <body>
@@ -86,7 +87,7 @@ $info = (object) $session->get('pos/info');
         ->find($con);
 ?>
 
-<div style="font-weight: bold; font-size: 23px; text-align: center;">
+<div style="font-weight: bold; font-size: 15px; text-align: center;">
     <?php echo $info->client_name;?>
 </div>
 <div style="text-align: center;"><?php echo $info->client_address;?>. Telp <?php echo $info->client_phone;?></div>
@@ -151,7 +152,7 @@ $info = (object) $session->get('pos/info');
         </tbody>
     </table>
 </p>
-<div style="margin-top: 25px; text-align: center; font-size: 17px; font-weight: bold;">
+<div style="margin-top: 25px; text-align: center; font-size: 13px; font-weight: bold;">
     Terima Kasih Atas Kunjungan Anda
 </div>
 </body>

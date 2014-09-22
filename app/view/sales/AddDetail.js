@@ -101,7 +101,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',

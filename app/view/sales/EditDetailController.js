@@ -90,7 +90,7 @@ Ext.define('POS.view.sales.EditDetailController', {
             }
             
             values.stock_id = values.stock;
-            values.unit_name = stock.get('unit_name');
+            //values.unit_name = stock.get('unit_name');
             values.total_buy_price = values.amount * values.buy;
             values.total_price_wo_discount = values.amount * values.unit_price;
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
