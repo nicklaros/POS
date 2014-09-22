@@ -39,7 +39,7 @@ html{
 }
 
 
-/* field class */
+/* field */
 .field-highlight{
     background-color: antiquewhite;
     font-size: 20px;
@@ -60,9 +60,9 @@ html{
 }
 
 
-/* panel class */
+/* panel */
 .panel{
-    border: 1px solid #d3d3d3;
+    border: 1px solid #d3d3d3 !important;
     border-radius: 2px;
     padding: 0;
     background-color: #ffffff;
@@ -87,7 +87,7 @@ html{
 }
 
 
-/* window class */
+/* window */
 .window{
     border:0 !important;
     border-radius: 3px !important;
@@ -157,7 +157,18 @@ html{
     padding: 4px 9px;
 }
 
-/* color class */
+/* align */
+.left{
+    text-align: left;
+}
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+}
+
+/* color */
 .bg-body{
     background-color: #ffffff;
 }
@@ -183,8 +194,22 @@ html{
     color: #FFCC00 !important;
 }
 
+/* text styling */
+.bold{
+    font-weight: bold;
+}
+.underline{
+    text-decoration: underline;
+}
+.line-through{
+    text-decoration: line-through;
+}
+.overline{
+    text-decoration: overline;
+}
 
-/* miscellaneous class */
+
+/* miscellaneous */
 .app-header{
     clear: both;
     float: left;
@@ -326,11 +351,4 @@ html{
     border:2px solid #193f4b;
     padding: 10px;
     margin: 10px 0;
-}
-
-.right{
-    text-align: right;
-}
-.left{
-    text-align: left;
 }

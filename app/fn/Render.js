@@ -2,8 +2,8 @@ Ext.define('Ext.fn.Render', {
     singleton: true,
 
     amount: function(value){
-        amount = parseInt(value.amount);
-        unlimited = value.unlimited || false;
+        var amount = parseInt(value.amount);
+        var unlimited = value.unlimited || false;
         
         return (unlimited == true ? 'tak terhingga' : amount);
     },
@@ -15,13 +15,14 @@ Ext.define('Ext.fn.Render', {
     creditBalance: function(value){
         value = parseInt(value);
         
-        return (value <= 0 ? 'Lunas' : Ext.fn.Render.currency(value));
+        return (value <= 0 ? 'Lunas' : Ext.fn.Render.plainCurrency(value));
     },
 
-    currency: function(value){
+    currency: function(value, cls){
         value = parseInt(value);
+        cls = (typeof(cls) == 'string' ? cls : '');
         
-        return (value == 0 ? '-' : Ext.util.Format.currency(value, ' Rp ', '.'));
+        return '<span class="' + cls + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
     },
     
     date: function(value, withDay){
@@ -32,6 +33,18 @@ Ext.define('Ext.fn.Render', {
 
     discount: function(value){
         return value + ' %';
+    },
+    
+    paymentBalance: function(value){
+        value = parseInt(value);
+        
+        return '<span class="' + (value <= 0 ? 'red' : 'green') + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
+    },
+    
+    plainCurrency: function(value){
+        value = parseInt(value);
+        
+        return (value == 0 ? '-' : Ext.util.Format.currency(value, ' Rp ', '.'));
     },
     
     time: function(value){

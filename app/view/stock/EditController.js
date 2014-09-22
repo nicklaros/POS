@@ -32,15 +32,15 @@ Ext.define('POS.view.stock.EditController', {
     },
     
     onKeyAmount: function(field, e){
-        if(e.getKey() == e.ENTER) this.lookupReference('buy').focus(true);
+        if(e.getKey() == e.ENTER) this.lookupReference('discount').focus(true);
     },
     
     onKeyBuy: function(field, e){
-        if(e.getKey() == e.ENTER) this.lookupReference('sell_public').focus(true);
+        if(e.getKey() == e.ENTER) this.lookupReference('amount').focus(true);
     },
     
     onKeyMisc: function(field, e){
-        if(e.getKey() == e.ENTER) this.lookupReference('discount').focus(true);
+        if(e.getKey() == e.ENTER) this.lookupReference('buy').focus(true);
     },
     
     onChangeUnlimited: function(field, value){
@@ -52,7 +52,7 @@ Ext.define('POS.view.stock.EditController', {
     },
     
     onSelectUnit: function(combo, record){
-        this.lookupReference('amount').focus(true);
+        this.lookupReference('sell_public').focus(true);
     },
 
 

@@ -10,7 +10,7 @@ Ext.define('POS.view.main.MainController', {
 
     control: {
         '#': {
-            boxready: function(panel){
+            boxready: function(panel){    
                 // Create global variable container
                 Ext.main = {};
 

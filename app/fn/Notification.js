@@ -2,11 +2,7 @@ Ext.define('Ext.fn.Notification', {
     singleton: true,
     
     checkProductPrice: function(productId){
-        Ext.fn.App.newTab('list-stock');
-                
-        POS.app.getStore('Stock').search({
-            product_id: productId
-        });
+        Ext.fn.App.showProductPrice(productId);
 
         var notification = Ext.ComponentQuery.query('list-notification')[0];
         if (notification) notification.close();

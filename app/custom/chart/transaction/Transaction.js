@@ -26,7 +26,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                 fields: ['sales', 'purchase'],
                 grid: true,
                 minimum: 0,
-                renderer: Ext.fn.Render.currency
+                renderer: Ext.fn.Render.plainCurrency
             },{
                 type: 'category',
                 position: 'bottom',

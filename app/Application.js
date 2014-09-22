@@ -39,6 +39,7 @@ Ext.define('POS.Application', {
         'customer.List',
         'DeveloperInfo',
         'notification.List',
+        'option.Option',
         'product.List',
         'purchase.List',
         'report.Custom',

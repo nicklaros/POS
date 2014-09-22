@@ -85,6 +85,54 @@ class Mains {
 
         return $results;
     }
+    
+    function changeAppPhoto($params){
+        require 'session.php';
+
+        $con = Propel::getConnection('pos');
+        $con->beginTransaction();
+
+        $operationTime = time();
+        $unique = session_id().time();
+
+        $file = $_FILES['photo'];
+        
+        
+        $folder = $session->get('pos/folder') . '/resources/images/';
+
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $newfile = $unique . '.' . $ext;
+        $newfile_full_path = $folder . $newfile;
+
+        try{
+            if ($file['name'] == '') throw new Exception('Missing file');
+            if ($file['error'] > 0) throw new Exception($file['error']);
+
+            move_uploaded_file($file['tmp_name'], $newfile_full_path);
+
+            $appPhoto = OptionQuery::create()
+                ->filterByName([
+                    'app_photo'
+                ])
+                ->findOne($con);
+            
+            $appPhoto
+                ->setValue($newfile)
+                ->save($con);
+
+            $results['success'] = true;
+            $results['photo'] = $newfile;
+
+            $con->commit();
+        }catch(Exception $e){
+            $con->rollBack();
+
+            $results['success'] = false;
+            $results['errmsg'] = $e->getMessage();
+        }
+
+        return $results;
+    }
 
     private function getMenu($state, $con){
         $result = [];

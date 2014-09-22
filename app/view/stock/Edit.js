@@ -71,43 +71,6 @@ Ext.define('POS.view.stock.Edit' ,{
                     margin: '25 0 0 5'
                 }]
             },{
-                xtype: 'container',
-                anchor: '100%',
-                layout: 'hbox',
-                margin: '0 0 10 0',
-                items:[{
-                    xtype: 'field-stock-amount',
-                    fieldLabel: 'Jumlah Stock',
-                    name: 'amount',
-                    reference: 'amount',
-                    width: 100,
-                    listeners: {
-                        'specialkey': 'onKeyAmount'
-                    }
-                },{
-                    xtype: 'container',
-                    html: 'atau',
-                    margin: '30 0 0 15'
-                },{
-                    xtype: 'checkbox',
-                    boxLabel: 'Tak terhingga',
-                    name: 'unlimited',
-                    inputValue: true,
-                    margin: '26 0 0 15',
-                    listeners: {
-                        'change': 'onChangeUnlimited'
-                    }
-                }]
-            },{
-                xtype: 'field-price',
-                fieldLabel: 'Harga Beli',
-                name: 'buy',
-                reference: 'buy',
-                width: 150,
-                listeners: {
-                    'specialkey': 'onKeyBuy'
-                }
-            },{
                 xtype: 'fieldset',
                 title: 'Harga Jual',
                 anchor: '100%',
@@ -150,6 +113,43 @@ Ext.define('POS.view.stock.Edit' ,{
                     cls: 'hint-text',
                     html: STOCK_HINT_0,
                     width: '100%'
+                }]
+            },{
+                xtype: 'field-price',
+                fieldLabel: 'Harga Beli',
+                name: 'buy',
+                reference: 'buy',
+                width: 150,
+                listeners: {
+                    'specialkey': 'onKeyBuy'
+                }
+            },{
+                xtype: 'container',
+                anchor: '100%',
+                layout: 'hbox',
+                margin: '0 0 10 0',
+                items:[{
+                    xtype: 'field-stock-amount',
+                    fieldLabel: 'Jumlah Stock',
+                    name: 'amount',
+                    reference: 'amount',
+                    width: 100,
+                    listeners: {
+                        'specialkey': 'onKeyAmount'
+                    }
+                },{
+                    xtype: 'container',
+                    html: 'atau',
+                    margin: '30 0 0 15'
+                },{
+                    xtype: 'checkbox',
+                    boxLabel: 'Tak terhingga',
+                    name: 'unlimited',
+                    inputValue: true,
+                    margin: '26 0 0 15',
+                    listeners: {
+                        'change': 'onChangeUnlimited'
+                    }
                 }]
             },{
                 xtype: 'field-discount',

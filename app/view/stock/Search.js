@@ -23,17 +23,9 @@ Ext.define('POS.view.stock.Search' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Nama Produk',
-                name: 'product',
-                reference: 'product',
-                emptyText: EMPTY_TEXT_0,
-                searchOnEnter: true,
-                selectOnFocus: true,
-                anchor: '100%'
-            },{
-                xtype: 'textfield',
-                fieldLabel: 'Kode Produk',
-                name: 'code',
+                fieldLabel: 'Kode / Nama Produk',
+                name: 'code_or_name',
+                reference: 'code_or_name',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

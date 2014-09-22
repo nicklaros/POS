@@ -9,7 +9,13 @@ Ext.define('POS.custom.grid.Notification', {
     
     columnLines: true,
     hideHeaders: true,
+    selModel: {
+        pruneRemoved: false
+    },
     selType: 'rowmodel',
+    viewConfig: {
+        preserveScrollOnRefresh: true
+    },
     
     minHeight: 150,
     

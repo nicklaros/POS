@@ -32,7 +32,7 @@ Ext.define('POS.view.sales.List' ,{
             {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
             {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.paymentBalance, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];

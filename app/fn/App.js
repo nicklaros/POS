@@ -2,23 +2,41 @@ Ext.define('Ext.fn.App', {
     singleton: true,
 
     init: function(){
-        // Add native javascript function
+        // add native javascript function
         Ext.fn.Util.addNativeFunction();
         
-        // Create WebSocket container
+        // create WebSocket container
         Ext.ws = {};
 
-        // Initialize QuickTips
+        // initialize QuickTips
         Ext.QuickTips.init();
 
-        // Initiating
+        // initiating application data
         Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(App.init);
 
         if (App.init.state == 1) { // if already loged in then
             Ext.fn.Util.afterLogin();
         }
-
+    
+        // disable browser context menu
+        this.disableBrowserContextMenu();
+                
         console.log('Application successfully initiated.');
+    },
+    
+    disableBrowserContextMenu: function(){
+        Ext.getDoc().on('contextmenu', function(e,t,eOpts)  { 
+            if (e.preventDefault) {
+                e.preventDefault();
+            } else {
+                e.returnValue = false;
+            }
+            return false;
+        });
+    },
+
+    mnAppOption: function(){
+        Ext.widget('app-option');
     },
 
     mnChangePassword: function(){
@@ -135,9 +153,8 @@ Ext.define('Ext.fn.App', {
             if(!panel){
                 var panel = tab.add({xtype:alias});
                 panel.show();
-            }else{
-                tab.setActiveTab(panel);
             }
+            tab.setActiveTab(panel);
             return panel;
         }else{
             Ext.Msg.alert('Akses ditolak', E0);
@@ -176,6 +193,14 @@ Ext.define('Ext.fn.App', {
             Ext.main.Windows = [];
         }
         if (Ext.main.View) Ext.main.View.setLoading(bool);
+    },
+    
+    showProductPrice: function(id){
+        Ext.fn.App.newTab('list-stock');
+                
+        POS.app.getStore('Stock').search({
+            product_id: id
+        });        
     },
 
     window: function(id){

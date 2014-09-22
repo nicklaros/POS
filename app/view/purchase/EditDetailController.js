@@ -194,6 +194,8 @@ Ext.define('POS.view.purchase.EditDetailController', {
             var values = form.getValues(),
                 viewModelData = this.getViewModel().getData();
             
+            delete values.id;
+            
             values.stock_id = values.stock;
             values.product_id = values.product;
             values.product_name = viewModelData.stock.product_name;

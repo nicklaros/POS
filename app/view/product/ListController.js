@@ -15,12 +15,25 @@ Ext.define('POS.view.product.ListController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: 'edit'
+            celldblclick: 'edit',
+            close: 'onClose',
+            itemcontextmenu: 'showMenu'
         }
     },
     
     add: function(){
         Ext.fn.App.window('add-product');
+    },
+
+    edit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('edit-product');
+        edit.getController().load(rec.get('id'));
+    },
+    
+    onClose: function(){
+        Ext.destroy(this.menu);
     },
     
     remove: function(){
@@ -57,13 +70,6 @@ Ext.define('POS.view.product.ListController', {
             }
         );
     },
-
-    edit: function(){
-        var rec = this.getView().getSelectionModel().getSelection()[0];
-
-        var edit = Ext.fn.App.window('edit-product');
-        edit.getController().load(rec.get('id'));
-    },
     
     reset: function(){
         this.getView().getStore().search({});
@@ -71,6 +77,34 @@ Ext.define('POS.view.product.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-product');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                items : [{
+                    text: 'Lihat Harga Produk',
+                    handler: function(){
+                        me.showStock();
+                    }
+                },{
+                    text: 'Ubah Kode atau Nama Produk',
+                    handler: function(){
+                        me.edit();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
+    },
+    
+    showStock: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+        
+        Ext.fn.App.showProductPrice(rec.get('id'));
     }
     
 });

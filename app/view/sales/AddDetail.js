@@ -74,7 +74,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     allowBlank: false,
                     step: 1,
                     tabOnEnter: true,
-                    minValue: 1,
+                    minValue: 0,
                     value: 1,
                     margin: '0 0 0 50',
                     width: 75

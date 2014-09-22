@@ -15,7 +15,7 @@ Ext.define('POS.view.notification.ListController', {
                         id.push(record.get('id'));
                     });
                     
-                    Ext.fn.App.removeNotification(id);
+                    Ext.fn.Notification.remove(id);
                 }
             }
         );

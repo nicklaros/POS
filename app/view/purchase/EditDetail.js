@@ -116,7 +116,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         allowBlank: false,
                         step: 1,
                         tabOnEnter: true,
-                        minValue: 1,
+                        minValue: 0,
                         value: 1,
                         width: 75,
                         listeners: {

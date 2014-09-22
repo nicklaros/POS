@@ -32,6 +32,7 @@ Ext.define('POS.view.main.Home' ,{
             },
             items: [{
                 xtype: 'container',
+                itemId: 'app-header',
                 bind: {
                     data: '{info}'
                 },
@@ -66,10 +67,14 @@ Ext.define('POS.view.main.Home' ,{
                     padding: 3,
                     width: 570,
                     height: 249,
-                    html: '<img src="resources/images/image_700x300.fw.png" style="width: 562px; height: 241px; border-radius: 2px;" />'
+                    html: '<img src="resources/images/image_700x300.fw.png" style="width: 562px; height: 241px; border-radius: 2px;" />',
+                    bind: {
+                        html: '<img src="resources/images/{info.app_photo}" style="width: 562px; height: 241px; border-radius: 2px;" />'
+                    }
                 }]
             },{
                 xtype: 'container',
+                hidden: true,
                 margin: '0 0 25 0',
                 width: 800,
                 bind: {

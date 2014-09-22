@@ -18,6 +18,7 @@ try{
     $options = OptionQuery::create()
         ->filterByName([
             'app_name',
+            'app_photo',
             'dev_name',
             'dev_email',
             'dev_phone',
@@ -117,10 +118,18 @@ try{
 
     $root['menu'] = $menu;
 
+    // get application root folder
+    $homepath       = $info['homepath'];
+    $localpath      = getenv('SCRIPT_NAME');
+    $absolutepath   = realpath(basename($localpath));
+    $absolutepath   = str_replace("\\","/", $absolutepath);
+    $root['folder'] = substr($absolutepath, 0, strpos($absolutepath, $localpath)) . $homepath;
+    
     $session->set('pos/state', $root['state']);
     $session->set('pos/current_user', $root['current_user']);
     $session->set('pos/info', $root['info']);
     $session->set('pos/menu', $root['menu']);
+    $session->set('pos/folder', $root['folder']);
 
     $con->commit();
 }catch (Exception $e){

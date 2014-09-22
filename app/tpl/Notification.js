@@ -7,7 +7,7 @@ Ext.define('POS.tpl.Notification', {
             '<div class="body">',
                 '<tpl switch="type">',
                     '<tpl case="price">',
-                        'Harga {data.product_name} {data.unit_name} ',
+                        'Harga {data.product_name} ',
                         '<tpl switch="data.status">',
                             '<tpl case="up">',
                                 '<span class="red"> <i class="fa fa-caret-up"></i> naik </span>',
