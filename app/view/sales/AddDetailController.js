@@ -45,6 +45,14 @@ Ext.define('POS.view.sales.AddDetailController', {
         // errrmm
         form.getForm().setValues(record.getData());
         
+        var comboStock = this.lookupReference('stock');
+
+        // add edited stock to comboStock's store
+        comboStock.getStore().add(stock);
+        
+        // make sure stock is selected 
+        comboStock.select(stock);
+        
         this.lookupReference('unit').setHtml(stock.get('unit_name'));
         
         var amount = this.lookupReference('amount');        
