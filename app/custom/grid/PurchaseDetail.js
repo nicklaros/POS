@@ -14,7 +14,7 @@ Ext.define('POS.custom.grid.PurchaseDetail', {
     minHeight: 150,
     
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.PurchaseDetail');
+        this.store = POS.app.getStore('PurchaseDetail');
         
         var columns = [];
         

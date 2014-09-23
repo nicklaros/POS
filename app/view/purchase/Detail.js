@@ -72,7 +72,8 @@ Ext.define('POS.view.purchase.Detail' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchase-detail',
-                    selType: 'rowmodel'
+                    selType: 'rowmodel',
+                    withRowNumber: true
                 }]
             }]
         }];

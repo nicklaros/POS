@@ -38,7 +38,7 @@ Ext.define('POS.view.credit.ListPayment' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
-                text: '<i class="fa fa-undo glyph"></i> Batalkan Penjualan',
+                text: '<i class="fa fa-undo glyph"></i> Batalkan Pembayaran',
                 reference: 'cancel',
                 handler: 'cancel',
                 disabled: true

@@ -7,6 +7,7 @@ Ext.define('POS.view.customer.List', {
         'Ext.ux.container.ButtonSegment',
         'POS.store.Customer',
         'POS.view.customer.Add',
+        'POS.view.customer.Detail',
         'POS.view.customer.Edit',
         'POS.view.customer.ListController',
         'POS.view.customer.Search'
@@ -29,7 +30,7 @@ Ext.define('POS.view.customer.List', {
             {header: 'Nama', dataIndex: 'name', width: 200},
             {header: 'Alamat', dataIndex: 'address', width: 200},
             {header: 'Tanggal lahir', dataIndex: 'birthday', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Jenis Kelamin', dataIndex: 'gender', width: 125},
+            {header: 'Jenis Kelamin', dataIndex: 'gender', width: 125, renderer: Ext.fn.Render.gender},
             {header: 'Telp', dataIndex: 'phone', width: 125}
         ];
 
@@ -38,6 +39,11 @@ Ext.define('POS.view.customer.List', {
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-edit glyph"></i> Detail',
+                reference: 'detail',
+                handler: 'detail',
+                disabled: true
+            },{
                 text: '<i class="fa fa-plus-square glyph"></i> Tambah',
                 reference: 'add',
                 handler: 'add'

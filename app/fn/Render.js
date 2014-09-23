@@ -35,6 +35,10 @@ Ext.define('Ext.fn.Render', {
         return value + ' %';
     },
     
+    gender: function(value){
+        return (value == 'Male' ? 'Laki-laki' : 'Perempuan');
+    },
+    
     paymentBalance: function(value){
         value = parseInt(value);
         

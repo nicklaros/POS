@@ -9,18 +9,30 @@ Ext.define('POS.view.customer.ListController', {
     control: {
         '#': {
             selectionchange: function(sm, selected){
-                var btnEdit = this.lookupReference('edit'),
+                var btnDetail = this.lookupReference('detail'),
+                    btnEdit = this.lookupReference('edit'),
                     btnDelete = this.lookupReference('delete');
 
+                btnDetail.setDisabled(selected.length !== 1);
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: 'edit'
+            celldblclick: 'detail'
         }
     },
     
     add: function(){
         Ext.fn.App.window('add-customer');
+    },
+    
+    detail: function(){
+        var rec     = this.getView().getSelectionModel().getSelection()[0],
+            params  = {
+                customer_id: rec.get('id')
+            };
+
+        var detail = Ext.fn.App.window('customer-detail');
+        detail.getController().load(params);
     },
     
     remove: function(){

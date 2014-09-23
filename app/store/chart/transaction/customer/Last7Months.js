@@ -1,7 +1,7 @@
-Ext.define('POS.store.chart.transaction.Monthly', {
+Ext.define('POS.store.chart.transaction.customer.Last7Months', {
     extend: 'Ext.data.Store',
     fields: [
-        {name: 'date',      type: 'date',   format: 'Y-m-d'},
+        {name: 'month',     type: 'date',   format: 'Y-m-d'},
         {name: 'sales',     type: 'int'},
         {name: 'purchase',  type: 'int'}
     ],
@@ -12,7 +12,7 @@ Ext.define('POS.store.chart.transaction.Monthly', {
             storeId: this.getStoreId(),
             websocket: Ext.ws.Main,
             api: {
-                read: 'chart/monthlyTransaction'
+                read: 'customer/last7MonthsTransactions'
             },
             reader: {
                 type: 'json',

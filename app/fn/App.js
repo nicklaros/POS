@@ -19,20 +19,9 @@ Ext.define('Ext.fn.App', {
         }
     
         // disable browser context menu
-        this.disableBrowserContextMenu();
+        Ext.fn.Util.disableBrowserContextMenu();
                 
         console.log('Application successfully initiated.');
-    },
-    
-    disableBrowserContextMenu: function(){
-        Ext.getDoc().on('contextmenu', function(e,t,eOpts)  { 
-            if (e.preventDefault) {
-                e.preventDefault();
-            } else {
-                e.returnValue = false;
-            }
-            return false;
-        });
     },
 
     mnAppOption: function(){
@@ -195,11 +184,19 @@ Ext.define('Ext.fn.App', {
         if (Ext.main.View) Ext.main.View.setLoading(bool);
     },
     
-    showProductPrice: function(id){
+    showCustomerCredit: function(customerId){
+        Ext.fn.App.newTab('list-credit');
+                
+        POS.app.getStore('Credit').search({
+            customer_id: customerId
+        });        
+    },
+    
+    showProductPrice: function(productId){
         Ext.fn.App.newTab('list-stock');
                 
         POS.app.getStore('Stock').search({
-            product_id: id
+            product_id: productId
         });        
     },
 

@@ -16,7 +16,7 @@ Ext.define('POS.view.report.Monthly' ,{
         'POS.custom.grid.SaledProduct',
         'POS.custom.grid.SalesReport',
         'POS.custom.panel.ReportStats',
-        'POS.store.chart.transaction.Monthly',
+        'POS.store.chart.transaction.Daily',
         'POS.store.chart.transaction.MonthlySalesVsPurchase',
         'POS.store.report.MonthlyPurchase',
         'POS.store.report.MonthlyPurchasedProduct',

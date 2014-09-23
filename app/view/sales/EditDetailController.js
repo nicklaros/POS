@@ -104,7 +104,7 @@ Ext.define('POS.view.sales.EditDetailController', {
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             
             if (!panel.isEdit) {            
-                var store = POS.app.getStore('POS.store.SalesDetail'),
+                var store = POS.app.getStore('SalesDetail'),
                     rec = Ext.create('POS.model.SalesDetail', values);
                     
                 store.add(rec);

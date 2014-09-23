@@ -8,7 +8,7 @@ Ext.define('POS.view.sales.EditController', {
                 this.keyMap(panel);
             },
             close: function(){
-                POS.app.getStore('POS.store.SalesDetail').removeAll(true);
+                POS.app.getStore('SalesDetail').removeAll(true);
             }
         },
         'textfield[name = paid]': {
@@ -137,7 +137,7 @@ Ext.define('POS.view.sales.EditController', {
 
                     form.getForm().setValues(result.data);
 
-                    POS.app.getStore('POS.store.SalesDetail').loadData(result.detail);
+                    POS.app.getStore('SalesDetail').loadData(result.detail);
 
                     var add = this.lookupReference('add');
                     setTimeout(function(){
@@ -160,7 +160,7 @@ Ext.define('POS.view.sales.EditController', {
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('POS.store.SalesDetail');
+            var storeDetail = POS.app.getStore('SalesDetail');
 
             var products = [];
             storeDetail.each(function(rec){
@@ -235,10 +235,10 @@ Ext.define('POS.view.sales.EditController', {
     },
 
     sumBuyPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_buy_price');
+        return POS.app.getStore('SalesDetail').sum('total_buy_price');
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_price');
+        return POS.app.getStore('SalesDetail').sum('total_price');
     }
 });

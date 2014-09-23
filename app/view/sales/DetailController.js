@@ -5,7 +5,7 @@ Ext.define('POS.view.sales.DetailController', {
     control: {
         '#': {
             close: function(){
-                POS.app.getStore('POS.store.SalesDetail').removeAll(true);
+                POS.app.getStore('SalesDetail').removeAll(true);
             }
         }
     },
@@ -28,7 +28,7 @@ Ext.define('POS.view.sales.DetailController', {
                     // update sales detail template
                     this.lookupReference('detail-panel').update(result.data);
 
-                    POS.app.getStore('POS.store.SalesDetail').loadData(result.detail);
+                    POS.app.getStore('SalesDetail').loadData(result.detail);
 
                     panel.show();
                 }else{
@@ -39,7 +39,8 @@ Ext.define('POS.view.sales.DetailController', {
                 single: true,
                 destroyable: true
             }),
-            panel
+            panel,
+            true
         );
         Ext.ws.Main.send('sales/viewDetail', params);
     },

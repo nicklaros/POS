@@ -45,6 +45,17 @@ Ext.define('Ext.fn.Util', {
         // Stop some task
     },
     
+    disableBrowserContextMenu: function(){
+        Ext.getDoc().on('contextmenu', function(e,t,eOpts)  { 
+            if (e.preventDefault) {
+                e.preventDefault();
+            } else {
+                e.returnValue = false;
+            }
+            return false;
+        });
+    },
+    
     initStore: function(){
         var stores = [
             'combo.Customer',
@@ -53,16 +64,25 @@ Ext.define('Ext.fn.Util', {
             'combo.Stock',
             'combo.Supplier',
             'combo.Unit',
+            
+            'chart.transaction.customer.Last7Months',
             'chart.transaction.CustomSalesVsPurchase',
             'chart.transaction.Last30Days',
-            'chart.transaction.Monthly',
+            'chart.transaction.Daily',
             'chart.transaction.MonthlySalesVsPurchase',
+            
             'Credit',
             'CreditPayment',
+            
             'Customer',
+            'customer.MonthlySales',
+            
             'Notification',
+            
             'Product',
+            
             'Purchase',
+            
             'report.CustomPurchase',
             'report.CustomPurchasedProduct',
             'report.CustomSaledProduct',
@@ -71,10 +91,15 @@ Ext.define('Ext.fn.Util', {
             'report.MonthlyPurchasedProduct',
             'report.MonthlySaledProduct',
             'report.MonthlySales',
+            
             'Sales',
+            
             'Stock',
+            
             'Supplier',
+            
             'Unit',
+            
             'User'
         ];
 

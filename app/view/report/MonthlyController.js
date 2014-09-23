@@ -8,7 +8,7 @@ Ext.define('POS.view.report.MonthlyController', {
                 var store = POS.app.getStore('chart.transaction.MonthlySalesVsPurchase');
                 this.getView().down('chart-sales-vs-purchase polar').setStore(store);
                 
-                var store = POS.app.getStore('chart.transaction.Monthly');
+                var store = POS.app.getStore('chart.transaction.Daily');
                 this.getView().down('chart-transaction chart').setStore(store);
             }
         }
@@ -33,6 +33,8 @@ Ext.define('POS.view.report.MonthlyController', {
                 panel.setLoading(false);
                 if (result.success){
                     panel.show();
+                    
+                    // update stats saved on view model
                     me.getViewModel().set('stats', result.data);
                 }else{
                     panel.close();

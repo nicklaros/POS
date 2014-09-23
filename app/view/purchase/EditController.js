@@ -8,7 +8,7 @@ Ext.define('POS.view.purchase.EditController', {
                 this.keyMap(panel);
             },
             close: function(){
-                POS.app.getStore('POS.store.PurchaseDetail').removeAll(true);
+                POS.app.getStore('PurchaseDetail').removeAll(true);
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -117,7 +117,7 @@ Ext.define('POS.view.purchase.EditController', {
 
                     form.getForm().setValues(result.data);
 
-                    POS.app.getStore('POS.store.PurchaseDetail').loadData(result.detail);
+                    POS.app.getStore('PurchaseDetail').loadData(result.detail);
 
                     var add = this.lookupReference('add');
                     setTimeout(function(){
@@ -141,7 +141,7 @@ Ext.define('POS.view.purchase.EditController', {
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('POS.store.PurchaseDetail');
+            var storeDetail = POS.app.getStore('PurchaseDetail');
 
             var products = [];
             storeDetail.each(function(rec){
@@ -196,6 +196,6 @@ Ext.define('POS.view.purchase.EditController', {
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('POS.store.PurchaseDetail').sum('total_price');
+        return POS.app.getStore('PurchaseDetail').sum('total_price');
     }
 });

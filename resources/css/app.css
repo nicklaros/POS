@@ -1,8 +1,7 @@
 /* global */
 a{
 	text-decoration:none;
-	color:#333;
-	font-weight:bold;
+    cursor: pointer;
 }
 body{
     background-color: #789;
@@ -12,7 +11,6 @@ body{
 html{
     height: 100%;
 }
-
 
 /* id */
 #initLoader{
@@ -30,6 +28,19 @@ html{
 }
 
 
+/* body */
+.body-text{
+    color: #838383;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    float: left;
+    padding: 1.5px;
+    white-space: normal;
+}
+
+
+/* glyph */
 .glyph{
     font-size:18px !important;
     margin-right: 5px;
@@ -235,6 +246,10 @@ html{
     border-right: 0;
     margin-right: 0;
 }
+
+
+
+
 .harga{
     border: 1px solid rgb(151, 151, 151);
     margin: 7px;
@@ -333,14 +348,6 @@ html{
     padding: 5px;
     font-size: 12px;
     line-height: 25px;
-}
-.value{
-    font-family: tahoma, arial, sans-serif;
-    float: left;
-    font-size: 12px;
-    white-space: normal;
-    color: #838383;
-    padding: 1.5px;
 }
 .warning{
     font-family: tahoma, arial, sans-serif;

@@ -10,6 +10,13 @@ Ext.define('POS.view.sales.AddDetailController', {
                 setTimeout(function(){
                     stock.focus();
                 }, 10);
+            },
+            close: function(){
+                var paid = Ext.ComponentQuery.query('add-sales')[0].down('[name = paid]');
+                
+                setTimeout(function(){
+                    paid.focus();
+                }, 10);
             }
         },
         'textfield[tabOnEnter = true]': {
@@ -104,7 +111,7 @@ Ext.define('POS.view.sales.AddDetailController', {
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             
             if (!panel.isEdit) {            
-                var store = POS.app.getStore('POS.store.SalesDetail'),
+                var store = POS.app.getStore('SalesDetail'),
                     rec = Ext.create('POS.model.SalesDetail', values);
                     
                 store.add(rec);
@@ -113,10 +120,12 @@ Ext.define('POS.view.sales.AddDetailController', {
                 
                 rec.set(values);
             }
-
-            panel.close();
             
             Ext.ComponentQuery.query('add-sales')[0].getController().setTotalPrice();
+
+            form.reset();
+            
+            this.lookupReference('stock').focus();
         }
     }
 });

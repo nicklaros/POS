@@ -201,7 +201,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             values.unit_price = parseInt(values.total_price / values.amount);
             
             if (!panel.isEdit) {            
-                var store = POS.app.getStore('POS.store.PurchaseDetail'),
+                var store = POS.app.getStore('PurchaseDetail'),
                     rec = Ext.create('POS.model.PurchaseDetail');
                     
                 rec.set(values);
