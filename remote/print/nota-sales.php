@@ -1,5 +1,6 @@
 <?php
 
+use ORM\OptionQuery;
 use ORM\SalesQuery;
 use ORM\SalesDetailQuery;
 use Propel\Runtime\Propel;
@@ -15,8 +16,32 @@ $con->beginTransaction();
 
 $id = (isset($_GET['id']) ? $_GET['id'] : die('Missing Parameter.'));
 
-// Get Client info from session
-$info = (object) $session->get('pos/info');
+// Get application info from database
+$info = [];
+$options = OptionQuery::create()
+    ->filterByName([
+        'app_name',
+        'app_photo',
+        'dev_name',
+        'dev_email',
+        'dev_phone',
+        'dev_website',
+        'dev_address',
+        'client_name',
+        'client_email',
+        'client_phone',
+        'client_website',
+        'client_address',
+        'homepath'
+    ])
+    ->find($con);
+
+foreach($options as $row){
+    $info[$row->getName()] = $row->getValue();
+}
+
+$info = (object) $info;
+
 ?>
 
 <!DOCTYPE html>

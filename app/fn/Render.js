@@ -38,7 +38,7 @@ Ext.define('Ext.fn.Render', {
     paymentBalance: function(value){
         value = parseInt(value);
         
-        return '<span class="' + (value <= 0 ? 'red' : 'green') + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
+        return '<span class="' + (value < 0 ? 'red' : 'green') + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
     },
     
     plainCurrency: function(value){

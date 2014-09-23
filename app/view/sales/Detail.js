@@ -77,7 +77,8 @@ Ext.define('POS.view.sales.Detail' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',
-                    selType: 'rowmodel'
+                    selType: 'rowmodel',
+                    withRowNumber: true
                 }]
             }]
         }];
