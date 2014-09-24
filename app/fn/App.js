@@ -192,6 +192,14 @@ Ext.define('Ext.fn.App', {
         });        
     },
     
+    showCustomerSales: function(customerId){
+        Ext.fn.App.newTab('list-sales');
+                
+        POS.app.getStore('Sales').search({
+            customer_id: customerId
+        });
+    },
+    
     showProductPrice: function(productId){
         Ext.fn.App.newTab('list-stock');
                 

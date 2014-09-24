@@ -85,13 +85,14 @@ Ext.define('POS.view.product.ListController', {
         e.stopEvent();
         if (!me.menu) {
             me.menu = new Ext.menu.Menu({
+                plain: true,
                 items : [{
-                    text: 'Lihat Harga Produk',
+                    text: '<i class="fa fa-bars main-nav-icon"></i> Lihat Harga Produk',
                     handler: function(){
                         me.showStock();
                     }
                 },{
-                    text: 'Ubah Kode atau Nama Produk',
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Kode atau Nama Produk',
                     handler: function(){
                         me.edit();
                     }

@@ -39,7 +39,7 @@ Ext.define('POS.view.customer.List', {
             dock: 'top',
             ui: 'footer',
             items: [{
-                text: '<i class="fa fa-edit glyph"></i> Detail',
+                text: '<i class="fa fa-credit-card glyph"></i> Detail',
                 reference: 'detail',
                 handler: 'detail',
                 disabled: true

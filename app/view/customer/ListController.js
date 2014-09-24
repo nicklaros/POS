@@ -17,7 +17,9 @@ Ext.define('POS.view.customer.ListController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: 'detail'
+            celldblclick: 'detail',
+            close: 'onClose',
+            itemcontextmenu: 'showMenu'
         }
     },
     
@@ -33,6 +35,17 @@ Ext.define('POS.view.customer.ListController', {
 
         var detail = Ext.fn.App.window('customer-detail');
         detail.getController().load(params);
+    },
+
+    edit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('edit-customer');
+        edit.getController().load(rec.get('id'));
+    },
+    
+    onClose: function(){
+        Ext.destroy(this.menu);
     },
     
     remove: function(){
@@ -72,13 +85,6 @@ Ext.define('POS.view.customer.ListController', {
             }
         );
     },
-
-    edit: function(){
-        var rec = this.getView().getSelectionModel().getSelection()[0];
-
-        var edit = Ext.fn.App.window('edit-customer');
-        edit.getController().load(rec.get('id'));
-    },
     
     reset: function(){
         this.getView().getStore().search({});
@@ -86,6 +92,45 @@ Ext.define('POS.view.customer.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-customer');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Pelanggan',
+                    handler: function(){
+                        me.detail();
+                    }
+                },{
+                    text: '<i class="fa fa-shopping-cart main-nav-icon"></i> Data Transaksi Penjualan',
+                    handler: function(){
+                        me.showSales();
+                    }
+                },{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Pelanggan',
+                    handler: function(){
+                        me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-trash-o main-nav-icon"></i> Hapus Pelanggan',
+                    handler: function(){
+                        me.remove();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
+    },
+    
+    showSales: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        Ext.fn.App.showCustomerSales(rec.get('id'))
     }
     
 });
