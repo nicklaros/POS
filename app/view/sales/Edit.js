@@ -98,6 +98,7 @@ Ext.define('POS.view.sales.Edit' ,{
                             reference: 'cashier',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
+                            readOnly: true,
                             margin: '0 0 0 20',
                             width: 200
                         }]

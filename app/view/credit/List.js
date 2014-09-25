@@ -20,7 +20,7 @@ Ext.define('POS.view.credit.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-calculator glyph"></i> Piutang';
+        this.title = '<i class="fa fa-calculator glyph"></i> Piutang Penjualan';
 
         var store = POS.app.getStore('Credit');
         this.store = store;

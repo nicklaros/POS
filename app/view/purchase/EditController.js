@@ -61,6 +61,7 @@ Ext.define('POS.view.purchase.EditController', {
                     for(i=0;i<smCount;i++){
                         store.remove(sel[i]);
                     }
+                    
                     me.setTotalPrice();
                 }
             }
@@ -189,13 +190,27 @@ Ext.define('POS.view.purchase.EditController', {
         }
     },
     
+    setBalance: function(){
+        var totalPrice  = this.lookupReference('total_price'),
+            paid        = this.lookupReference('paid'),
+            balance     = this.lookupReference('balance'),
+            result      = paid.getSubmitValue() - totalPrice.getSubmitValue();
+        
+        balance.setValue(result);
+        
+        balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
+    },
+    
     setTotalPrice: function(){
         var totalPrice = this.lookupReference('total_price');
         
         totalPrice.setValue(this.sumTotalPrice());
+
+        this.setBalance();
     },
 
     sumTotalPrice: function(){
         return POS.app.getStore('PurchaseDetail').sum('total_price');
     }
+    
 });

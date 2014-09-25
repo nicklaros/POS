@@ -77,6 +77,8 @@ Ext.define('Ext.fn.Util', {
             'Customer',
             'customer.MonthlySales',
             
+            'Debit',
+            
             'Notification',
             
             'Product',

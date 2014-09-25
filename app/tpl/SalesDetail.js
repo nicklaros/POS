@@ -39,7 +39,7 @@ Ext.define('POS.tpl.SalesDetail', {
                     '<td class="right">{[ Ext.fn.Render.currency(values.paid) ]}</td>',
                 '</tr>',
                 '<tr>',
-                    '<td>Sisa</td>',
+                    '<td>Kembali</td>',
                     '<td>:</td>',
                     '<td class="right">{[ Ext.fn.Render.currency(values.balance) ]}</td>',
                 '</tr>',

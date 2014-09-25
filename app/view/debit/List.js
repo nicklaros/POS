@@ -1,17 +1,13 @@
-Ext.define('POS.view.purchase.List' ,{
+Ext.define('POS.view.debit.List' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.list-purchase',
-    controller: 'list-purchase',
+    alias : 'widget.list-debit',
+    controller: 'list-debit',
 
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.store.Purchase',
-        'POS.view.purchase.Add',
-        'POS.view.purchase.Detail',
-        'POS.view.purchase.Edit',
-        'POS.view.purchase.ListController',
-        'POS.view.purchase.Search'
+        'POS.store.Debit',
+        'POS.view.debit.ListController'
     ],
 
     autoScroll: true,
@@ -21,18 +17,20 @@ Ext.define('POS.view.purchase.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-truck glyph"></i> Pembelian';
+        this.title = '<i class="fa fa-calculator glyph"></i> Hutang Pembelian';
 
-        var store = POS.app.getStore('Purchase');
+        var store = POS.app.getStore('Debit');
         this.store = store;
 
         this.columns = [
+            {header: 'Kode', dataIndex:'id', width: 75},
+            {header: 'Nota Pembelian', dataIndex:'purchase_id', width: 125},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
             {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
-            {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Hutang', dataIndex: 'total', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.paymentBalance, align: 'right'},
-            {header: 'Catatan', dataIndex: 'note', width: 150}
+            {header: 'Sisa Hutang', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.creditBalance, align: 'right'},
+            {header: 'Kembali', dataIndex: 'cash_back', width: 125, renderer: Ext.fn.Render.currency, align: 'right'}
         ];
 
         this.dockedItems = [{
@@ -40,23 +38,22 @@ Ext.define('POS.view.purchase.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
-                text: '<i class="fa fa-plus-square glyph"></i> Tambah',
-                reference: 'add',
-                handler: 'add'
-            }, '-', {
-                text: '<i class="fa fa-credit-card glyph"></i> Detail',
-                reference: 'detail',
-                handler: 'detail',
+                text: '<i class="fa fa-calculator glyph"></i> Data Pembayaran',
+                handler: 'listPayment'
+            },'-',{
+                text: '<i class="fa fa-money glyph"></i> Bayar',
+                reference: 'pay',
+                handler: 'pay',
                 disabled: true
             },{
-                text: '<i class="fa fa-edit glyph"></i> Ubah',
-                reference: 'edit',
-                handler: 'edit',
+                text: '<i class="fa fa-credit-card glyph"></i> Detail Pembelian',
+                reference: 'purchase_detail',
+                handler: 'purchaseDetail',
                 disabled: true
             },{
-                text: '<i class="fa fa-undo glyph"></i> Batalkan Pembelian',
-                reference: 'cancel',
-                handler: 'cancel',
+                text: '<i class="fa fa-print glyph"></i> Print',
+                reference: 'print',
+                handler: 'print',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

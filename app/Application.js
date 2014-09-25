@@ -37,6 +37,7 @@ Ext.define('POS.Application', {
         'currentuser.ChangePassword',
         'currentuser.UpdateBiodata',
         'customer.List',
+        'debit.List',
         'DeveloperInfo',
         'notification.List',
         'option.Option',

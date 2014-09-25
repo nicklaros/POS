@@ -95,6 +95,7 @@ Ext.define('POS.view.sales.Add' ,{
                             reference: 'cashier',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
+                            readOnly: true,
                             margin: '0 0 0 20',
                             width: 200
                         }]
@@ -119,7 +120,10 @@ Ext.define('POS.view.sales.Add' ,{
                             saveOnEnter: true,
                             selectOnFocus: true,
                             margin: '0 0 0 20',
-                            width: 150
+                            width: 150,
+                            listeners: {
+                                change: 'setBalance'
+                            }
                         },{
                             xtype: 'field-price',
                             fieldLabel: 'Sisa',

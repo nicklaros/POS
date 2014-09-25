@@ -57,6 +57,11 @@ Ext.define('Ext.fn.App', {
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
+    mnListDebit: function(){
+        var panel = this.newTab('list-debit');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
     mnListProduct: function(){
         var panel = this.newTab('list-product');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});

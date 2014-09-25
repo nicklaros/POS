@@ -88,11 +88,37 @@ Ext.define('POS.view.purchase.Edit' ,{
                         name: 'note',
                         margin: '0 0 0 20',
                         width: 200
-                    },{
+                    }]
+                },{
+                    xtype: 'container',
+                    anchor: '100%',
+                    layout: 'hbox',
+                    margin: '0 0 10 0',
+                    items:[{
                         xtype: 'field-price',
                         fieldLabel: 'Harga Total',
                         name: 'total_price',
                         reference: 'total_price',
+                        readOnly: true,
+                        saveOnEnter: true,
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Dibayar',
+                        name: 'paid',
+                        reference: 'paid',
+                        saveOnEnter: true,
+                        selectOnFocus: true,
+                        margin: '0 0 0 20',
+                        width: 150,
+                        listeners: {
+                            change: 'setBalance'
+                        }
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Sisa',
+                        name: 'balance',
+                        reference: 'balance',
                         readOnly: true,
                         saveOnEnter: true,
                         margin: '0 0 0 20',

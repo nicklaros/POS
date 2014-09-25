@@ -13,6 +13,12 @@ Ext.define('POS.view.purchase.AddDetailController', {
             },
             close: function(){
                 POS.app.getStore('combo.Stock').removeAll();
+                
+                var paid = Ext.ComponentQuery.query('add-purchase')[0].down('[name = paid]');
+                
+                setTimeout(function(){
+                    paid.focus();
+                }, 10);
             }
         },
         'textfield[tabOnEnter = true]': {
@@ -121,6 +127,8 @@ Ext.define('POS.view.purchase.AddDetailController', {
         
         stock.clear();
         stock.getStore().removeAll();
+
+        this.lookupReference('price_status').update({});
     },
     
     onSelectProduct: function(combo, record){
@@ -211,10 +219,14 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 var rec = Ext.ComponentQuery.query('add-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
                 rec.set(values);
             }
-
-            panel.close();
             
             Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
+
+            form.reset();
+        
+            this.lookupReference('price_status').update({});
+            
+            this.lookupReference('product').focus();
         }
     },
     

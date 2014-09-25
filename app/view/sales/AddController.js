@@ -31,11 +31,6 @@ Ext.define('POS.view.sales.AddController', {
                 POS.app.getStore('SalesDetail').removeAll(true);
             }
         },
-        'textfield[name = paid]': {
-            change: function(){
-                this.setBalance();
-            }
-        },
         'textfield[saveOnEnter = true]': {
             specialkey: function(field, e){
                 if (e.getKey() == e.ENTER) this.save();
@@ -49,9 +44,7 @@ Ext.define('POS.view.sales.AddController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: function(){
-                this.edit();
-            }
+            celldblclick: 'edit'
         }
     },
     
@@ -86,6 +79,7 @@ Ext.define('POS.view.sales.AddController', {
                     for(i=0;i<smCount;i++){
                         store.remove(sel[i]);
                     }
+                    
                     me.setTotalPrice();
                 }
             }
@@ -199,7 +193,7 @@ Ext.define('POS.view.sales.AddController', {
         var buyPrice = this.lookupReference('buy_price');
         buyPrice.setValue(this.sumBuyPrice());
 
-        this.setBalance()
+        this.setBalance();
     },
 
     sumBuyPrice: function(){
