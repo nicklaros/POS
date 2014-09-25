@@ -19,9 +19,8 @@ Ext.define('POS.view.purchase.ListController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnCancel.setDisabled(selected.length === 0);
             },
-            celldblclick: function(){
-                this.detail();
-            }
+            celldblclick: 'detail',
+            itemcontextmenu: 'showMenu'
         }
     },
     
@@ -87,6 +86,34 @@ Ext.define('POS.view.purchase.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-purchase');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Pembelian',
+                    handler: function(){
+                        me.detail();
+                    }
+                },{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Pembelian',
+                    handler: function(){
+                        me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-undo main-nav-icon"></i> Batalkan Pembelian',
+                    handler: function(){
+                        me.cancel();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
     },
     
     reset: function(){

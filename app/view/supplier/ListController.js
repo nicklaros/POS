@@ -15,12 +15,20 @@ Ext.define('POS.view.supplier.ListController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: 'edit'
+            celldblclick: 'edit',
+            itemcontextmenu: 'showMenu'
         }
     },
     
     add: function(){
         Ext.fn.App.window('add-supplier');
+    },
+
+    edit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('edit-supplier');
+        edit.getController().load(rec.get('id'));
     },
     
     remove: function(){
@@ -60,13 +68,6 @@ Ext.define('POS.view.supplier.ListController', {
             }
         );
     },
-
-    edit: function(){
-        var rec = this.getView().getSelectionModel().getSelection()[0];
-
-        var edit = Ext.fn.App.window('edit-supplier');
-        edit.getController().load(rec.get('id'));
-    },
     
     reset: function(){
         this.getView().getStore().search({});
@@ -74,6 +75,29 @@ Ext.define('POS.view.supplier.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-supplier');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Supplier',
+                    handler: function(){
+                        me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-trash-o main-nav-icon"></i> Hapus Supplier',
+                    handler: function(){
+                        me.remove();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
     }
     
 });

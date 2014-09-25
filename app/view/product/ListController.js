@@ -96,6 +96,11 @@ Ext.define('POS.view.product.ListController', {
                     handler: function(){
                         me.edit();
                     }
+                },{
+                    text: '<i class="fa fa-trash-o main-nav-icon"></i> Hapus Produk',
+                    handler: function(){
+                        me.remove();
+                    }
                 }]
             });
         }

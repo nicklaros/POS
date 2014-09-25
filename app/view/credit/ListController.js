@@ -13,7 +13,8 @@ Ext.define('POS.view.credit.ListController', {
                 print.setDisabled(selected.length !== 1);
                 salesDetail.setDisabled(selected.length !== 1);
             },
-            celldblclick: 'pay'
+            celldblclick: 'pay',
+            itemcontextmenu: 'showMenu'
         }
     },
     
@@ -53,6 +54,34 @@ Ext.define('POS.view.credit.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-credit');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-money main-nav-icon"></i> Bayar',
+                    handler: function(){
+                        me.pay();
+                    }
+                },{
+                    text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Penjualan',
+                    handler: function(){
+                        me.salesDetail();
+                    }
+                },{
+                    text: '<i class="fa fa-print main-nav-icon"></i> Print',
+                    handler: function(){
+                        me.print();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
     },
     
     reset: function(){

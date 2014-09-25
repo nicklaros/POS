@@ -20,14 +20,20 @@ Ext.define('POS.view.user.ListController', {
                 btnResetPassword.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: function(){
-                this.edit();
-            }
+            celldblclick: 'edit',
+            itemcontextmenu: 'showMenu'
         }
     },
     
     add: function(){
         Ext.fn.App.window('add-user')
+    },
+
+    edit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('edit-user');
+        edit.getController().load(rec.get('id'));
     },
     
     remove: function(){
@@ -64,13 +70,6 @@ Ext.define('POS.view.user.ListController', {
             }
         );
     },
-
-    edit: function(){
-        var rec = this.getView().getSelectionModel().getSelection()[0];
-
-        var edit = Ext.fn.App.window('edit-user');
-        edit.getController().load(rec.get('id'));
-    },
     
     reset: function(){
         this.getView().getStore().search({});
@@ -81,7 +80,7 @@ Ext.define('POS.view.user.ListController', {
 
         Ext.Msg.confirm(
             '<i class="fa fa-exclamation-triangle glyph"></i> Reset Password',
-            '<b>Password user ' + rec.get('nama') + ' akan direset sama dengan "User ID" nya. <br /> Lanjutkan?</b><br>',
+            '<b>Password user ' + rec.get('name') + ' akan direset sama dengan "User ID" nya. <br /> Lanjutkan?</b><br>',
             function(btn){
                 if (btn == 'yes'){
                     Ext.fn.App.setLoading(true);
@@ -107,5 +106,33 @@ Ext.define('POS.view.user.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-user');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Pegawai',
+                    handler: function(){
+                        me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-key main-nav-icon"></i> Reset Password Pegawai',
+                    handler: function(){
+                        me.resetPassword();
+                    }
+                },{
+                    text: '<i class="fa fa-trash-o main-nav-icon"></i> Hapus Pegawai',
+                    handler: function(){
+                        me.remove();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
     }
 });

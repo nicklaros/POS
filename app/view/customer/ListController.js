@@ -27,6 +27,19 @@ Ext.define('POS.view.customer.ListController', {
         Ext.fn.App.window('add-customer');
     },
     
+    addSales: function(){
+        var sales = Ext.fn.App.window('add-sales'),
+            customer = this.getView().getSelectionModel().getSelection()[0],
+            comboCustomer = sales.down('combo-customer');
+        
+
+        // add selected record to combo's store
+        comboCustomer.getStore().add(customer);
+        
+        // make sure newly added record is selected 
+        comboCustomer.select(customer);
+    },
+    
     detail: function(){
         var rec     = this.getView().getSelectionModel().getSelection()[0],
             params  = {
@@ -94,6 +107,12 @@ Ext.define('POS.view.customer.ListController', {
         Ext.fn.App.window('search-customer');
     },
     
+    showCredit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        Ext.fn.App.showCustomerCredit(rec.get('id'))
+    },
+    
     showMenu: function(view, record, item, index, e, eOpts) {
         var me = this;
         
@@ -102,6 +121,11 @@ Ext.define('POS.view.customer.ListController', {
             me.menu = new Ext.menu.Menu({
                 plain: true,
                 items : [{
+                    text: '<i class="fa fa-plus-square main-nav-icon"></i> Penjualan Baru',
+                    handler: function(){
+                        me.addSales();
+                    }
+                }, '-', {
                     text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Pelanggan',
                     handler: function(){
                         me.detail();
@@ -110,6 +134,11 @@ Ext.define('POS.view.customer.ListController', {
                     text: '<i class="fa fa-shopping-cart main-nav-icon"></i> Data Transaksi Penjualan',
                     handler: function(){
                         me.showSales();
+                    }
+                },{
+                    text: '<i class="fa fa-calculator main-nav-icon"></i> Data Piutang',
+                    handler: function(){
+                        me.showCredit();
                     }
                 },{
                     text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Pelanggan',

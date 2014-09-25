@@ -42,14 +42,14 @@ Ext.define('POS.view.sales.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-plus-square glyph"></i> Tambah',
+                reference: 'add',
+                handler: 'add'
+            }, '-', {
                 text: '<i class="fa fa-credit-card glyph"></i> Detail',
                 reference: 'detail',
                 handler: 'detail',
                 disabled: true
-            },{
-                text: '<i class="fa fa-plus-square glyph"></i> Tambah',
-                reference: 'add',
-                handler: 'add'
             },{
                 text: '<i class="fa fa-edit glyph"></i> Ubah',
                 reference: 'edit',
