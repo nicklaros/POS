@@ -27,6 +27,7 @@ Ext.define('POS.view.purchase.List' ,{
         this.store = store;
 
         this.columns = [
+            {header: 'Nota', dataIndex:'id', width: 75},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
             {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
             {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},

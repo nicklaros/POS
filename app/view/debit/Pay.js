@@ -1,13 +1,13 @@
-Ext.define('POS.view.credit.Pay' ,{
+Ext.define('POS.view.debit.Pay' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.pay-credit',
-    controller: 'pay-credit',
+    alias : 'widget.pay-debit',
+    controller: 'pay-debit',
     
     requires: [
         'POS.custom.field.ComboCashier',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
-        'POS.view.credit.PayController'
+        'POS.view.debit.PayController'
     ],
 
     layout: 'anchor',
@@ -21,7 +21,7 @@ Ext.define('POS.view.credit.Pay' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Bayar Piutang';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Bayar Hutang';
 
         this.items = [{
             xtype: 'form',
@@ -37,14 +37,14 @@ Ext.define('POS.view.credit.Pay' ,{
                 width: 200
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Kode Piutang',
-                name: 'credit_id',
+                fieldLabel: 'Kode Hutang',
+                name: 'debit_id',
                 readOnly: true,
                 width:250
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Pelanggan',
-                name: 'customer_name',
+                fieldLabel: 'Supplier',
+                name: 'supplier_name',
                 readOnly: true,
                 width:250
             },{
@@ -57,9 +57,9 @@ Ext.define('POS.view.credit.Pay' ,{
                 width: 200
             },{
                 xtype: 'field-price',
-                fieldLabel: 'Besar Piutang',
-                name: 'credit',
-                reference: 'credit',
+                fieldLabel: 'Besar Hutang',
+                name: 'debit',
+                reference: 'debit',
                 readOnly: true,
                 width: 150
             },{
@@ -72,7 +72,10 @@ Ext.define('POS.view.credit.Pay' ,{
                 saveOnEnter: true,
                 selectOnFocus: true,
                 value: 0,
-                width: 150
+                width: 150,
+                listeners: {
+                    change: 'setBalance'
+                }
             },{
                 xtype: 'field-price',
                 fieldLabel: 'Kembali',

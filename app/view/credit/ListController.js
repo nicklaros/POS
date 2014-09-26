@@ -9,7 +9,7 @@ Ext.define('POS.view.credit.ListController', {
                     print       = this.lookupReference('print'),
                     salesDetail = this.lookupReference('sales_detail');
 
-                pay.setDisabled(selected.length !== 1 || selected[0].get('balance') <= 0);
+                pay.setDisabled(selected.length !== 1);
                 print.setDisabled(selected.length !== 1);
                 salesDetail.setDisabled(selected.length !== 1);
             },

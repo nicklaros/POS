@@ -30,7 +30,6 @@ Ext.define('POS.view.report.CustomController', {
                     me.getViewModel().set('stats', result.data);
                 }else{
                     panel.close();
-                    me.getViewModel().set('stats', '');
                     Ext.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {

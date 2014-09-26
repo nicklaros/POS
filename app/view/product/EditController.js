@@ -62,6 +62,7 @@ Ext.define('POS.view.product.EditController', {
                     if (data.success){
                         panel.close();
                         POS.app.getStore('Product').load();
+                        POS.app.getStore('Stock').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

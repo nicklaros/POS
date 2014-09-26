@@ -33,6 +33,13 @@ Ext.define('POS.view.stock.ListController', {
         var edit = Ext.fn.App.window('edit-stock');
         edit.getController().load(rec.get('id'));
     },
+
+    editProduct: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        var edit = Ext.fn.App.window('edit-product');
+        edit.getController().load(rec.get('product_id'));
+    },
     
     remove: function(){
         var sm  = this.getView().getSelectionModel(),
@@ -85,6 +92,11 @@ Ext.define('POS.view.stock.ListController', {
                     text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Stock',
                     handler: function(){
                         me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Kode atau Nama Produk',
+                    handler: function(){
+                        me.editProduct();
                     }
                 },{
                     text: '<i class="fa fa-trash-o main-nav-icon"></i> Hapus Stock',

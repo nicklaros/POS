@@ -7,7 +7,10 @@ Ext.define('POS.view.debit.List' ,{
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Debit',
-        'POS.view.debit.ListController'
+        'POS.view.debit.ListController',
+        'POS.view.debit.ListPayment',
+        'POS.view.debit.Pay',
+        'POS.view.debit.Search'
     ],
 
     autoScroll: true,
@@ -49,11 +52,6 @@ Ext.define('POS.view.debit.List' ,{
                 text: '<i class="fa fa-credit-card glyph"></i> Detail Pembelian',
                 reference: 'purchase_detail',
                 handler: 'purchaseDetail',
-                disabled: true
-            },{
-                text: '<i class="fa fa-print glyph"></i> Print',
-                reference: 'print',
-                handler: 'print',
                 disabled: true
             },{
                 xtype: 'buttonsegment',

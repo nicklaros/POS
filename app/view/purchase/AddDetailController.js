@@ -42,13 +42,22 @@ Ext.define('POS.view.purchase.AddDetailController', {
     addVariant: function(){
         var product = this.lookupReference('product').getSelectedRecord();
             
-        // make sure product is selected
+        // make sure a product is selected
         if (!Ext.isEmpty(product)) {
-            var panel = Ext.fn.App.window('add-stock-variant');
+            var panel           = Ext.fn.App.window('add-stock'),
+                panelController = panel.getController();
             
             panel.bindCombo = this.lookupReference('stock').getId();
-            panel.setTitle(panel.getTitle() + product.get('name'));
-            panel.down('[name = product_id]').setValue(product.get('id'));
+            
+            var comboProduct = panelController.lookupReference('product');            
+            comboProduct.setValue(product);
+            comboProduct.setReadOnly(true);
+            
+            panelController.lookupReference('add_product').hide();
+            
+            setTimeout(function(){
+                panelController.lookupReference('unit').focus();
+            }, 10);
         } else {
             Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
         }

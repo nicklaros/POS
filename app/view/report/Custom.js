@@ -57,6 +57,7 @@ Ext.define('POS.view.report.Custom' ,{
                 margin: '5 0 0 0'
             },{
                 xtype: 'field-date',
+                itemId: 'start',
                 reference: 'start',
                 allowBlank: false,
                 msgTarget: 'side',
@@ -69,6 +70,7 @@ Ext.define('POS.view.report.Custom' ,{
                 margin: '5 0 0 10'
             },{
                 xtype: 'field-date',
+                itemId: 'until',
                 reference: 'until',
                 allowBlank: false,
                 msgTarget: 'side',

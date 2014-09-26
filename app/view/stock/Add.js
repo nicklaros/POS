@@ -46,6 +46,7 @@ Ext.define('POS.view.stock.Add' ,{
                 },{
                     xtype: 'button',
                     text: '<i class="fa fa-plus"></i>',
+                    reference: 'add_product',
                     handler: 'addProduct',
                     margin: '25 0 0 5'
                 },{

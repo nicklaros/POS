@@ -1,14 +1,14 @@
-Ext.define('POS.view.credit.ListPayment' ,{
+Ext.define('POS.view.debit.ListPayment' ,{
     extend: 'Ext.grid.Panel',
-    alias : 'widget.list-credit-payment',
-    controller: 'list-credit-payment',
+    alias : 'widget.list-debit-payment',
+    controller: 'list-debit-payment',
 
     requires: [
         'Ext.fn.Render',
         'Ext.ux.container.ButtonSegment',
-        'POS.store.CreditPayment',
-        'POS.view.credit.ListPaymentController',
-        'POS.view.credit.SearchPayment'
+        'POS.store.DebitPayment',
+        'POS.view.debit.ListPaymentController',
+        'POS.view.debit.SearchPayment'
     ],
 
     autoScroll: true,
@@ -18,15 +18,15 @@ Ext.define('POS.view.credit.ListPayment' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-calculator glyph"></i> Pembayaran Piutang';
+        this.title = '<i class="fa fa-calculator glyph"></i> Pembayaran Hutang';
 
-        var store = POS.app.getStore('CreditPayment');
+        var store = POS.app.getStore('DebitPayment');
         this.store = store;
 
         this.columns = [
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Kode Piutang', dataIndex:'credit_id', width: 125},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
+            {header: 'Kode Hutang', dataIndex:'debit_id', width: 125},
+            {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
             {header: 'Bayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120}
         ];

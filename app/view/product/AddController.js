@@ -43,6 +43,7 @@ Ext.define('POS.view.product.AddController', {
                     if (result.success){
                         panel.close();
                         POS.app.getStore('Product').load();
+                        POS.app.getStore('Stock').load();
                         
                         var bindCombo = Ext.getCmp(panel.bindCombo);
                         

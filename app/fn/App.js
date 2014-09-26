@@ -193,7 +193,8 @@ Ext.define('Ext.fn.App', {
         Ext.fn.App.newTab('list-credit');
                 
         POS.app.getStore('Credit').search({
-            customer_id: customerId
+            customer_id: customerId,
+            credit_status: 'Belum Lunas'
         });        
     },
     

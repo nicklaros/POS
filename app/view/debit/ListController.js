@@ -6,11 +6,9 @@ Ext.define('POS.view.debit.ListController', {
         '#': {
             selectionchange: function(sm, selected){
                 var pay             = this.lookupReference('pay'),
-                    print           = this.lookupReference('print'),
                     purchaseDetail  = this.lookupReference('purchase_detail');
 
-                pay.setDisabled(selected.length !== 1 || selected[0].get('balance') <= 0);
-                print.setDisabled(selected.length !== 1);
+                pay.setDisabled(selected.length !== 1);
                 purchaseDetail.setDisabled(selected.length !== 1);
             },
             celldblclick: 'pay',
@@ -32,14 +30,8 @@ Ext.define('POS.view.debit.ListController', {
             var panel = Ext.fn.App.window('pay-debit');
             panel.getController().load(params);
         } else {
-            Ext.fn.Notification.show('Lunas', 'Piutang ini sudah dilunasi.');
+            Ext.fn.Notification.show('Lunas', 'Hutang ini sudah dilunasi.');
         }
-    },
-    
-    print: function(){
-        var rec  = this.getView().getSelectionModel().getSelection()[0];
-
-        Ext.fn.App.printNotaCredit(rec.get('id'));
     },
 
     purchaseDetail: function(){
@@ -72,11 +64,6 @@ Ext.define('POS.view.debit.ListController', {
                     text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Pembelian',
                     handler: function(){
                         me.purchaseDetail();
-                    }
-                },{
-                    text: '<i class="fa fa-print main-nav-icon"></i> Print',
-                    handler: function(){
-                        me.print();
                     }
                 }]
             });

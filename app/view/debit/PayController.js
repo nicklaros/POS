@@ -1,16 +1,11 @@
-Ext.define('POS.view.credit.PayController', {
+Ext.define('POS.view.debit.PayController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.pay-credit',
+    alias: 'controller.pay-debit',
 
     control: {
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.save();
-            }
-        },
-        'textfield[name = paid]': {
-            change: function(){
-                this.setBalance();
             }
         }
     },
@@ -26,11 +21,11 @@ Ext.define('POS.view.credit.PayController', {
 
         Ext.fn.App.setLoading(true);
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('credit/loadFormPay', function(websocket, result){
+            Ext.ws.Main.on('debit/loadFormPay', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
-                POS.app.getStore('Credit').load();
-                POS.app.getStore('CreditPayment').load();
+                POS.app.getStore('Debit').load();
+                POS.app.getStore('DebitPayment').load();
                 if (result.success){
                     panel.show();
 
@@ -56,7 +51,7 @@ Ext.define('POS.view.credit.PayController', {
             }),
             panel
         );
-        Ext.ws.Main.send('credit/loadFormPay', params);
+        Ext.ws.Main.send('debit/loadFormPay', params);
     },
 
     save: function(){
@@ -68,7 +63,7 @@ Ext.define('POS.view.credit.PayController', {
 
             panel.setLoading(true);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('credit/pay', function(websocket, result){
+                Ext.ws.Main.on('debit/pay', function(websocket, result){
                     clearTimeout(monitor);
                     panel.setLoading(false);
                     if (result.success){
@@ -76,8 +71,8 @@ Ext.define('POS.view.credit.PayController', {
                     }else{
                         Ext.fn.App.notification('Ups', result.errmsg);
                     }
-                    POS.app.getStore('Credit').load();
-                    POS.app.getStore('CreditPayment').load();
+                    POS.app.getStore('Debit').load();
+                    POS.app.getStore('DebitPayment').load();
                 }, this, {
                     single: true,
                     destroyable: true
@@ -85,15 +80,15 @@ Ext.define('POS.view.credit.PayController', {
                 panel,
                 false
             );
-            Ext.ws.Main.send('credit/pay', values);
+            Ext.ws.Main.send('debit/pay', values);
         }
     },
     
     setBalance: function(){
-        var credit  = this.lookupReference('credit'),
+        var debit   = this.lookupReference('debit'),
             paid    = this.lookupReference('paid'),
             balance = this.lookupReference('balance'),
-            result  = paid.getSubmitValue() - credit.getSubmitValue();
+            result  = paid.getSubmitValue() - debit.getSubmitValue();
         
         balance.setValue(result);
         

@@ -1,6 +1,6 @@
-Ext.define('POS.view.credit.ListPaymentController', {
+Ext.define('POS.view.debit.ListPaymentController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.list-credit-payment',
+    alias: 'controller.list-debit-payment',
 
     control: {
         '#': {
@@ -19,17 +19,17 @@ Ext.define('POS.view.credit.ListPaymentController', {
             };
 
         Ext.Msg.confirm(
-            '<i class="fa fa-exclamation-triangle glyph"></i> Batalkan Pembayaran Piutang',
-            'Apakah Anda yakin akan membatalkan Pembayaran Piutang ini?',
+            '<i class="fa fa-exclamation-triangle glyph"></i> Batalkan Pembayaran Hutang',
+            'Apakah Anda yakin akan membatalkan Pembayaran Hutang ini?',
             function(btn){
                 if (btn == 'yes'){
                     Ext.fn.App.setLoading(true);
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('credit/cancelPayment', function(websocket, result){
+                        Ext.ws.Main.on('debit/cancelPayment', function(websocket, result){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
-                            POS.app.getStore('Credit').load();
-                            POS.app.getStore('CreditPayment').load();
+                            POS.app.getStore('Debit').load();
+                            POS.app.getStore('DebitPayment').load();
                             if (result.success == false) {
                                 Ext.fn.App.notification('Ups', result.errmsg);
                             }
@@ -38,14 +38,14 @@ Ext.define('POS.view.credit.ListPaymentController', {
                             destroyable: true
                         })
                     );
-                    Ext.ws.Main.send('credit/cancelPayment', params);
+                    Ext.ws.Main.send('debit/cancelPayment', params);
                 }
             }
         );
     },
     
     search: function(){
-        Ext.fn.App.window('search-credit-payment');
+        Ext.fn.App.window('search-debit-payment');
     },
     
     reset: function(){

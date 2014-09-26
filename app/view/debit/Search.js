@@ -1,12 +1,12 @@
-Ext.define('POS.view.credit.Search' ,{
+Ext.define('POS.view.debit.Search' ,{
     extend: 'Ext.window.Window',
-    alias : 'widget.search-credit',
-    id: 'search-credit',
-    controller: 'search-credit',
+    alias : 'widget.search-debit',
+    id: 'search-debit',
+    controller: 'search-debit',
 
     requires: [
         'POS.custom.field.ComboPaymentStatus',
-        'POS.view.credit.SearchController'
+        'POS.view.debit.SearchController'
     ],
 
     autoShow: true,
@@ -16,23 +16,23 @@ Ext.define('POS.view.credit.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-calculator glyph"></i> Pencarian Piutang Penjualan';
+        this.title = '<i class="fa fa-calculator glyph"></i> Pencarian Hutang Pembelian';
 
         this.items = [{
             xtype: 'form',
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Pelanggan',
-                name: 'customer',
-                reference: 'customer',
+                fieldLabel: 'Supplier',
+                name: 'supplier_name',
+                reference: 'supplier_name',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,
                 anchor: '100%'
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Kode Piutang',
+                fieldLabel: 'Kode Hutang',
                 name: 'id',
                 reference: 'id',
                 emptyText: EMPTY_TEXT_0,
@@ -41,17 +41,17 @@ Ext.define('POS.view.credit.Search' ,{
                 anchor: '100%'
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Nomor Nota Penjualan',
-                name: 'sales_id',
-                reference: 'sales_id',
+                fieldLabel: 'Nomor Nota Pembelian',
+                name: 'purchase_id',
+                reference: 'purchase_id',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,
                 anchor: '100%'
             },{
                 xtype: 'combo-payment-status',
-                fieldLabel: 'Status Piutang',
-                name: 'credit_status',
+                fieldLabel: 'Status Hutang',
+                name: 'debit_status',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 anchor: '100%'
