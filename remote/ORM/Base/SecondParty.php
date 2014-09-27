@@ -2,13 +2,16 @@
 
 namespace ORM\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
 use ORM\Purchase as ChildPurchase;
 use ORM\PurchaseQuery as ChildPurchaseQuery;
-use ORM\Supplier as ChildSupplier;
-use ORM\SupplierQuery as ChildSupplierQuery;
-use ORM\Map\SupplierTableMap;
+use ORM\Sales as ChildSales;
+use ORM\SalesQuery as ChildSalesQuery;
+use ORM\SecondParty as ChildSecondParty;
+use ORM\SecondPartyQuery as ChildSecondPartyQuery;
+use ORM\Map\SecondPartyTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -21,13 +24,14 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
-abstract class Supplier implements ActiveRecordInterface
+abstract class SecondParty implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\ORM\\Map\\SupplierTableMap';
+    const TABLE_MAP = '\\ORM\\Map\\SecondPartyTableMap';
 
 
     /**
@@ -63,6 +67,12 @@ abstract class Supplier implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the registered_date field.
+     * @var        \DateTime
+     */
+    protected $registered_date;
+
+    /**
      * The value for the name field.
      * @var        string
      */
@@ -75,10 +85,28 @@ abstract class Supplier implements ActiveRecordInterface
     protected $address;
 
     /**
+     * The value for the birthday field.
+     * @var        \DateTime
+     */
+    protected $birthday;
+
+    /**
+     * The value for the gender field.
+     * @var        string
+     */
+    protected $gender;
+
+    /**
      * The value for the phone field.
      * @var        string
      */
     protected $phone;
+
+    /**
+     * The value for the type field.
+     * @var        string
+     */
+    protected $type;
 
     /**
      * The value for the status field.
@@ -91,6 +119,12 @@ abstract class Supplier implements ActiveRecordInterface
      */
     protected $collPurchases;
     protected $collPurchasesPartial;
+
+    /**
+     * @var        ObjectCollection|ChildSales[] Collection to store aggregation of ChildSales objects.
+     */
+    protected $collSaless;
+    protected $collSalessPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -107,7 +141,13 @@ abstract class Supplier implements ActiveRecordInterface
     protected $purchasesScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of ORM\Base\Supplier object.
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildSales[]
+     */
+    protected $salessScheduledForDeletion = null;
+
+    /**
+     * Initializes internal state of ORM\Base\SecondParty object.
      */
     public function __construct()
     {
@@ -202,9 +242,9 @@ abstract class Supplier implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Supplier</code> instance.  If
-     * <code>obj</code> is an instance of <code>Supplier</code>, delegates to
-     * <code>equals(Supplier)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>SecondParty</code> instance.  If
+     * <code>obj</code> is an instance of <code>SecondParty</code>, delegates to
+     * <code>equals(SecondParty)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -270,7 +310,7 @@ abstract class Supplier implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Supplier The current object, for fluid interface
+     * @return $this|SecondParty The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -334,6 +374,26 @@ abstract class Supplier implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [registered_date] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getRegisteredDate($format = NULL)
+    {
+        if ($format === null) {
+            return $this->registered_date;
+        } else {
+            return $this->registered_date instanceof \DateTime ? $this->registered_date->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [name] column value.
      *
      * @return string
@@ -354,6 +414,36 @@ abstract class Supplier implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [birthday] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getBirthday($format = NULL)
+    {
+        if ($format === null) {
+            return $this->birthday;
+        } else {
+            return $this->birthday instanceof \DateTime ? $this->birthday->format($format) : null;
+        }
+    }
+
+    /**
+     * Get the [gender] column value.
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
      * Get the [phone] column value.
      *
      * @return string
@@ -361,6 +451,16 @@ abstract class Supplier implements ActiveRecordInterface
     public function getPhone()
     {
         return $this->phone;
+    }
+
+    /**
+     * Get the [type] column value.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -409,19 +509,37 @@ abstract class Supplier implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SupplierTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SecondPartyTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SupplierTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SecondPartyTableMap::translateFieldName('RegisteredDate', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->registered_date = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SecondPartyTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SupplierTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SecondPartyTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
             $this->address = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SupplierTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SecondPartyTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SecondPartyTableMap::translateFieldName('Gender', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->gender = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SecondPartyTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
             $this->phone = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SupplierTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SecondPartyTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SecondPartyTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -431,10 +549,10 @@ abstract class Supplier implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = SupplierTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = SecondPartyTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Supplier'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\SecondParty'), 0, $e);
         }
     }
 
@@ -459,7 +577,7 @@ abstract class Supplier implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -469,17 +587,37 @@ abstract class Supplier implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[SupplierTableMap::COL_ID] = true;
+            $this->modifiedColumns[SecondPartyTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
+     * Sets the value of [registered_date] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
+     */
+    public function setRegisteredDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->registered_date !== null || $dt !== null) {
+            if ($dt !== $this->registered_date) {
+                $this->registered_date = $dt;
+                $this->modifiedColumns[SecondPartyTableMap::COL_REGISTERED_DATE] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setRegisteredDate()
+
+    /**
      * Set the value of [name] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function setName($v)
     {
@@ -489,7 +627,7 @@ abstract class Supplier implements ActiveRecordInterface
 
         if ($this->name !== $v) {
             $this->name = $v;
-            $this->modifiedColumns[SupplierTableMap::COL_NAME] = true;
+            $this->modifiedColumns[SecondPartyTableMap::COL_NAME] = true;
         }
 
         return $this;
@@ -499,7 +637,7 @@ abstract class Supplier implements ActiveRecordInterface
      * Set the value of [address] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function setAddress($v)
     {
@@ -509,17 +647,57 @@ abstract class Supplier implements ActiveRecordInterface
 
         if ($this->address !== $v) {
             $this->address = $v;
-            $this->modifiedColumns[SupplierTableMap::COL_ADDRESS] = true;
+            $this->modifiedColumns[SecondPartyTableMap::COL_ADDRESS] = true;
         }
 
         return $this;
     } // setAddress()
 
     /**
+     * Sets the value of [birthday] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
+     */
+    public function setBirthday($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->birthday !== null || $dt !== null) {
+            if ($dt !== $this->birthday) {
+                $this->birthday = $dt;
+                $this->modifiedColumns[SecondPartyTableMap::COL_BIRTHDAY] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setBirthday()
+
+    /**
+     * Set the value of [gender] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
+     */
+    public function setGender($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->gender !== $v) {
+            $this->gender = $v;
+            $this->modifiedColumns[SecondPartyTableMap::COL_GENDER] = true;
+        }
+
+        return $this;
+    } // setGender()
+
+    /**
      * Set the value of [phone] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function setPhone($v)
     {
@@ -529,17 +707,37 @@ abstract class Supplier implements ActiveRecordInterface
 
         if ($this->phone !== $v) {
             $this->phone = $v;
-            $this->modifiedColumns[SupplierTableMap::COL_PHONE] = true;
+            $this->modifiedColumns[SecondPartyTableMap::COL_PHONE] = true;
         }
 
         return $this;
     } // setPhone()
 
     /**
+     * Set the value of [type] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
+     */
+    public function setType($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[SecondPartyTableMap::COL_TYPE] = true;
+        }
+
+        return $this;
+    } // setType()
+
+    /**
      * Set the value of [status] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function setStatus($v)
     {
@@ -549,7 +747,7 @@ abstract class Supplier implements ActiveRecordInterface
 
         if ($this->status !== $v) {
             $this->status = $v;
-            $this->modifiedColumns[SupplierTableMap::COL_STATUS] = true;
+            $this->modifiedColumns[SecondPartyTableMap::COL_STATUS] = true;
         }
 
         return $this;
@@ -576,13 +774,13 @@ abstract class Supplier implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(SupplierTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(SecondPartyTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildSupplierQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildSecondPartyQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -594,6 +792,8 @@ abstract class Supplier implements ActiveRecordInterface
 
             $this->collPurchases = null;
 
+            $this->collSaless = null;
+
         } // if (deep)
     }
 
@@ -603,8 +803,8 @@ abstract class Supplier implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Supplier::setDeleted()
-     * @see Supplier::isDeleted()
+     * @see SecondParty::setDeleted()
+     * @see SecondParty::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -613,11 +813,11 @@ abstract class Supplier implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SupplierTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SecondPartyTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildSupplierQuery::create()
+            $deleteQuery = ChildSecondPartyQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -648,7 +848,7 @@ abstract class Supplier implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(SupplierTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(SecondPartyTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -667,7 +867,7 @@ abstract class Supplier implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                SupplierTableMap::addInstanceToPool($this);
+                SecondPartyTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -722,6 +922,24 @@ abstract class Supplier implements ActiveRecordInterface
                 }
             }
 
+            if ($this->salessScheduledForDeletion !== null) {
+                if (!$this->salessScheduledForDeletion->isEmpty()) {
+                    foreach ($this->salessScheduledForDeletion as $sales) {
+                        // need to save related object because we set the relation to null
+                        $sales->save($con);
+                    }
+                    $this->salessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collSaless !== null) {
+                foreach ($this->collSaless as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -742,30 +960,42 @@ abstract class Supplier implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[SupplierTableMap::COL_ID] = true;
+        $this->modifiedColumns[SecondPartyTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SupplierTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . SecondPartyTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(SupplierTableMap::COL_ID)) {
+        if ($this->isColumnModified(SecondPartyTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_NAME)) {
+        if ($this->isColumnModified(SecondPartyTableMap::COL_REGISTERED_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'REGISTERED_DATE';
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_ADDRESS)) {
+        if ($this->isColumnModified(SecondPartyTableMap::COL_ADDRESS)) {
             $modifiedColumns[':p' . $index++]  = 'ADDRESS';
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_PHONE)) {
+        if ($this->isColumnModified(SecondPartyTableMap::COL_BIRTHDAY)) {
+            $modifiedColumns[':p' . $index++]  = 'BIRTHDAY';
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_GENDER)) {
+            $modifiedColumns[':p' . $index++]  = 'GENDER';
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_PHONE)) {
             $modifiedColumns[':p' . $index++]  = 'PHONE';
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_STATUS)) {
+        if ($this->isColumnModified(SecondPartyTableMap::COL_TYPE)) {
+            $modifiedColumns[':p' . $index++]  = 'TYPE';
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'STATUS';
         }
 
         $sql = sprintf(
-            'INSERT INTO supplier (%s) VALUES (%s)',
+            'INSERT INTO second_party (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -777,14 +1007,26 @@ abstract class Supplier implements ActiveRecordInterface
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
+                    case 'REGISTERED_DATE':
+                        $stmt->bindValue($identifier, $this->registered_date ? $this->registered_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
                     case 'NAME':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case 'ADDRESS':
                         $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
                         break;
+                    case 'BIRTHDAY':
+                        $stmt->bindValue($identifier, $this->birthday ? $this->birthday->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                        break;
+                    case 'GENDER':
+                        $stmt->bindValue($identifier, $this->gender, PDO::PARAM_STR);
+                        break;
                     case 'PHONE':
                         $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
+                        break;
+                    case 'TYPE':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
                         break;
                     case 'STATUS':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -835,7 +1077,7 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = SupplierTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = SecondPartyTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -855,15 +1097,27 @@ abstract class Supplier implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getName();
+                return $this->getRegisteredDate();
                 break;
             case 2:
-                return $this->getAddress();
+                return $this->getName();
                 break;
             case 3:
-                return $this->getPhone();
+                return $this->getAddress();
                 break;
             case 4:
+                return $this->getBirthday();
+                break;
+            case 5:
+                return $this->getGender();
+                break;
+            case 6:
+                return $this->getPhone();
+                break;
+            case 7:
+                return $this->getType();
+                break;
+            case 8:
                 return $this->getStatus();
                 break;
             default:
@@ -889,17 +1143,21 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Supplier'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['SecondParty'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Supplier'][$this->getPrimaryKey()] = true;
-        $keys = SupplierTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['SecondParty'][$this->getPrimaryKey()] = true;
+        $keys = SecondPartyTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getAddress(),
-            $keys[3] => $this->getPhone(),
-            $keys[4] => $this->getStatus(),
+            $keys[1] => $this->getRegisteredDate(),
+            $keys[2] => $this->getName(),
+            $keys[3] => $this->getAddress(),
+            $keys[4] => $this->getBirthday(),
+            $keys[5] => $this->getGender(),
+            $keys[6] => $this->getPhone(),
+            $keys[7] => $this->getType(),
+            $keys[8] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -909,6 +1167,9 @@ abstract class Supplier implements ActiveRecordInterface
         if ($includeForeignObjects) {
             if (null !== $this->collPurchases) {
                 $result['Purchases'] = $this->collPurchases->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collSaless) {
+                $result['Saless'] = $this->collSaless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -924,11 +1185,11 @@ abstract class Supplier implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\ORM\Supplier
+     * @return $this|\ORM\SecondParty
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = SupplierTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = SecondPartyTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -939,7 +1200,7 @@ abstract class Supplier implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\ORM\Supplier
+     * @return $this|\ORM\SecondParty
      */
     public function setByPosition($pos, $value)
     {
@@ -948,15 +1209,27 @@ abstract class Supplier implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setName($value);
+                $this->setRegisteredDate($value);
                 break;
             case 2:
-                $this->setAddress($value);
+                $this->setName($value);
                 break;
             case 3:
-                $this->setPhone($value);
+                $this->setAddress($value);
                 break;
             case 4:
+                $this->setBirthday($value);
+                break;
+            case 5:
+                $this->setGender($value);
+                break;
+            case 6:
+                $this->setPhone($value);
+                break;
+            case 7:
+                $this->setType($value);
+                break;
+            case 8:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -983,22 +1256,34 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = SupplierTableMap::getFieldNames($keyType);
+        $keys = SecondPartyTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setName($arr[$keys[1]]);
+            $this->setRegisteredDate($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setAddress($arr[$keys[2]]);
+            $this->setName($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setPhone($arr[$keys[3]]);
+            $this->setAddress($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setStatus($arr[$keys[4]]);
+            $this->setBirthday($arr[$keys[4]]);
+        }
+        if (array_key_exists($keys[5], $arr)) {
+            $this->setGender($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setPhone($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setType($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setStatus($arr[$keys[8]]);
         }
     }
 
@@ -1013,7 +1298,7 @@ abstract class Supplier implements ActiveRecordInterface
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
      *
-     * @return $this|\ORM\Supplier The current object, for fluid interface
+     * @return $this|\ORM\SecondParty The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -1033,22 +1318,34 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(SupplierTableMap::DATABASE_NAME);
+        $criteria = new Criteria(SecondPartyTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(SupplierTableMap::COL_ID)) {
-            $criteria->add(SupplierTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(SecondPartyTableMap::COL_ID)) {
+            $criteria->add(SecondPartyTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_NAME)) {
-            $criteria->add(SupplierTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(SecondPartyTableMap::COL_REGISTERED_DATE)) {
+            $criteria->add(SecondPartyTableMap::COL_REGISTERED_DATE, $this->registered_date);
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_ADDRESS)) {
-            $criteria->add(SupplierTableMap::COL_ADDRESS, $this->address);
+        if ($this->isColumnModified(SecondPartyTableMap::COL_NAME)) {
+            $criteria->add(SecondPartyTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_PHONE)) {
-            $criteria->add(SupplierTableMap::COL_PHONE, $this->phone);
+        if ($this->isColumnModified(SecondPartyTableMap::COL_ADDRESS)) {
+            $criteria->add(SecondPartyTableMap::COL_ADDRESS, $this->address);
         }
-        if ($this->isColumnModified(SupplierTableMap::COL_STATUS)) {
-            $criteria->add(SupplierTableMap::COL_STATUS, $this->status);
+        if ($this->isColumnModified(SecondPartyTableMap::COL_BIRTHDAY)) {
+            $criteria->add(SecondPartyTableMap::COL_BIRTHDAY, $this->birthday);
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_GENDER)) {
+            $criteria->add(SecondPartyTableMap::COL_GENDER, $this->gender);
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_PHONE)) {
+            $criteria->add(SecondPartyTableMap::COL_PHONE, $this->phone);
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_TYPE)) {
+            $criteria->add(SecondPartyTableMap::COL_TYPE, $this->type);
+        }
+        if ($this->isColumnModified(SecondPartyTableMap::COL_STATUS)) {
+            $criteria->add(SecondPartyTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -1066,8 +1363,8 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(SupplierTableMap::DATABASE_NAME);
-        $criteria->add(SupplierTableMap::COL_ID, $this->id);
+        $criteria = new Criteria(SecondPartyTableMap::DATABASE_NAME);
+        $criteria->add(SecondPartyTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1129,16 +1426,20 @@ abstract class Supplier implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \ORM\Supplier (or compatible) type.
+     * @param      object $copyObj An object of \ORM\SecondParty (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setRegisteredDate($this->getRegisteredDate());
         $copyObj->setName($this->getName());
         $copyObj->setAddress($this->getAddress());
+        $copyObj->setBirthday($this->getBirthday());
+        $copyObj->setGender($this->getGender());
         $copyObj->setPhone($this->getPhone());
+        $copyObj->setType($this->getType());
         $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
@@ -1149,6 +1450,12 @@ abstract class Supplier implements ActiveRecordInterface
             foreach ($this->getPurchases() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPurchase($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getSaless() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addSales($relObj->copy($deepCopy));
                 }
             }
 
@@ -1169,7 +1476,7 @@ abstract class Supplier implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \ORM\Supplier Clone of current object.
+     * @return \ORM\SecondParty Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1195,6 +1502,9 @@ abstract class Supplier implements ActiveRecordInterface
     {
         if ('Purchase' == $relationName) {
             return $this->initPurchases();
+        }
+        if ('Sales' == $relationName) {
+            return $this->initSaless();
         }
     }
 
@@ -1247,7 +1557,7 @@ abstract class Supplier implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildSupplier is new, it will return
+     * If this ChildSecondParty is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
@@ -1264,7 +1574,7 @@ abstract class Supplier implements ActiveRecordInterface
                 $this->initPurchases();
             } else {
                 $collPurchases = ChildPurchaseQuery::create(null, $criteria)
-                    ->filterBySupplier($this)
+                    ->filterBySecondParty($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -1307,7 +1617,7 @@ abstract class Supplier implements ActiveRecordInterface
      *
      * @param      Collection $purchases A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildSupplier The current object (for fluent API support)
+     * @return $this|ChildSecondParty The current object (for fluent API support)
      */
     public function setPurchases(Collection $purchases, ConnectionInterface $con = null)
     {
@@ -1318,7 +1628,7 @@ abstract class Supplier implements ActiveRecordInterface
         $this->purchasesScheduledForDeletion = $purchasesToDelete;
 
         foreach ($purchasesToDelete as $purchaseRemoved) {
-            $purchaseRemoved->setSupplier(null);
+            $purchaseRemoved->setSecondParty(null);
         }
 
         $this->collPurchases = null;
@@ -1359,7 +1669,7 @@ abstract class Supplier implements ActiveRecordInterface
             }
 
             return $query
-                ->filterBySupplier($this)
+                ->filterBySecondParty($this)
                 ->count($con);
         }
 
@@ -1371,7 +1681,7 @@ abstract class Supplier implements ActiveRecordInterface
      * through the ChildPurchase foreign key attribute.
      *
      * @param  ChildPurchase $l ChildPurchase
-     * @return $this|\ORM\Supplier The current object (for fluent API support)
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
      */
     public function addPurchase(ChildPurchase $l)
     {
@@ -1393,12 +1703,12 @@ abstract class Supplier implements ActiveRecordInterface
     protected function doAddPurchase(ChildPurchase $purchase)
     {
         $this->collPurchases[]= $purchase;
-        $purchase->setSupplier($this);
+        $purchase->setSecondParty($this);
     }
 
     /**
      * @param  ChildPurchase $purchase The ChildPurchase object to remove.
-     * @return $this|ChildSupplier The current object (for fluent API support)
+     * @return $this|ChildSecondParty The current object (for fluent API support)
      */
     public function removePurchase(ChildPurchase $purchase)
     {
@@ -1410,10 +1720,253 @@ abstract class Supplier implements ActiveRecordInterface
                 $this->purchasesScheduledForDeletion->clear();
             }
             $this->purchasesScheduledForDeletion[]= $purchase;
-            $purchase->setSupplier(null);
+            $purchase->setSecondParty(null);
         }
 
         return $this;
+    }
+
+    /**
+     * Clears out the collSaless collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addSaless()
+     */
+    public function clearSaless()
+    {
+        $this->collSaless = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collSaless collection loaded partially.
+     */
+    public function resetPartialSaless($v = true)
+    {
+        $this->collSalessPartial = $v;
+    }
+
+    /**
+     * Initializes the collSaless collection.
+     *
+     * By default this just sets the collSaless collection to an empty array (like clearcollSaless());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initSaless($overrideExisting = true)
+    {
+        if (null !== $this->collSaless && !$overrideExisting) {
+            return;
+        }
+        $this->collSaless = new ObjectCollection();
+        $this->collSaless->setModel('\ORM\Sales');
+    }
+
+    /**
+     * Gets an array of ChildSales objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildSecondParty is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     * @throws PropelException
+     */
+    public function getSaless(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSalessPartial && !$this->isNew();
+        if (null === $this->collSaless || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collSaless) {
+                // return empty collection
+                $this->initSaless();
+            } else {
+                $collSaless = ChildSalesQuery::create(null, $criteria)
+                    ->filterBySecondParty($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collSalessPartial && count($collSaless)) {
+                        $this->initSaless(false);
+
+                        foreach ($collSaless as $obj) {
+                            if (false == $this->collSaless->contains($obj)) {
+                                $this->collSaless->append($obj);
+                            }
+                        }
+
+                        $this->collSalessPartial = true;
+                    }
+
+                    return $collSaless;
+                }
+
+                if ($partial && $this->collSaless) {
+                    foreach ($this->collSaless as $obj) {
+                        if ($obj->isNew()) {
+                            $collSaless[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collSaless = $collSaless;
+                $this->collSalessPartial = false;
+            }
+        }
+
+        return $this->collSaless;
+    }
+
+    /**
+     * Sets a collection of ChildSales objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $saless A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildSecondParty The current object (for fluent API support)
+     */
+    public function setSaless(Collection $saless, ConnectionInterface $con = null)
+    {
+        /** @var ChildSales[] $salessToDelete */
+        $salessToDelete = $this->getSaless(new Criteria(), $con)->diff($saless);
+
+
+        $this->salessScheduledForDeletion = $salessToDelete;
+
+        foreach ($salessToDelete as $salesRemoved) {
+            $salesRemoved->setSecondParty(null);
+        }
+
+        $this->collSaless = null;
+        foreach ($saless as $sales) {
+            $this->addSales($sales);
+        }
+
+        $this->collSaless = $saless;
+        $this->collSalessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Sales objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Sales objects.
+     * @throws PropelException
+     */
+    public function countSaless(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collSalessPartial && !$this->isNew();
+        if (null === $this->collSaless || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collSaless) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getSaless());
+            }
+
+            $query = ChildSalesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterBySecondParty($this)
+                ->count($con);
+        }
+
+        return count($this->collSaless);
+    }
+
+    /**
+     * Method called to associate a ChildSales object to this object
+     * through the ChildSales foreign key attribute.
+     *
+     * @param  ChildSales $l ChildSales
+     * @return $this|\ORM\SecondParty The current object (for fluent API support)
+     */
+    public function addSales(ChildSales $l)
+    {
+        if ($this->collSaless === null) {
+            $this->initSaless();
+            $this->collSalessPartial = true;
+        }
+
+        if (!$this->collSaless->contains($l)) {
+            $this->doAddSales($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildSales $sales The ChildSales object to add.
+     */
+    protected function doAddSales(ChildSales $sales)
+    {
+        $this->collSaless[]= $sales;
+        $sales->setSecondParty($this);
+    }
+
+    /**
+     * @param  ChildSales $sales The ChildSales object to remove.
+     * @return $this|ChildSecondParty The current object (for fluent API support)
+     */
+    public function removeSales(ChildSales $sales)
+    {
+        if ($this->getSaless()->contains($sales)) {
+            $pos = $this->collSaless->search($sales);
+            $this->collSaless->remove($pos);
+            if (null === $this->salessScheduledForDeletion) {
+                $this->salessScheduledForDeletion = clone $this->collSaless;
+                $this->salessScheduledForDeletion->clear();
+            }
+            $this->salessScheduledForDeletion[]= $sales;
+            $sales->setSecondParty(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this SecondParty is new, it will return
+     * an empty collection; or if this SecondParty has previously
+     * been saved, it will retrieve related Saless from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in SecondParty.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     */
+    public function getSalessJoinCashier(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildSalesQuery::create(null, $criteria);
+        $query->joinWith('Cashier', $joinBehavior);
+
+        return $this->getSaless($query, $con);
     }
 
     /**
@@ -1424,9 +1977,13 @@ abstract class Supplier implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
+        $this->registered_date = null;
         $this->name = null;
         $this->address = null;
+        $this->birthday = null;
+        $this->gender = null;
         $this->phone = null;
+        $this->type = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1451,9 +2008,15 @@ abstract class Supplier implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collSaless) {
+                foreach ($this->collSaless as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collPurchases = null;
+        $this->collSaless = null;
     }
 
     /**
@@ -1463,7 +2026,7 @@ abstract class Supplier implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(SupplierTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(SecondPartyTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

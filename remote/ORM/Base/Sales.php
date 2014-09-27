@@ -7,14 +7,14 @@ use \Exception;
 use \PDO;
 use ORM\Credit as ChildCredit;
 use ORM\CreditQuery as ChildCreditQuery;
-use ORM\Customer as ChildCustomer;
-use ORM\CustomerQuery as ChildCustomerQuery;
 use ORM\Sales as ChildSales;
 use ORM\SalesDetail as ChildSalesDetail;
 use ORM\SalesDetailQuery as ChildSalesDetailQuery;
 use ORM\SalesHistory as ChildSalesHistory;
 use ORM\SalesHistoryQuery as ChildSalesHistoryQuery;
 use ORM\SalesQuery as ChildSalesQuery;
+use ORM\SecondParty as ChildSecondParty;
+use ORM\SecondPartyQuery as ChildSecondPartyQuery;
 use ORM\UserDetail as ChildUserDetail;
 use ORM\UserDetailQuery as ChildUserDetailQuery;
 use ORM\Map\SalesTableMap;
@@ -79,10 +79,10 @@ abstract class Sales implements ActiveRecordInterface
     protected $date;
 
     /**
-     * The value for the customer_id field.
+     * The value for the second_party_id field.
      * @var        string
      */
-    protected $customer_id;
+    protected $second_party_id;
 
     /**
      * The value for the buy_price field.
@@ -121,9 +121,9 @@ abstract class Sales implements ActiveRecordInterface
     protected $status;
 
     /**
-     * @var        ChildCustomer
+     * @var        ChildSecondParty
      */
-    protected $aCustomer;
+    protected $aSecondParty;
 
     /**
      * @var        ChildUserDetail
@@ -422,13 +422,13 @@ abstract class Sales implements ActiveRecordInterface
     }
 
     /**
-     * Get the [customer_id] column value.
+     * Get the [second_party_id] column value.
      *
      * @return string
      */
-    public function getCustomerId()
+    public function getSecondPartyId()
     {
-        return $this->customer_id;
+        return $this->second_party_id;
     }
 
     /**
@@ -536,8 +536,8 @@ abstract class Sales implements ActiveRecordInterface
             }
             $this->date = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SalesTableMap::translateFieldName('CustomerId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->customer_id = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SalesTableMap::translateFieldName('SecondPartyId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->second_party_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : SalesTableMap::translateFieldName('BuyPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->buy_price = (null !== $col) ? (int) $col : null;
@@ -586,8 +586,8 @@ abstract class Sales implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aCustomer !== null && $this->customer_id !== $this->aCustomer->getId()) {
-            $this->aCustomer = null;
+        if ($this->aSecondParty !== null && $this->second_party_id !== $this->aSecondParty->getId()) {
+            $this->aSecondParty = null;
         }
         if ($this->aCashier !== null && $this->cashier_id !== $this->aCashier->getId()) {
             $this->aCashier = null;
@@ -635,28 +635,28 @@ abstract class Sales implements ActiveRecordInterface
     } // setDate()
 
     /**
-     * Set the value of [customer_id] column.
+     * Set the value of [second_party_id] column.
      *
      * @param  string $v new value
      * @return $this|\ORM\Sales The current object (for fluent API support)
      */
-    public function setCustomerId($v)
+    public function setSecondPartyId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->customer_id !== $v) {
-            $this->customer_id = $v;
-            $this->modifiedColumns[SalesTableMap::COL_CUSTOMER_ID] = true;
+        if ($this->second_party_id !== $v) {
+            $this->second_party_id = $v;
+            $this->modifiedColumns[SalesTableMap::COL_SECOND_PARTY_ID] = true;
         }
 
-        if ($this->aCustomer !== null && $this->aCustomer->getId() !== $v) {
-            $this->aCustomer = null;
+        if ($this->aSecondParty !== null && $this->aSecondParty->getId() !== $v) {
+            $this->aSecondParty = null;
         }
 
         return $this;
-    } // setCustomerId()
+    } // setSecondPartyId()
 
     /**
      * Set the value of [buy_price] column.
@@ -819,7 +819,7 @@ abstract class Sales implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCustomer = null;
+            $this->aSecondParty = null;
             $this->aCashier = null;
             $this->collCredits = null;
 
@@ -931,11 +931,11 @@ abstract class Sales implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCustomer !== null) {
-                if ($this->aCustomer->isModified() || $this->aCustomer->isNew()) {
-                    $affectedRows += $this->aCustomer->save($con);
+            if ($this->aSecondParty !== null) {
+                if ($this->aSecondParty->isModified() || $this->aSecondParty->isNew()) {
+                    $affectedRows += $this->aSecondParty->save($con);
                 }
-                $this->setCustomer($this->aCustomer);
+                $this->setSecondParty($this->aSecondParty);
             }
 
             if ($this->aCashier !== null) {
@@ -1040,8 +1040,8 @@ abstract class Sales implements ActiveRecordInterface
         if ($this->isColumnModified(SalesTableMap::COL_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'DATE';
         }
-        if ($this->isColumnModified(SalesTableMap::COL_CUSTOMER_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'CUSTOMER_ID';
+        if ($this->isColumnModified(SalesTableMap::COL_SECOND_PARTY_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'SECOND_PARTY_ID';
         }
         if ($this->isColumnModified(SalesTableMap::COL_BUY_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'BUY_PRICE';
@@ -1078,8 +1078,8 @@ abstract class Sales implements ActiveRecordInterface
                     case 'DATE':
                         $stmt->bindValue($identifier, $this->date ? $this->date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'CUSTOMER_ID':
-                        $stmt->bindValue($identifier, $this->customer_id, PDO::PARAM_INT);
+                    case 'SECOND_PARTY_ID':
+                        $stmt->bindValue($identifier, $this->second_party_id, PDO::PARAM_INT);
                         break;
                     case 'BUY_PRICE':
                         $stmt->bindValue($identifier, $this->buy_price, PDO::PARAM_INT);
@@ -1168,7 +1168,7 @@ abstract class Sales implements ActiveRecordInterface
                 return $this->getDate();
                 break;
             case 2:
-                return $this->getCustomerId();
+                return $this->getSecondPartyId();
                 break;
             case 3:
                 return $this->getBuyPrice();
@@ -1219,7 +1219,7 @@ abstract class Sales implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getDate(),
-            $keys[2] => $this->getCustomerId(),
+            $keys[2] => $this->getSecondPartyId(),
             $keys[3] => $this->getBuyPrice(),
             $keys[4] => $this->getTotalPrice(),
             $keys[5] => $this->getPaid(),
@@ -1233,8 +1233,8 @@ abstract class Sales implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCustomer) {
-                $result['Customer'] = $this->aCustomer->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aSecondParty) {
+                $result['SecondParty'] = $this->aSecondParty->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aCashier) {
                 $result['Cashier'] = $this->aCashier->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1289,7 +1289,7 @@ abstract class Sales implements ActiveRecordInterface
                 $this->setDate($value);
                 break;
             case 2:
-                $this->setCustomerId($value);
+                $this->setSecondPartyId($value);
                 break;
             case 3:
                 $this->setBuyPrice($value);
@@ -1342,7 +1342,7 @@ abstract class Sales implements ActiveRecordInterface
             $this->setDate($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setCustomerId($arr[$keys[2]]);
+            $this->setSecondPartyId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setBuyPrice($arr[$keys[3]]);
@@ -1403,8 +1403,8 @@ abstract class Sales implements ActiveRecordInterface
         if ($this->isColumnModified(SalesTableMap::COL_DATE)) {
             $criteria->add(SalesTableMap::COL_DATE, $this->date);
         }
-        if ($this->isColumnModified(SalesTableMap::COL_CUSTOMER_ID)) {
-            $criteria->add(SalesTableMap::COL_CUSTOMER_ID, $this->customer_id);
+        if ($this->isColumnModified(SalesTableMap::COL_SECOND_PARTY_ID)) {
+            $criteria->add(SalesTableMap::COL_SECOND_PARTY_ID, $this->second_party_id);
         }
         if ($this->isColumnModified(SalesTableMap::COL_BUY_PRICE)) {
             $criteria->add(SalesTableMap::COL_BUY_PRICE, $this->buy_price);
@@ -1511,7 +1511,7 @@ abstract class Sales implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setDate($this->getDate());
-        $copyObj->setCustomerId($this->getCustomerId());
+        $copyObj->setSecondPartyId($this->getSecondPartyId());
         $copyObj->setBuyPrice($this->getBuyPrice());
         $copyObj->setTotalPrice($this->getTotalPrice());
         $copyObj->setPaid($this->getPaid());
@@ -1573,24 +1573,24 @@ abstract class Sales implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildCustomer object.
+     * Declares an association between this object and a ChildSecondParty object.
      *
-     * @param  ChildCustomer $v
+     * @param  ChildSecondParty $v
      * @return $this|\ORM\Sales The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCustomer(ChildCustomer $v = null)
+    public function setSecondParty(ChildSecondParty $v = null)
     {
         if ($v === null) {
-            $this->setCustomerId(NULL);
+            $this->setSecondPartyId(NULL);
         } else {
-            $this->setCustomerId($v->getId());
+            $this->setSecondPartyId($v->getId());
         }
 
-        $this->aCustomer = $v;
+        $this->aSecondParty = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildCustomer object, it will not be re-added.
+        // If this object has already been added to the ChildSecondParty object, it will not be re-added.
         if ($v !== null) {
             $v->addSales($this);
         }
@@ -1601,26 +1601,26 @@ abstract class Sales implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildCustomer object
+     * Get the associated ChildSecondParty object
      *
      * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildCustomer The associated ChildCustomer object.
+     * @return ChildSecondParty The associated ChildSecondParty object.
      * @throws PropelException
      */
-    public function getCustomer(ConnectionInterface $con = null)
+    public function getSecondParty(ConnectionInterface $con = null)
     {
-        if ($this->aCustomer === null && (($this->customer_id !== "" && $this->customer_id !== null))) {
-            $this->aCustomer = ChildCustomerQuery::create()->findPk($this->customer_id, $con);
+        if ($this->aSecondParty === null && (($this->second_party_id !== "" && $this->second_party_id !== null))) {
+            $this->aSecondParty = ChildSecondPartyQuery::create()->findPk($this->second_party_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCustomer->addSaless($this);
+                $this->aSecondParty->addSaless($this);
              */
         }
 
-        return $this->aCustomer;
+        return $this->aSecondParty;
     }
 
     /**
@@ -2407,15 +2407,15 @@ abstract class Sales implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aCustomer) {
-            $this->aCustomer->removeSales($this);
+        if (null !== $this->aSecondParty) {
+            $this->aSecondParty->removeSales($this);
         }
         if (null !== $this->aCashier) {
             $this->aCashier->removeSales($this);
         }
         $this->id = null;
         $this->date = null;
-        $this->customer_id = null;
+        $this->second_party_id = null;
         $this->buy_price = null;
         $this->total_price = null;
         $this->paid = null;
@@ -2460,7 +2460,7 @@ abstract class Sales implements ActiveRecordInterface
         $this->collCredits = null;
         $this->collDetails = null;
         $this->collHistories = null;
-        $this->aCustomer = null;
+        $this->aSecondParty = null;
         $this->aCashier = null;
     }
 

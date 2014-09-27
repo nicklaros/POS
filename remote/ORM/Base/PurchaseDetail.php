@@ -78,7 +78,7 @@ abstract class PurchaseDetail implements ActiveRecordInterface
 
     /**
      * The value for the amount field.
-     * @var        int
+     * @var        string
      */
     protected $amount;
 
@@ -373,7 +373,7 @@ abstract class PurchaseDetail implements ActiveRecordInterface
     /**
      * Get the [amount] column value.
      *
-     * @return int
+     * @return string
      */
     public function getAmount()
     {
@@ -456,7 +456,7 @@ abstract class PurchaseDetail implements ActiveRecordInterface
             $this->stock_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PurchaseDetailTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->amount = (null !== $col) ? (int) $col : null;
+            $this->amount = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : PurchaseDetailTableMap::translateFieldName('TotalPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->total_price = (null !== $col) ? (int) $col : null;
@@ -578,13 +578,13 @@ abstract class PurchaseDetail implements ActiveRecordInterface
     /**
      * Set the value of [amount] column.
      *
-     * @param  int $v new value
+     * @param  string $v new value
      * @return $this|\ORM\PurchaseDetail The current object (for fluent API support)
      */
     public function setAmount($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->amount !== $v) {
@@ -903,7 +903,7 @@ abstract class PurchaseDetail implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->stock_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
-                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
                     case 'TOTAL_PRICE':
                         $stmt->bindValue($identifier, $this->total_price, PDO::PARAM_INT);

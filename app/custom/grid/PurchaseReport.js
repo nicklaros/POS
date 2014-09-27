@@ -23,7 +23,7 @@ Ext.define('POS.custom.grid.PurchaseReport', {
                 width: 50
             }),
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Supplier', dataIndex: 'supplier_name', width: 200,
+            {header: 'Dibeli Dari', dataIndex: 'second_party_name', width: 200,
                 summaryRenderer: function(value) {
                     return '<strong>Total</strong>';
                 }

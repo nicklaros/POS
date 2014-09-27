@@ -179,7 +179,7 @@ class StockTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addForeignKey('PRODUCT_ID', 'ProductId', 'BIGINT', 'product', 'ID', false, 20, null);
-        $this->addColumn('AMOUNT', 'Amount', 'BIGINT', false, 20, null);
+        $this->addColumn('AMOUNT', 'Amount', 'DECIMAL', false, 10, null);
         $this->addForeignKey('UNIT_ID', 'UnitId', 'BIGINT', 'unit', 'ID', false, 20, null);
         $this->addColumn('BUY', 'Buy', 'INTEGER', false, 10, null);
         $this->addColumn('SELL_PUBLIC', 'SellPublic', 'INTEGER', false, 10, null);

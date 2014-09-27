@@ -15,8 +15,32 @@ $con->beginTransaction();
 
 $id = (isset($_GET['id']) ? $_GET['id'] : die('Missing Parameter.'));
 
-// Get Client info from session
-$info = (object) $session->get('pos/info');
+// Get application info from database
+$info = [];
+$options = OptionQuery::create()
+    ->filterByName([
+        'app_name',
+        'app_photo',
+        'dev_name',
+        'dev_email',
+        'dev_phone',
+        'dev_website',
+        'dev_address',
+        'client_name',
+        'client_email',
+        'client_phone',
+        'client_website',
+        'client_address',
+        'homepath'
+    ])
+    ->find($con);
+
+foreach($options as $row){
+    $info[$row->getName()] = $row->getValue();
+}
+
+$info = (object) $info;
+
 ?>
 
 <!DOCTYPE html>
@@ -38,17 +62,17 @@ $info = (object) $session->get('pos/info');
         ->filterByStatus('Active')
         ->filterById($id)
         ->useSalesQuery()
-            ->leftJoin('Customer')
-            ->withColumn('Customer.Id', 'customer_id')
-            ->withColumn('Customer.Name', 'customer_name')
+            ->leftJoin('SecondParty')
+            ->withColumn('SecondParty.Id', 'second_party_id')
+            ->withColumn('SecondParty.Name', 'second_party_name')
             ->withColumn('Sales.Date', 'date')
         ->endUse()
         ->select(array(
             'id',
             'sales_id',
             'total',
-            'customer_id',
-            'customer_name',
+            'second_party_id',
+            'second_party_name',
             'date'
         ))
         ->findOne($con);
@@ -102,7 +126,7 @@ $info = (object) $session->get('pos/info');
         <tr>
             <td>Pelanggan</td>
             <td>:</td>
-            <td><?php echo $credit->customer_name;?></td>
+            <td><?php echo $credit->second_party_name;?></td>
         </tr>
         <tr>
             <td>Piutang</td>

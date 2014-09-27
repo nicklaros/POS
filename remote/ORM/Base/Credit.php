@@ -77,6 +77,12 @@ abstract class Credit implements ActiveRecordInterface
     protected $total;
 
     /**
+     * The value for the paid field.
+     * @var        int
+     */
+    protected $paid;
+
+    /**
      * The value for the status field.
      * @var        string
      */
@@ -355,6 +361,16 @@ abstract class Credit implements ActiveRecordInterface
     }
 
     /**
+     * Get the [paid] column value.
+     *
+     * @return int
+     */
+    public function getPaid()
+    {
+        return $this->paid;
+    }
+
+    /**
      * Get the [status] column value.
      *
      * @return string
@@ -409,7 +425,10 @@ abstract class Credit implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CreditTableMap::translateFieldName('Total', TableMap::TYPE_PHPNAME, $indexType)];
             $this->total = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CreditTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CreditTableMap::translateFieldName('Paid', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->paid = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CreditTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -419,7 +438,7 @@ abstract class Credit implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = CreditTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = CreditTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Credit'), 0, $e);
@@ -509,6 +528,26 @@ abstract class Credit implements ActiveRecordInterface
 
         return $this;
     } // setTotal()
+
+    /**
+     * Set the value of [paid] column.
+     *
+     * @param  int $v new value
+     * @return $this|\ORM\Credit The current object (for fluent API support)
+     */
+    public function setPaid($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->paid !== $v) {
+            $this->paid = $v;
+            $this->modifiedColumns[CreditTableMap::COL_PAID] = true;
+        }
+
+        return $this;
+    } // setPaid()
 
     /**
      * Set the value of [status] column.
@@ -745,6 +784,9 @@ abstract class Credit implements ActiveRecordInterface
         if ($this->isColumnModified(CreditTableMap::COL_TOTAL)) {
             $modifiedColumns[':p' . $index++]  = 'TOTAL';
         }
+        if ($this->isColumnModified(CreditTableMap::COL_PAID)) {
+            $modifiedColumns[':p' . $index++]  = 'PAID';
+        }
         if ($this->isColumnModified(CreditTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'STATUS';
         }
@@ -767,6 +809,9 @@ abstract class Credit implements ActiveRecordInterface
                         break;
                     case 'TOTAL':
                         $stmt->bindValue($identifier, $this->total, PDO::PARAM_INT);
+                        break;
+                    case 'PAID':
+                        $stmt->bindValue($identifier, $this->paid, PDO::PARAM_INT);
                         break;
                     case 'STATUS':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -843,6 +888,9 @@ abstract class Credit implements ActiveRecordInterface
                 return $this->getTotal();
                 break;
             case 3:
+                return $this->getPaid();
+                break;
+            case 4:
                 return $this->getStatus();
                 break;
             default:
@@ -877,7 +925,8 @@ abstract class Credit implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getSalesId(),
             $keys[2] => $this->getTotal(),
-            $keys[3] => $this->getStatus(),
+            $keys[3] => $this->getPaid(),
+            $keys[4] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -935,6 +984,9 @@ abstract class Credit implements ActiveRecordInterface
                 $this->setTotal($value);
                 break;
             case 3:
+                $this->setPaid($value);
+                break;
+            case 4:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -973,7 +1025,10 @@ abstract class Credit implements ActiveRecordInterface
             $this->setTotal($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setStatus($arr[$keys[3]]);
+            $this->setPaid($arr[$keys[3]]);
+        }
+        if (array_key_exists($keys[4], $arr)) {
+            $this->setStatus($arr[$keys[4]]);
         }
     }
 
@@ -1018,6 +1073,9 @@ abstract class Credit implements ActiveRecordInterface
         }
         if ($this->isColumnModified(CreditTableMap::COL_TOTAL)) {
             $criteria->add(CreditTableMap::COL_TOTAL, $this->total);
+        }
+        if ($this->isColumnModified(CreditTableMap::COL_PAID)) {
+            $criteria->add(CreditTableMap::COL_PAID, $this->paid);
         }
         if ($this->isColumnModified(CreditTableMap::COL_STATUS)) {
             $criteria->add(CreditTableMap::COL_STATUS, $this->status);
@@ -1110,6 +1168,7 @@ abstract class Credit implements ActiveRecordInterface
     {
         $copyObj->setSalesId($this->getSalesId());
         $copyObj->setTotal($this->getTotal());
+        $copyObj->setPaid($this->getPaid());
         $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
@@ -1476,6 +1535,7 @@ abstract class Credit implements ActiveRecordInterface
         $this->id = null;
         $this->sales_id = null;
         $this->total = null;
+        $this->paid = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

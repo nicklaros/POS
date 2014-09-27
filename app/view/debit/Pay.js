@@ -43,8 +43,8 @@ Ext.define('POS.view.debit.Pay' ,{
                 width:250
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Supplier',
-                name: 'supplier_name',
+                fieldLabel: 'Nama',
+                name: 'second_party_name',
                 readOnly: true,
                 width:250
             },{

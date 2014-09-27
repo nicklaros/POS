@@ -59,7 +59,7 @@ class CreditTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 5;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class CreditTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 5;
 
     /**
      * the column name for the ID field
@@ -85,6 +85,11 @@ class CreditTableMap extends TableMap
      * the column name for the TOTAL field
      */
     const COL_TOTAL = 'credit.TOTAL';
+
+    /**
+     * the column name for the PAID field
+     */
+    const COL_PAID = 'credit.PAID';
 
     /**
      * the column name for the STATUS field
@@ -103,12 +108,12 @@ class CreditTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'SalesId', 'Total', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'salesId', 'total', 'status', ),
-        self::TYPE_COLNAME       => array(CreditTableMap::COL_ID, CreditTableMap::COL_SALES_ID, CreditTableMap::COL_TOTAL, CreditTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SALES_ID', 'COL_TOTAL', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'sales_id', 'total', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id', 'SalesId', 'Total', 'Paid', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'salesId', 'total', 'paid', 'status', ),
+        self::TYPE_COLNAME       => array(CreditTableMap::COL_ID, CreditTableMap::COL_SALES_ID, CreditTableMap::COL_TOTAL, CreditTableMap::COL_PAID, CreditTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_SALES_ID', 'COL_TOTAL', 'COL_PAID', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'sales_id', 'total', 'paid', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -118,12 +123,12 @@ class CreditTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'SalesId' => 1, 'Total' => 2, 'Status' => 3, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'salesId' => 1, 'total' => 2, 'status' => 3, ),
-        self::TYPE_COLNAME       => array(CreditTableMap::COL_ID => 0, CreditTableMap::COL_SALES_ID => 1, CreditTableMap::COL_TOTAL => 2, CreditTableMap::COL_STATUS => 3, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SALES_ID' => 1, 'COL_TOTAL' => 2, 'COL_STATUS' => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'sales_id' => 1, 'total' => 2, 'status' => 3, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SalesId' => 1, 'Total' => 2, 'Paid' => 3, 'Status' => 4, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'salesId' => 1, 'total' => 2, 'paid' => 3, 'status' => 4, ),
+        self::TYPE_COLNAME       => array(CreditTableMap::COL_ID => 0, CreditTableMap::COL_SALES_ID => 1, CreditTableMap::COL_TOTAL => 2, CreditTableMap::COL_PAID => 3, CreditTableMap::COL_STATUS => 4, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_SALES_ID' => 1, 'COL_TOTAL' => 2, 'COL_PAID' => 3, 'COL_STATUS' => 4, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'sales_id' => 1, 'total' => 2, 'paid' => 3, 'status' => 4, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
     );
 
     /**
@@ -145,6 +150,7 @@ class CreditTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addForeignKey('SALES_ID', 'SalesId', 'BIGINT', 'sales', 'ID', false, 20, null);
         $this->addColumn('TOTAL', 'Total', 'INTEGER', false, 10, null);
+        $this->addColumn('PAID', 'Paid', 'INTEGER', false, 10, null);
         $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
@@ -153,7 +159,7 @@ class CreditTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::MANY_TO_ONE, array('sales_id' => 'id', ), 'CASCADE', 'RESTRICT');
+        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::MANY_TO_ONE, array('sales_id' => 'id', ), 'CASCADE', 'CASCADE');
         $this->addRelation('Payment', '\\ORM\\CreditPayment', RelationMap::ONE_TO_MANY, array('id' => 'credit_id', ), 'NO ACTION', 'RESTRICT', 'Payments');
     } // buildRelations()
 
@@ -301,11 +307,13 @@ class CreditTableMap extends TableMap
             $criteria->addSelectColumn(CreditTableMap::COL_ID);
             $criteria->addSelectColumn(CreditTableMap::COL_SALES_ID);
             $criteria->addSelectColumn(CreditTableMap::COL_TOTAL);
+            $criteria->addSelectColumn(CreditTableMap::COL_PAID);
             $criteria->addSelectColumn(CreditTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.SALES_ID');
             $criteria->addSelectColumn($alias . '.TOTAL');
+            $criteria->addSelectColumn($alias . '.PAID');
             $criteria->addSelectColumn($alias . '.STATUS');
         }
     }

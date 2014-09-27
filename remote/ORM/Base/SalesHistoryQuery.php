@@ -21,14 +21,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildSalesHistoryQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildSalesHistoryQuery orderByUserID($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildSalesHistoryQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildSalesHistoryQuery orderBySalesId($order = Criteria::ASC) Order by the sales_id column
  * @method     ChildSalesHistoryQuery orderByTime($order = Criteria::ASC) Order by the time column
  * @method     ChildSalesHistoryQuery orderByOperation($order = Criteria::ASC) Order by the operation column
  * @method     ChildSalesHistoryQuery orderByData($order = Criteria::ASC) Order by the data column
  *
  * @method     ChildSalesHistoryQuery groupById() Group by the id column
- * @method     ChildSalesHistoryQuery groupByUserID() Group by the user_id column
+ * @method     ChildSalesHistoryQuery groupByUserId() Group by the user_id column
  * @method     ChildSalesHistoryQuery groupBySalesId() Group by the sales_id column
  * @method     ChildSalesHistoryQuery groupByTime() Group by the time column
  * @method     ChildSalesHistoryQuery groupByOperation() Group by the operation column
@@ -52,7 +52,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesHistory findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSalesHistory matching the query, or a new ChildSalesHistory object populated from the query conditions when no match is found
  *
  * @method     ChildSalesHistory findOneById(string $id) Return the first ChildSalesHistory filtered by the id column
- * @method     ChildSalesHistory findOneByUserID(string $user_id) Return the first ChildSalesHistory filtered by the user_id column
+ * @method     ChildSalesHistory findOneByUserId(string $user_id) Return the first ChildSalesHistory filtered by the user_id column
  * @method     ChildSalesHistory findOneBySalesId(string $sales_id) Return the first ChildSalesHistory filtered by the sales_id column
  * @method     ChildSalesHistory findOneByTime(string $time) Return the first ChildSalesHistory filtered by the time column
  * @method     ChildSalesHistory findOneByOperation(string $operation) Return the first ChildSalesHistory filtered by the operation column
@@ -60,7 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildSalesHistory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSalesHistory objects based on current ModelCriteria
  * @method     ChildSalesHistory[]|ObjectCollection findById(string $id) Return ChildSalesHistory objects filtered by the id column
- * @method     ChildSalesHistory[]|ObjectCollection findByUserID(string $user_id) Return ChildSalesHistory objects filtered by the user_id column
+ * @method     ChildSalesHistory[]|ObjectCollection findByUserId(string $user_id) Return ChildSalesHistory objects filtered by the user_id column
  * @method     ChildSalesHistory[]|ObjectCollection findBySalesId(string $sales_id) Return ChildSalesHistory objects filtered by the sales_id column
  * @method     ChildSalesHistory[]|ObjectCollection findByTime(string $time) Return ChildSalesHistory objects filtered by the time column
  * @method     ChildSalesHistory[]|ObjectCollection findByOperation(string $operation) Return ChildSalesHistory objects filtered by the operation column
@@ -290,14 +290,14 @@ abstract class SalesHistoryQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByUserID(1234); // WHERE user_id = 1234
-     * $query->filterByUserID(array(12, 34)); // WHERE user_id IN (12, 34)
-     * $query->filterByUserID(array('min' => 12)); // WHERE user_id > 12
+     * $query->filterByUserId(1234); // WHERE user_id = 1234
+     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
+     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
      * </code>
      *
      * @see       filterByUserDetail()
      *
-     * @param     mixed $userID The value to use as filter.
+     * @param     mixed $userId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -305,16 +305,16 @@ abstract class SalesHistoryQuery extends ModelCriteria
      *
      * @return $this|ChildSalesHistoryQuery The current query, for fluid interface
      */
-    public function filterByUserID($userID = null, $comparison = null)
+    public function filterByUserId($userId = null, $comparison = null)
     {
-        if (is_array($userID)) {
+        if (is_array($userId)) {
             $useMinMax = false;
-            if (isset($userID['min'])) {
-                $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userID['min'], Criteria::GREATER_EQUAL);
+            if (isset($userId['min'])) {
+                $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($userID['max'])) {
-                $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userID['max'], Criteria::LESS_EQUAL);
+            if (isset($userId['max'])) {
+                $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -325,7 +325,7 @@ abstract class SalesHistoryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userID, $comparison);
+        return $this->addUsingAlias(SalesHistoryTableMap::COL_USER_ID, $userId, $comparison);
     }
 
     /**

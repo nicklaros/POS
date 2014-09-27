@@ -69,7 +69,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail findOneBySalesId(string $sales_id) Return the first ChildSalesDetail filtered by the sales_id column
  * @method     ChildSalesDetail findOneByType(string $type) Return the first ChildSalesDetail filtered by the type column
  * @method     ChildSalesDetail findOneByStockId(string $stock_id) Return the first ChildSalesDetail filtered by the stock_id column
- * @method     ChildSalesDetail findOneByAmount(int $amount) Return the first ChildSalesDetail filtered by the amount column
+ * @method     ChildSalesDetail findOneByAmount(string $amount) Return the first ChildSalesDetail filtered by the amount column
  * @method     ChildSalesDetail findOneByUnitPrice(int $unit_price) Return the first ChildSalesDetail filtered by the unit_price column
  * @method     ChildSalesDetail findOneByDiscount(int $discount) Return the first ChildSalesDetail filtered by the discount column
  * @method     ChildSalesDetail findOneByTotalPrice(int $total_price) Return the first ChildSalesDetail filtered by the total_price column
@@ -84,7 +84,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail[]|ObjectCollection findBySalesId(string $sales_id) Return ChildSalesDetail objects filtered by the sales_id column
  * @method     ChildSalesDetail[]|ObjectCollection findByType(string $type) Return ChildSalesDetail objects filtered by the type column
  * @method     ChildSalesDetail[]|ObjectCollection findByStockId(string $stock_id) Return ChildSalesDetail objects filtered by the stock_id column
- * @method     ChildSalesDetail[]|ObjectCollection findByAmount(int $amount) Return ChildSalesDetail objects filtered by the amount column
+ * @method     ChildSalesDetail[]|ObjectCollection findByAmount(string $amount) Return ChildSalesDetail objects filtered by the amount column
  * @method     ChildSalesDetail[]|ObjectCollection findByUnitPrice(int $unit_price) Return ChildSalesDetail objects filtered by the unit_price column
  * @method     ChildSalesDetail[]|ObjectCollection findByDiscount(int $discount) Return ChildSalesDetail objects filtered by the discount column
  * @method     ChildSalesDetail[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildSalesDetail objects filtered by the total_price column

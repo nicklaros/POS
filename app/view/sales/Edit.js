@@ -6,13 +6,14 @@ Ext.define('POS.view.sales.Edit' ,{
 
     requires: [
         'POS.custom.field.ComboCashier',
-        'POS.custom.field.ComboCustomer',
+        'POS.custom.field.ComboSecondParty',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
         'POS.custom.panel.hint.Sales',
         'POS.view.sales.EditController',
-        'POS.view.sales.EditDetail'
+        'POS.view.sales.EditDetail',
+        'POS.view.secondparty.Add'
     ],
 
 	autoScroll: true,
@@ -72,10 +73,10 @@ Ext.define('POS.view.sales.Edit' ,{
                             value: new Date(),
                             width: 130
                         },{
-                            xtype: 'combo-customer',
-                            fieldLabel: 'Pelanggan',
-                            name: 'customer_id',
-                            reference: 'customer',
+                            xtype: 'combo-second-party',
+                            fieldLabel: 'Dijual Ke',
+                            name: 'second_party',
+                            reference: 'second_party',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
                             margin: '0 0 0 20',
@@ -83,7 +84,7 @@ Ext.define('POS.view.sales.Edit' ,{
                         },{
                             xtype: 'button',
                             text: '<i class="fa fa-plus"></i>',
-                            handler: 'addCustomer',
+                            handler: 'addSecondParty',
                             margin: '25 0 0 5'
                         },{
                             xtype: 'textfield',

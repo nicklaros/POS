@@ -344,7 +344,7 @@ abstract class SalesHistory implements ActiveRecordInterface
      *
      * @return string
      */
-    public function getUserID()
+    public function getUserId()
     {
         return $this->user_id;
     }
@@ -438,7 +438,7 @@ abstract class SalesHistory implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : SalesHistoryTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SalesHistoryTableMap::translateFieldName('UserID', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SalesHistoryTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : SalesHistoryTableMap::translateFieldName('SalesId', TableMap::TYPE_PHPNAME, $indexType)];
@@ -519,7 +519,7 @@ abstract class SalesHistory implements ActiveRecordInterface
      * @param  string $v new value
      * @return $this|\ORM\SalesHistory The current object (for fluent API support)
      */
-    public function setUserID($v)
+    public function setUserId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -535,7 +535,7 @@ abstract class SalesHistory implements ActiveRecordInterface
         }
 
         return $this;
-    } // setUserID()
+    } // setUserId()
 
     /**
      * Set the value of [sales_id] column.
@@ -928,7 +928,7 @@ abstract class SalesHistory implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getUserID();
+                return $this->getUserId();
                 break;
             case 2:
                 return $this->getSalesId();
@@ -972,7 +972,7 @@ abstract class SalesHistory implements ActiveRecordInterface
         $keys = SalesHistoryTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getUserID(),
+            $keys[1] => $this->getUserId(),
             $keys[2] => $this->getSalesId(),
             $keys[3] => $this->getTime(),
             $keys[4] => $this->getOperation(),
@@ -1028,7 +1028,7 @@ abstract class SalesHistory implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setUserID($value);
+                $this->setUserId($value);
                 break;
             case 2:
                 $this->setSalesId($value);
@@ -1072,7 +1072,7 @@ abstract class SalesHistory implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setUserID($arr[$keys[1]]);
+            $this->setUserId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setSalesId($arr[$keys[2]]);
@@ -1225,7 +1225,7 @@ abstract class SalesHistory implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setUserID($this->getUserID());
+        $copyObj->setUserId($this->getUserId());
         $copyObj->setSalesId($this->getSalesId());
         $copyObj->setTime($this->getTime());
         $copyObj->setOperation($this->getOperation());
@@ -1268,9 +1268,9 @@ abstract class SalesHistory implements ActiveRecordInterface
     public function setUserDetail(ChildUserDetail $v = null)
     {
         if ($v === null) {
-            $this->setUserID(NULL);
+            $this->setUserId(NULL);
         } else {
-            $this->setUserID($v->getId());
+            $this->setUserId($v->getId());
         }
 
         $this->aUserDetail = $v;

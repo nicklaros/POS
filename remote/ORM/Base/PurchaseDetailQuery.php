@@ -60,7 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPurchaseDetail findOneById(string $id) Return the first ChildPurchaseDetail filtered by the id column
  * @method     ChildPurchaseDetail findOneByPurchaseId(string $purchase_id) Return the first ChildPurchaseDetail filtered by the purchase_id column
  * @method     ChildPurchaseDetail findOneByStockId(string $stock_id) Return the first ChildPurchaseDetail filtered by the stock_id column
- * @method     ChildPurchaseDetail findOneByAmount(int $amount) Return the first ChildPurchaseDetail filtered by the amount column
+ * @method     ChildPurchaseDetail findOneByAmount(string $amount) Return the first ChildPurchaseDetail filtered by the amount column
  * @method     ChildPurchaseDetail findOneByTotalPrice(int $total_price) Return the first ChildPurchaseDetail filtered by the total_price column
  * @method     ChildPurchaseDetail findOneByNotificationId(string $notification_id) Return the first ChildPurchaseDetail filtered by the notification_id column
  * @method     ChildPurchaseDetail findOneByStatus(string $status) Return the first ChildPurchaseDetail filtered by the status column
@@ -69,7 +69,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPurchaseDetail[]|ObjectCollection findById(string $id) Return ChildPurchaseDetail objects filtered by the id column
  * @method     ChildPurchaseDetail[]|ObjectCollection findByPurchaseId(string $purchase_id) Return ChildPurchaseDetail objects filtered by the purchase_id column
  * @method     ChildPurchaseDetail[]|ObjectCollection findByStockId(string $stock_id) Return ChildPurchaseDetail objects filtered by the stock_id column
- * @method     ChildPurchaseDetail[]|ObjectCollection findByAmount(int $amount) Return ChildPurchaseDetail objects filtered by the amount column
+ * @method     ChildPurchaseDetail[]|ObjectCollection findByAmount(string $amount) Return ChildPurchaseDetail objects filtered by the amount column
  * @method     ChildPurchaseDetail[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildPurchaseDetail objects filtered by the total_price column
  * @method     ChildPurchaseDetail[]|ObjectCollection findByNotificationId(string $notification_id) Return ChildPurchaseDetail objects filtered by the notification_id column
  * @method     ChildPurchaseDetail[]|ObjectCollection findByStatus(string $status) Return ChildPurchaseDetail objects filtered by the status column

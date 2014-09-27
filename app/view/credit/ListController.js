@@ -28,6 +28,7 @@ Ext.define('POS.view.credit.ListController', {
             params  = {
                 credit_id: rec.get('id')
             };
+        
         if (rec.get('balance') > 0) {
             var panel = Ext.fn.App.window('pay-credit');
             panel.getController().load(params);

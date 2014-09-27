@@ -110,7 +110,7 @@ Ext.define('POS.view.customer.ListController', {
     showCredit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.showCustomerCredit(rec.get('id'))
+        Ext.fn.App.showSecondPartyCredit(rec.get('id'))
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {
@@ -159,7 +159,7 @@ Ext.define('POS.view.customer.ListController', {
     showSales: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.showCustomerSales(rec.get('id'))
+        Ext.fn.App.showSecondPartySales(rec.get('id'))
     }
     
 });

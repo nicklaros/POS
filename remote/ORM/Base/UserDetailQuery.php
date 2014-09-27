@@ -42,6 +42,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserDetailQuery rightJoinCreditPayment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CreditPayment relation
  * @method     ChildUserDetailQuery innerJoinCreditPayment($relationAlias = null) Adds a INNER JOIN clause to the query using the CreditPayment relation
  *
+ * @method     ChildUserDetailQuery leftJoinDebitPayment($relationAlias = null) Adds a LEFT JOIN clause to the query using the DebitPayment relation
+ * @method     ChildUserDetailQuery rightJoinDebitPayment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the DebitPayment relation
+ * @method     ChildUserDetailQuery innerJoinDebitPayment($relationAlias = null) Adds a INNER JOIN clause to the query using the DebitPayment relation
+ *
  * @method     ChildUserDetailQuery leftJoinPurchaseHistory($relationAlias = null) Adds a LEFT JOIN clause to the query using the PurchaseHistory relation
  * @method     ChildUserDetailQuery rightJoinPurchaseHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PurchaseHistory relation
  * @method     ChildUserDetailQuery innerJoinPurchaseHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the PurchaseHistory relation
@@ -58,7 +62,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserDetailQuery rightJoinSalesHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SalesHistory relation
  * @method     ChildUserDetailQuery innerJoinSalesHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the SalesHistory relation
  *
- * @method     \ORM\UserQuery|\ORM\CreditPaymentQuery|\ORM\PurchaseHistoryQuery|\ORM\RowHistoryQuery|\ORM\SalesQuery|\ORM\SalesHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\UserQuery|\ORM\CreditPaymentQuery|\ORM\DebitPaymentQuery|\ORM\PurchaseHistoryQuery|\ORM\RowHistoryQuery|\ORM\SalesQuery|\ORM\SalesHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUserDetail findOne(ConnectionInterface $con = null) Return the first ChildUserDetail matching the query
  * @method     ChildUserDetail findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUserDetail matching the query, or a new ChildUserDetail object populated from the query conditions when no match is found
@@ -531,6 +535,79 @@ abstract class UserDetailQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \ORM\DebitPayment object
+     *
+     * @param \ORM\DebitPayment|ObjectCollection $debitPayment  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserDetailQuery The current query, for fluid interface
+     */
+    public function filterByDebitPayment($debitPayment, $comparison = null)
+    {
+        if ($debitPayment instanceof \ORM\DebitPayment) {
+            return $this
+                ->addUsingAlias(UserDetailTableMap::COL_ID, $debitPayment->getCashierId(), $comparison);
+        } elseif ($debitPayment instanceof ObjectCollection) {
+            return $this
+                ->useDebitPaymentQuery()
+                ->filterByPrimaryKeys($debitPayment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByDebitPayment() only accepts arguments of type \ORM\DebitPayment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the DebitPayment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserDetailQuery The current query, for fluid interface
+     */
+    public function joinDebitPayment($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('DebitPayment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'DebitPayment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the DebitPayment relation DebitPayment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\DebitPaymentQuery A secondary query class using the current class as primary query
+     */
+    public function useDebitPaymentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinDebitPayment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'DebitPayment', '\ORM\DebitPaymentQuery');
+    }
+
+    /**
      * Filter the query by a related \ORM\PurchaseHistory object
      *
      * @param \ORM\PurchaseHistory|ObjectCollection $purchaseHistory  the related object to use as filter
@@ -542,7 +619,7 @@ abstract class UserDetailQuery extends ModelCriteria
     {
         if ($purchaseHistory instanceof \ORM\PurchaseHistory) {
             return $this
-                ->addUsingAlias(UserDetailTableMap::COL_ID, $purchaseHistory->getUserID(), $comparison);
+                ->addUsingAlias(UserDetailTableMap::COL_ID, $purchaseHistory->getUserId(), $comparison);
         } elseif ($purchaseHistory instanceof ObjectCollection) {
             return $this
                 ->usePurchaseHistoryQuery()
@@ -615,7 +692,7 @@ abstract class UserDetailQuery extends ModelCriteria
     {
         if ($rowHistory instanceof \ORM\RowHistory) {
             return $this
-                ->addUsingAlias(UserDetailTableMap::COL_ID, $rowHistory->getUserID(), $comparison);
+                ->addUsingAlias(UserDetailTableMap::COL_ID, $rowHistory->getUserId(), $comparison);
         } elseif ($rowHistory instanceof ObjectCollection) {
             return $this
                 ->useHistoryQuery()
@@ -761,7 +838,7 @@ abstract class UserDetailQuery extends ModelCriteria
     {
         if ($salesHistory instanceof \ORM\SalesHistory) {
             return $this
-                ->addUsingAlias(UserDetailTableMap::COL_ID, $salesHistory->getUserID(), $comparison);
+                ->addUsingAlias(UserDetailTableMap::COL_ID, $salesHistory->getUserId(), $comparison);
         } elseif ($salesHistory instanceof ObjectCollection) {
             return $this
                 ->useSalesHistoryQuery()

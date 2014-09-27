@@ -69,6 +69,12 @@ abstract class Unit implements ActiveRecordInterface
     protected $name;
 
     /**
+     * The value for the status field.
+     * @var        string
+     */
+    protected $status;
+
+    /**
      * @var        ObjectCollection|ChildStock[] Collection to store aggregation of ChildStock objects.
      */
     protected $collStocks;
@@ -326,6 +332,16 @@ abstract class Unit implements ActiveRecordInterface
     }
 
     /**
+     * Get the [status] column value.
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -366,6 +382,9 @@ abstract class Unit implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UnitTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UnitTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -374,7 +393,7 @@ abstract class Unit implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = UnitTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = UnitTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Unit'), 0, $e);
@@ -437,6 +456,26 @@ abstract class Unit implements ActiveRecordInterface
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [status] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\Unit The current object (for fluent API support)
+     */
+    public function setStatus($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->status !== $v) {
+            $this->status = $v;
+            $this->modifiedColumns[UnitTableMap::COL_STATUS] = true;
+        }
+
+        return $this;
+    } // setStatus()
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -637,6 +676,9 @@ abstract class Unit implements ActiveRecordInterface
         if ($this->isColumnModified(UnitTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
         }
+        if ($this->isColumnModified(UnitTableMap::COL_STATUS)) {
+            $modifiedColumns[':p' . $index++]  = 'STATUS';
+        }
 
         $sql = sprintf(
             'INSERT INTO unit (%s) VALUES (%s)',
@@ -653,6 +695,9 @@ abstract class Unit implements ActiveRecordInterface
                         break;
                     case 'NAME':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'STATUS':
+                        $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -722,6 +767,9 @@ abstract class Unit implements ActiveRecordInterface
             case 1:
                 return $this->getName();
                 break;
+            case 2:
+                return $this->getStatus();
+                break;
             default:
                 return null;
                 break;
@@ -753,6 +801,7 @@ abstract class Unit implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
+            $keys[2] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -803,6 +852,9 @@ abstract class Unit implements ActiveRecordInterface
             case 1:
                 $this->setName($value);
                 break;
+            case 2:
+                $this->setStatus($value);
+                break;
         } // switch()
 
         return $this;
@@ -834,6 +886,9 @@ abstract class Unit implements ActiveRecordInterface
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setName($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setStatus($arr[$keys[2]]);
         }
     }
 
@@ -875,6 +930,9 @@ abstract class Unit implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UnitTableMap::COL_NAME)) {
             $criteria->add(UnitTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(UnitTableMap::COL_STATUS)) {
+            $criteria->add(UnitTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -963,6 +1021,7 @@ abstract class Unit implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
+        $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1273,6 +1332,7 @@ abstract class Unit implements ActiveRecordInterface
     {
         $this->id = null;
         $this->name = null;
+        $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

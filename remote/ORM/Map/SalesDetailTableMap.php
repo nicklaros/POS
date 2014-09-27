@@ -191,7 +191,7 @@ class SalesDetailTableMap extends TableMap
         $this->addForeignKey('SALES_ID', 'SalesId', 'BIGINT', 'sales', 'ID', false, 20, null);
         $this->addColumn('TYPE', 'Type', 'CHAR', false, null, null);
         $this->addForeignKey('STOCK_ID', 'StockId', 'BIGINT', 'stock', 'ID', false, 20, null);
-        $this->addColumn('AMOUNT', 'Amount', 'TINYINT', false, 3, null);
+        $this->addColumn('AMOUNT', 'Amount', 'DECIMAL', false, 10, null);
         $this->addColumn('UNIT_PRICE', 'UnitPrice', 'INTEGER', false, 10, null);
         $this->addColumn('DISCOUNT', 'Discount', 'TINYINT', false, 3, null);
         $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);

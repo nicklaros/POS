@@ -1134,7 +1134,7 @@ abstract class Stock implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
-                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
                     case 'UNIT_ID':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);

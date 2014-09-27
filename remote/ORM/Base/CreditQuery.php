@@ -23,11 +23,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCreditQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCreditQuery orderBySalesId($order = Criteria::ASC) Order by the sales_id column
  * @method     ChildCreditQuery orderByTotal($order = Criteria::ASC) Order by the total column
+ * @method     ChildCreditQuery orderByPaid($order = Criteria::ASC) Order by the paid column
  * @method     ChildCreditQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildCreditQuery groupById() Group by the id column
  * @method     ChildCreditQuery groupBySalesId() Group by the sales_id column
  * @method     ChildCreditQuery groupByTotal() Group by the total column
+ * @method     ChildCreditQuery groupByPaid() Group by the paid column
  * @method     ChildCreditQuery groupByStatus() Group by the status column
  *
  * @method     ChildCreditQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -50,12 +52,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCredit findOneById(string $id) Return the first ChildCredit filtered by the id column
  * @method     ChildCredit findOneBySalesId(string $sales_id) Return the first ChildCredit filtered by the sales_id column
  * @method     ChildCredit findOneByTotal(int $total) Return the first ChildCredit filtered by the total column
+ * @method     ChildCredit findOneByPaid(int $paid) Return the first ChildCredit filtered by the paid column
  * @method     ChildCredit findOneByStatus(string $status) Return the first ChildCredit filtered by the status column
  *
  * @method     ChildCredit[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCredit objects based on current ModelCriteria
  * @method     ChildCredit[]|ObjectCollection findById(string $id) Return ChildCredit objects filtered by the id column
  * @method     ChildCredit[]|ObjectCollection findBySalesId(string $sales_id) Return ChildCredit objects filtered by the sales_id column
  * @method     ChildCredit[]|ObjectCollection findByTotal(int $total) Return ChildCredit objects filtered by the total column
+ * @method     ChildCredit[]|ObjectCollection findByPaid(int $paid) Return ChildCredit objects filtered by the paid column
  * @method     ChildCredit[]|ObjectCollection findByStatus(string $status) Return ChildCredit objects filtered by the status column
  * @method     ChildCredit[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -146,7 +150,7 @@ abstract class CreditQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, SALES_ID, TOTAL, STATUS FROM credit WHERE ID = :p0';
+        $sql = 'SELECT ID, SALES_ID, TOTAL, PAID, STATUS FROM credit WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -359,6 +363,47 @@ abstract class CreditQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CreditTableMap::COL_TOTAL, $total, $comparison);
+    }
+
+    /**
+     * Filter the query on the paid column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPaid(1234); // WHERE paid = 1234
+     * $query->filterByPaid(array(12, 34)); // WHERE paid IN (12, 34)
+     * $query->filterByPaid(array('min' => 12)); // WHERE paid > 12
+     * </code>
+     *
+     * @param     mixed $paid The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCreditQuery The current query, for fluid interface
+     */
+    public function filterByPaid($paid = null, $comparison = null)
+    {
+        if (is_array($paid)) {
+            $useMinMax = false;
+            if (isset($paid['min'])) {
+                $this->addUsingAlias(CreditTableMap::COL_PAID, $paid['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($paid['max'])) {
+                $this->addUsingAlias(CreditTableMap::COL_PAID, $paid['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CreditTableMap::COL_PAID, $paid, $comparison);
     }
 
     /**

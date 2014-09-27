@@ -9,9 +9,9 @@ Ext.define('POS.view.debit.SearchController', {
 
                 panel.down('form').getForm().setValues(params);
 
-                var supplier = this.lookupReference('supplier_name');
+                var secondPartyName = this.lookupReference('second_party_name');
                 setTimeout(function(){
-                    supplier.focus();
+                    secondPartyName.focus();
                 }, 10);
             }
         },

@@ -9,9 +9,9 @@ Ext.define('POS.view.credit.SearchPaymentController', {
 
                 panel.down('form').getForm().setValues(params);
 
-                var customer = this.lookupReference('customer');
+                var secondParty = this.lookupReference('second_party');
                 setTimeout(function(){
-                    customer.focus();
+                    secondParty.focus();
                 }, 10);
             }
         },

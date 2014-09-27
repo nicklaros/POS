@@ -22,15 +22,17 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildPurchaseQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildPurchaseQuery orderByDate($order = Criteria::ASC) Order by the date column
- * @method     ChildPurchaseQuery orderBySupplierId($order = Criteria::ASC) Order by the supplier_id column
+ * @method     ChildPurchaseQuery orderBySecondPartyId($order = Criteria::ASC) Order by the second_party_id column
  * @method     ChildPurchaseQuery orderByTotalPrice($order = Criteria::ASC) Order by the total_price column
+ * @method     ChildPurchaseQuery orderByPaid($order = Criteria::ASC) Order by the paid column
  * @method     ChildPurchaseQuery orderByNote($order = Criteria::ASC) Order by the note column
  * @method     ChildPurchaseQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildPurchaseQuery groupById() Group by the id column
  * @method     ChildPurchaseQuery groupByDate() Group by the date column
- * @method     ChildPurchaseQuery groupBySupplierId() Group by the supplier_id column
+ * @method     ChildPurchaseQuery groupBySecondPartyId() Group by the second_party_id column
  * @method     ChildPurchaseQuery groupByTotalPrice() Group by the total_price column
+ * @method     ChildPurchaseQuery groupByPaid() Group by the paid column
  * @method     ChildPurchaseQuery groupByNote() Group by the note column
  * @method     ChildPurchaseQuery groupByStatus() Group by the status column
  *
@@ -38,9 +40,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPurchaseQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildPurchaseQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildPurchaseQuery leftJoinSupplier($relationAlias = null) Adds a LEFT JOIN clause to the query using the Supplier relation
- * @method     ChildPurchaseQuery rightJoinSupplier($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Supplier relation
- * @method     ChildPurchaseQuery innerJoinSupplier($relationAlias = null) Adds a INNER JOIN clause to the query using the Supplier relation
+ * @method     ChildPurchaseQuery leftJoinSecondParty($relationAlias = null) Adds a LEFT JOIN clause to the query using the SecondParty relation
+ * @method     ChildPurchaseQuery rightJoinSecondParty($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SecondParty relation
+ * @method     ChildPurchaseQuery innerJoinSecondParty($relationAlias = null) Adds a INNER JOIN clause to the query using the SecondParty relation
+ *
+ * @method     ChildPurchaseQuery leftJoinDebit($relationAlias = null) Adds a LEFT JOIN clause to the query using the Debit relation
+ * @method     ChildPurchaseQuery rightJoinDebit($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Debit relation
+ * @method     ChildPurchaseQuery innerJoinDebit($relationAlias = null) Adds a INNER JOIN clause to the query using the Debit relation
  *
  * @method     ChildPurchaseQuery leftJoinDetail($relationAlias = null) Adds a LEFT JOIN clause to the query using the Detail relation
  * @method     ChildPurchaseQuery rightJoinDetail($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Detail relation
@@ -50,23 +56,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPurchaseQuery rightJoinHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the History relation
  * @method     ChildPurchaseQuery innerJoinHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the History relation
  *
- * @method     \ORM\SupplierQuery|\ORM\PurchaseDetailQuery|\ORM\PurchaseHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\SecondPartyQuery|\ORM\DebitQuery|\ORM\PurchaseDetailQuery|\ORM\PurchaseHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildPurchase findOne(ConnectionInterface $con = null) Return the first ChildPurchase matching the query
  * @method     ChildPurchase findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPurchase matching the query, or a new ChildPurchase object populated from the query conditions when no match is found
  *
  * @method     ChildPurchase findOneById(string $id) Return the first ChildPurchase filtered by the id column
  * @method     ChildPurchase findOneByDate(string $date) Return the first ChildPurchase filtered by the date column
- * @method     ChildPurchase findOneBySupplierId(string $supplier_id) Return the first ChildPurchase filtered by the supplier_id column
+ * @method     ChildPurchase findOneBySecondPartyId(string $second_party_id) Return the first ChildPurchase filtered by the second_party_id column
  * @method     ChildPurchase findOneByTotalPrice(int $total_price) Return the first ChildPurchase filtered by the total_price column
+ * @method     ChildPurchase findOneByPaid(int $paid) Return the first ChildPurchase filtered by the paid column
  * @method     ChildPurchase findOneByNote(string $note) Return the first ChildPurchase filtered by the note column
  * @method     ChildPurchase findOneByStatus(string $status) Return the first ChildPurchase filtered by the status column
  *
  * @method     ChildPurchase[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPurchase objects based on current ModelCriteria
  * @method     ChildPurchase[]|ObjectCollection findById(string $id) Return ChildPurchase objects filtered by the id column
  * @method     ChildPurchase[]|ObjectCollection findByDate(string $date) Return ChildPurchase objects filtered by the date column
- * @method     ChildPurchase[]|ObjectCollection findBySupplierId(string $supplier_id) Return ChildPurchase objects filtered by the supplier_id column
+ * @method     ChildPurchase[]|ObjectCollection findBySecondPartyId(string $second_party_id) Return ChildPurchase objects filtered by the second_party_id column
  * @method     ChildPurchase[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildPurchase objects filtered by the total_price column
+ * @method     ChildPurchase[]|ObjectCollection findByPaid(int $paid) Return ChildPurchase objects filtered by the paid column
  * @method     ChildPurchase[]|ObjectCollection findByNote(string $note) Return ChildPurchase objects filtered by the note column
  * @method     ChildPurchase[]|ObjectCollection findByStatus(string $status) Return ChildPurchase objects filtered by the status column
  * @method     ChildPurchase[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -158,7 +166,7 @@ abstract class PurchaseQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, DATE, SUPPLIER_ID, TOTAL_PRICE, NOTE, STATUS FROM purchase WHERE ID = :p0';
+        $sql = 'SELECT ID, DATE, SECOND_PARTY_ID, TOTAL_PRICE, PAID, NOTE, STATUS FROM purchase WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -333,18 +341,18 @@ abstract class PurchaseQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the supplier_id column
+     * Filter the query on the second_party_id column
      *
      * Example usage:
      * <code>
-     * $query->filterBySupplierId(1234); // WHERE supplier_id = 1234
-     * $query->filterBySupplierId(array(12, 34)); // WHERE supplier_id IN (12, 34)
-     * $query->filterBySupplierId(array('min' => 12)); // WHERE supplier_id > 12
+     * $query->filterBySecondPartyId(1234); // WHERE second_party_id = 1234
+     * $query->filterBySecondPartyId(array(12, 34)); // WHERE second_party_id IN (12, 34)
+     * $query->filterBySecondPartyId(array('min' => 12)); // WHERE second_party_id > 12
      * </code>
      *
-     * @see       filterBySupplier()
+     * @see       filterBySecondParty()
      *
-     * @param     mixed $supplierId The value to use as filter.
+     * @param     mixed $secondPartyId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -352,16 +360,16 @@ abstract class PurchaseQuery extends ModelCriteria
      *
      * @return $this|ChildPurchaseQuery The current query, for fluid interface
      */
-    public function filterBySupplierId($supplierId = null, $comparison = null)
+    public function filterBySecondPartyId($secondPartyId = null, $comparison = null)
     {
-        if (is_array($supplierId)) {
+        if (is_array($secondPartyId)) {
             $useMinMax = false;
-            if (isset($supplierId['min'])) {
-                $this->addUsingAlias(PurchaseTableMap::COL_SUPPLIER_ID, $supplierId['min'], Criteria::GREATER_EQUAL);
+            if (isset($secondPartyId['min'])) {
+                $this->addUsingAlias(PurchaseTableMap::COL_SECOND_PARTY_ID, $secondPartyId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($supplierId['max'])) {
-                $this->addUsingAlias(PurchaseTableMap::COL_SUPPLIER_ID, $supplierId['max'], Criteria::LESS_EQUAL);
+            if (isset($secondPartyId['max'])) {
+                $this->addUsingAlias(PurchaseTableMap::COL_SECOND_PARTY_ID, $secondPartyId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -372,7 +380,7 @@ abstract class PurchaseQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PurchaseTableMap::COL_SUPPLIER_ID, $supplierId, $comparison);
+        return $this->addUsingAlias(PurchaseTableMap::COL_SECOND_PARTY_ID, $secondPartyId, $comparison);
     }
 
     /**
@@ -414,6 +422,47 @@ abstract class PurchaseQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PurchaseTableMap::COL_TOTAL_PRICE, $totalPrice, $comparison);
+    }
+
+    /**
+     * Filter the query on the paid column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByPaid(1234); // WHERE paid = 1234
+     * $query->filterByPaid(array(12, 34)); // WHERE paid IN (12, 34)
+     * $query->filterByPaid(array('min' => 12)); // WHERE paid > 12
+     * </code>
+     *
+     * @param     mixed $paid The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildPurchaseQuery The current query, for fluid interface
+     */
+    public function filterByPaid($paid = null, $comparison = null)
+    {
+        if (is_array($paid)) {
+            $useMinMax = false;
+            if (isset($paid['min'])) {
+                $this->addUsingAlias(PurchaseTableMap::COL_PAID, $paid['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($paid['max'])) {
+                $this->addUsingAlias(PurchaseTableMap::COL_PAID, $paid['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PurchaseTableMap::COL_PAID, $paid, $comparison);
     }
 
     /**
@@ -475,42 +524,42 @@ abstract class PurchaseQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \ORM\Supplier object
+     * Filter the query by a related \ORM\SecondParty object
      *
-     * @param \ORM\Supplier|ObjectCollection $supplier The related object(s) to use as filter
+     * @param \ORM\SecondParty|ObjectCollection $secondParty The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildPurchaseQuery The current query, for fluid interface
      */
-    public function filterBySupplier($supplier, $comparison = null)
+    public function filterBySecondParty($secondParty, $comparison = null)
     {
-        if ($supplier instanceof \ORM\Supplier) {
+        if ($secondParty instanceof \ORM\SecondParty) {
             return $this
-                ->addUsingAlias(PurchaseTableMap::COL_SUPPLIER_ID, $supplier->getId(), $comparison);
-        } elseif ($supplier instanceof ObjectCollection) {
+                ->addUsingAlias(PurchaseTableMap::COL_SECOND_PARTY_ID, $secondParty->getId(), $comparison);
+        } elseif ($secondParty instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(PurchaseTableMap::COL_SUPPLIER_ID, $supplier->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(PurchaseTableMap::COL_SECOND_PARTY_ID, $secondParty->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterBySupplier() only accepts arguments of type \ORM\Supplier or Collection');
+            throw new PropelException('filterBySecondParty() only accepts arguments of type \ORM\SecondParty or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Supplier relation
+     * Adds a JOIN clause to the query using the SecondParty relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildPurchaseQuery The current query, for fluid interface
      */
-    public function joinSupplier($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinSecondParty($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Supplier');
+        $relationMap = $tableMap->getRelation('SecondParty');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -525,14 +574,14 @@ abstract class PurchaseQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Supplier');
+            $this->addJoinObject($join, 'SecondParty');
         }
 
         return $this;
     }
 
     /**
-     * Use the Supplier relation Supplier object
+     * Use the SecondParty relation SecondParty object
      *
      * @see useQuery()
      *
@@ -540,13 +589,86 @@ abstract class PurchaseQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \ORM\SupplierQuery A secondary query class using the current class as primary query
+     * @return \ORM\SecondPartyQuery A secondary query class using the current class as primary query
      */
-    public function useSupplierQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useSecondPartyQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinSupplier($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Supplier', '\ORM\SupplierQuery');
+            ->joinSecondParty($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SecondParty', '\ORM\SecondPartyQuery');
+    }
+
+    /**
+     * Filter the query by a related \ORM\Debit object
+     *
+     * @param \ORM\Debit|ObjectCollection $debit  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildPurchaseQuery The current query, for fluid interface
+     */
+    public function filterByDebit($debit, $comparison = null)
+    {
+        if ($debit instanceof \ORM\Debit) {
+            return $this
+                ->addUsingAlias(PurchaseTableMap::COL_ID, $debit->getPurchaseId(), $comparison);
+        } elseif ($debit instanceof ObjectCollection) {
+            return $this
+                ->useDebitQuery()
+                ->filterByPrimaryKeys($debit->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByDebit() only accepts arguments of type \ORM\Debit or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Debit relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildPurchaseQuery The current query, for fluid interface
+     */
+    public function joinDebit($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Debit');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Debit');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Debit relation Debit object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\DebitQuery A secondary query class using the current class as primary query
+     */
+    public function useDebitQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinDebit($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Debit', '\ORM\DebitQuery');
     }
 
     /**

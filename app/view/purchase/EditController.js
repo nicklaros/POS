@@ -34,10 +34,12 @@ Ext.define('POS.view.purchase.EditController', {
         Ext.fn.App.window('edit-purchase-detail');
     },
 
-    addSupplier: function(){
-        var panel = Ext.fn.App.window('add-supplier');
+    addSecondParty: function(){
+        var panel = Ext.fn.App.window('add-second-party');
 
-        panel.bindCombo = this.lookupReference('supplier').getId();
+        panel.bindCombo = this.lookupReference('second_party').getId();
+        
+        panel.down('[name = type]').setValue('Supplier');
     },
 
     close: function(){
@@ -82,14 +84,14 @@ Ext.define('POS.view.purchase.EditController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 84, // Ctrl + T
+                key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
-                key: 83, // Ctrl + S
+                key: 83, // Alt + S
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
@@ -109,12 +111,12 @@ Ext.define('POS.view.purchase.EditController', {
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
-                    var supplier = Ext.create('POS.model.Supplier', {
-                        id  : result.data.supplier_id,
-                        name: result.data.supplier_name
+                    var secondParty = Ext.create('POS.model.SecondParty', {
+                        id  : result.data.second_party_id,
+                        name: result.data.second_party_name
                     });
 
-                    result.data.supplier = supplier;
+                    result.data.second_party = secondParty;
 
                     form.getForm().setValues(result.data);
 
@@ -165,7 +167,7 @@ Ext.define('POS.view.purchase.EditController', {
                 // safety first, sum total one more time before sending it to server ^_^
                 values.total_price = this.sumTotalPrice();
                 
-                values.supplier_id = values.supplier;
+                values.second_party_id = values.second_party;
 
                 Ext.fn.App.setLoading(true);
                 var monitor = Ext.fn.WebSocket.monitor(

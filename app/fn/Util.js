@@ -61,6 +61,7 @@ Ext.define('Ext.fn.Util', {
             'combo.Customer',
             'combo.Cashier',
             'combo.Product',
+            'combo.SecondParty',
             'combo.Stock',
             'combo.Supplier',
             'combo.Unit',
@@ -128,6 +129,11 @@ Ext.define('Ext.fn.Util', {
 
         Ext.override(Ext.tab.Tab, {
             height: 31
+        });
+
+        // enable text selection inside all grid
+        Ext.override(Ext.grid.View, {
+            enableTextSelection: true
         });
         
         // Add the additional 'advanced' VTypes

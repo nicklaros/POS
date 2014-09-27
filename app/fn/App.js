@@ -189,20 +189,20 @@ Ext.define('Ext.fn.App', {
         if (Ext.main.View) Ext.main.View.setLoading(bool);
     },
     
-    showCustomerCredit: function(customerId){
+    showSecondPartyCredit: function(secondPartyId){
         Ext.fn.App.newTab('list-credit');
                 
         POS.app.getStore('Credit').search({
-            customer_id: customerId,
+            second_party_id: secondPartyId,
             credit_status: 'Belum Lunas'
         });        
     },
     
-    showCustomerSales: function(customerId){
+    showSecondPartySales: function(secondPartyId){
         Ext.fn.App.newTab('list-sales');
                 
         POS.app.getStore('Sales').search({
-            customer_id: customerId
+            second_party_id: secondPartyId
         });
     },
     

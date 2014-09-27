@@ -22,7 +22,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildSalesQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildSalesQuery orderByDate($order = Criteria::ASC) Order by the date column
- * @method     ChildSalesQuery orderByCustomerId($order = Criteria::ASC) Order by the customer_id column
+ * @method     ChildSalesQuery orderBySecondPartyId($order = Criteria::ASC) Order by the second_party_id column
  * @method     ChildSalesQuery orderByBuyPrice($order = Criteria::ASC) Order by the buy_price column
  * @method     ChildSalesQuery orderByTotalPrice($order = Criteria::ASC) Order by the total_price column
  * @method     ChildSalesQuery orderByPaid($order = Criteria::ASC) Order by the paid column
@@ -32,7 +32,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildSalesQuery groupById() Group by the id column
  * @method     ChildSalesQuery groupByDate() Group by the date column
- * @method     ChildSalesQuery groupByCustomerId() Group by the customer_id column
+ * @method     ChildSalesQuery groupBySecondPartyId() Group by the second_party_id column
  * @method     ChildSalesQuery groupByBuyPrice() Group by the buy_price column
  * @method     ChildSalesQuery groupByTotalPrice() Group by the total_price column
  * @method     ChildSalesQuery groupByPaid() Group by the paid column
@@ -44,9 +44,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildSalesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildSalesQuery leftJoinCustomer($relationAlias = null) Adds a LEFT JOIN clause to the query using the Customer relation
- * @method     ChildSalesQuery rightJoinCustomer($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Customer relation
- * @method     ChildSalesQuery innerJoinCustomer($relationAlias = null) Adds a INNER JOIN clause to the query using the Customer relation
+ * @method     ChildSalesQuery leftJoinSecondParty($relationAlias = null) Adds a LEFT JOIN clause to the query using the SecondParty relation
+ * @method     ChildSalesQuery rightJoinSecondParty($relationAlias = null) Adds a RIGHT JOIN clause to the query using the SecondParty relation
+ * @method     ChildSalesQuery innerJoinSecondParty($relationAlias = null) Adds a INNER JOIN clause to the query using the SecondParty relation
  *
  * @method     ChildSalesQuery leftJoinCashier($relationAlias = null) Adds a LEFT JOIN clause to the query using the Cashier relation
  * @method     ChildSalesQuery rightJoinCashier($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Cashier relation
@@ -64,14 +64,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesQuery rightJoinHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the History relation
  * @method     ChildSalesQuery innerJoinHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the History relation
  *
- * @method     \ORM\CustomerQuery|\ORM\UserDetailQuery|\ORM\CreditQuery|\ORM\SalesDetailQuery|\ORM\SalesHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\SecondPartyQuery|\ORM\UserDetailQuery|\ORM\CreditQuery|\ORM\SalesDetailQuery|\ORM\SalesHistoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildSales findOne(ConnectionInterface $con = null) Return the first ChildSales matching the query
  * @method     ChildSales findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSales matching the query, or a new ChildSales object populated from the query conditions when no match is found
  *
  * @method     ChildSales findOneById(string $id) Return the first ChildSales filtered by the id column
  * @method     ChildSales findOneByDate(string $date) Return the first ChildSales filtered by the date column
- * @method     ChildSales findOneByCustomerId(string $customer_id) Return the first ChildSales filtered by the customer_id column
+ * @method     ChildSales findOneBySecondPartyId(string $second_party_id) Return the first ChildSales filtered by the second_party_id column
  * @method     ChildSales findOneByBuyPrice(int $buy_price) Return the first ChildSales filtered by the buy_price column
  * @method     ChildSales findOneByTotalPrice(int $total_price) Return the first ChildSales filtered by the total_price column
  * @method     ChildSales findOneByPaid(int $paid) Return the first ChildSales filtered by the paid column
@@ -82,7 +82,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSales[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSales objects based on current ModelCriteria
  * @method     ChildSales[]|ObjectCollection findById(string $id) Return ChildSales objects filtered by the id column
  * @method     ChildSales[]|ObjectCollection findByDate(string $date) Return ChildSales objects filtered by the date column
- * @method     ChildSales[]|ObjectCollection findByCustomerId(string $customer_id) Return ChildSales objects filtered by the customer_id column
+ * @method     ChildSales[]|ObjectCollection findBySecondPartyId(string $second_party_id) Return ChildSales objects filtered by the second_party_id column
  * @method     ChildSales[]|ObjectCollection findByBuyPrice(int $buy_price) Return ChildSales objects filtered by the buy_price column
  * @method     ChildSales[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildSales objects filtered by the total_price column
  * @method     ChildSales[]|ObjectCollection findByPaid(int $paid) Return ChildSales objects filtered by the paid column
@@ -178,7 +178,7 @@ abstract class SalesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, DATE, CUSTOMER_ID, BUY_PRICE, TOTAL_PRICE, PAID, CASHIER_ID, NOTE, STATUS FROM sales WHERE ID = :p0';
+        $sql = 'SELECT ID, DATE, SECOND_PARTY_ID, BUY_PRICE, TOTAL_PRICE, PAID, CASHIER_ID, NOTE, STATUS FROM sales WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -353,18 +353,18 @@ abstract class SalesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the customer_id column
+     * Filter the query on the second_party_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByCustomerId(1234); // WHERE customer_id = 1234
-     * $query->filterByCustomerId(array(12, 34)); // WHERE customer_id IN (12, 34)
-     * $query->filterByCustomerId(array('min' => 12)); // WHERE customer_id > 12
+     * $query->filterBySecondPartyId(1234); // WHERE second_party_id = 1234
+     * $query->filterBySecondPartyId(array(12, 34)); // WHERE second_party_id IN (12, 34)
+     * $query->filterBySecondPartyId(array('min' => 12)); // WHERE second_party_id > 12
      * </code>
      *
-     * @see       filterByCustomer()
+     * @see       filterBySecondParty()
      *
-     * @param     mixed $customerId The value to use as filter.
+     * @param     mixed $secondPartyId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -372,16 +372,16 @@ abstract class SalesQuery extends ModelCriteria
      *
      * @return $this|ChildSalesQuery The current query, for fluid interface
      */
-    public function filterByCustomerId($customerId = null, $comparison = null)
+    public function filterBySecondPartyId($secondPartyId = null, $comparison = null)
     {
-        if (is_array($customerId)) {
+        if (is_array($secondPartyId)) {
             $useMinMax = false;
-            if (isset($customerId['min'])) {
-                $this->addUsingAlias(SalesTableMap::COL_CUSTOMER_ID, $customerId['min'], Criteria::GREATER_EQUAL);
+            if (isset($secondPartyId['min'])) {
+                $this->addUsingAlias(SalesTableMap::COL_SECOND_PARTY_ID, $secondPartyId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($customerId['max'])) {
-                $this->addUsingAlias(SalesTableMap::COL_CUSTOMER_ID, $customerId['max'], Criteria::LESS_EQUAL);
+            if (isset($secondPartyId['max'])) {
+                $this->addUsingAlias(SalesTableMap::COL_SECOND_PARTY_ID, $secondPartyId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -392,7 +392,7 @@ abstract class SalesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SalesTableMap::COL_CUSTOMER_ID, $customerId, $comparison);
+        return $this->addUsingAlias(SalesTableMap::COL_SECOND_PARTY_ID, $secondPartyId, $comparison);
     }
 
     /**
@@ -620,42 +620,42 @@ abstract class SalesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \ORM\Customer object
+     * Filter the query by a related \ORM\SecondParty object
      *
-     * @param \ORM\Customer|ObjectCollection $customer The related object(s) to use as filter
+     * @param \ORM\SecondParty|ObjectCollection $secondParty The related object(s) to use as filter
      * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return ChildSalesQuery The current query, for fluid interface
      */
-    public function filterByCustomer($customer, $comparison = null)
+    public function filterBySecondParty($secondParty, $comparison = null)
     {
-        if ($customer instanceof \ORM\Customer) {
+        if ($secondParty instanceof \ORM\SecondParty) {
             return $this
-                ->addUsingAlias(SalesTableMap::COL_CUSTOMER_ID, $customer->getId(), $comparison);
-        } elseif ($customer instanceof ObjectCollection) {
+                ->addUsingAlias(SalesTableMap::COL_SECOND_PARTY_ID, $secondParty->getId(), $comparison);
+        } elseif ($secondParty instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(SalesTableMap::COL_CUSTOMER_ID, $customer->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(SalesTableMap::COL_SECOND_PARTY_ID, $secondParty->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByCustomer() only accepts arguments of type \ORM\Customer or Collection');
+            throw new PropelException('filterBySecondParty() only accepts arguments of type \ORM\SecondParty or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the Customer relation
+     * Adds a JOIN clause to the query using the SecondParty relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this|ChildSalesQuery The current query, for fluid interface
      */
-    public function joinCustomer($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinSecondParty($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Customer');
+        $relationMap = $tableMap->getRelation('SecondParty');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -670,14 +670,14 @@ abstract class SalesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'Customer');
+            $this->addJoinObject($join, 'SecondParty');
         }
 
         return $this;
     }
 
     /**
-     * Use the Customer relation Customer object
+     * Use the SecondParty relation SecondParty object
      *
      * @see useQuery()
      *
@@ -685,13 +685,13 @@ abstract class SalesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \ORM\CustomerQuery A secondary query class using the current class as primary query
+     * @return \ORM\SecondPartyQuery A secondary query class using the current class as primary query
      */
-    public function useCustomerQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useSecondPartyQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinCustomer($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Customer', '\ORM\CustomerQuery');
+            ->joinSecondParty($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'SecondParty', '\ORM\SecondPartyQuery');
     }
 
     /**

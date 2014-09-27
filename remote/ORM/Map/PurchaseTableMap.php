@@ -59,7 +59,7 @@ class PurchaseTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class PurchaseTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the ID field
@@ -82,14 +82,19 @@ class PurchaseTableMap extends TableMap
     const COL_DATE = 'purchase.DATE';
 
     /**
-     * the column name for the SUPPLIER_ID field
+     * the column name for the SECOND_PARTY_ID field
      */
-    const COL_SUPPLIER_ID = 'purchase.SUPPLIER_ID';
+    const COL_SECOND_PARTY_ID = 'purchase.SECOND_PARTY_ID';
 
     /**
      * the column name for the TOTAL_PRICE field
      */
     const COL_TOTAL_PRICE = 'purchase.TOTAL_PRICE';
+
+    /**
+     * the column name for the PAID field
+     */
+    const COL_PAID = 'purchase.PAID';
 
     /**
      * the column name for the NOTE field
@@ -113,12 +118,12 @@ class PurchaseTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Date', 'SupplierId', 'TotalPrice', 'Note', 'Status', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'date', 'supplierId', 'totalPrice', 'note', 'status', ),
-        self::TYPE_COLNAME       => array(PurchaseTableMap::COL_ID, PurchaseTableMap::COL_DATE, PurchaseTableMap::COL_SUPPLIER_ID, PurchaseTableMap::COL_TOTAL_PRICE, PurchaseTableMap::COL_NOTE, PurchaseTableMap::COL_STATUS, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_DATE', 'COL_SUPPLIER_ID', 'COL_TOTAL_PRICE', 'COL_NOTE', 'COL_STATUS', ),
-        self::TYPE_FIELDNAME     => array('id', 'date', 'supplier_id', 'total_price', 'note', 'status', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'Date', 'SecondPartyId', 'TotalPrice', 'Paid', 'Note', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'date', 'secondPartyId', 'totalPrice', 'paid', 'note', 'status', ),
+        self::TYPE_COLNAME       => array(PurchaseTableMap::COL_ID, PurchaseTableMap::COL_DATE, PurchaseTableMap::COL_SECOND_PARTY_ID, PurchaseTableMap::COL_TOTAL_PRICE, PurchaseTableMap::COL_PAID, PurchaseTableMap::COL_NOTE, PurchaseTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_DATE', 'COL_SECOND_PARTY_ID', 'COL_TOTAL_PRICE', 'COL_PAID', 'COL_NOTE', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'date', 'second_party_id', 'total_price', 'paid', 'note', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -128,12 +133,12 @@ class PurchaseTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Date' => 1, 'SupplierId' => 2, 'TotalPrice' => 3, 'Note' => 4, 'Status' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'date' => 1, 'supplierId' => 2, 'totalPrice' => 3, 'note' => 4, 'status' => 5, ),
-        self::TYPE_COLNAME       => array(PurchaseTableMap::COL_ID => 0, PurchaseTableMap::COL_DATE => 1, PurchaseTableMap::COL_SUPPLIER_ID => 2, PurchaseTableMap::COL_TOTAL_PRICE => 3, PurchaseTableMap::COL_NOTE => 4, PurchaseTableMap::COL_STATUS => 5, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_DATE' => 1, 'COL_SUPPLIER_ID' => 2, 'COL_TOTAL_PRICE' => 3, 'COL_NOTE' => 4, 'COL_STATUS' => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'date' => 1, 'supplier_id' => 2, 'total_price' => 3, 'note' => 4, 'status' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Date' => 1, 'SecondPartyId' => 2, 'TotalPrice' => 3, 'Paid' => 4, 'Note' => 5, 'Status' => 6, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'date' => 1, 'secondPartyId' => 2, 'totalPrice' => 3, 'paid' => 4, 'note' => 5, 'status' => 6, ),
+        self::TYPE_COLNAME       => array(PurchaseTableMap::COL_ID => 0, PurchaseTableMap::COL_DATE => 1, PurchaseTableMap::COL_SECOND_PARTY_ID => 2, PurchaseTableMap::COL_TOTAL_PRICE => 3, PurchaseTableMap::COL_PAID => 4, PurchaseTableMap::COL_NOTE => 5, PurchaseTableMap::COL_STATUS => 6, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_DATE' => 1, 'COL_SECOND_PARTY_ID' => 2, 'COL_TOTAL_PRICE' => 3, 'COL_PAID' => 4, 'COL_NOTE' => 5, 'COL_STATUS' => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'date' => 1, 'second_party_id' => 2, 'total_price' => 3, 'paid' => 4, 'note' => 5, 'status' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -154,8 +159,9 @@ class PurchaseTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addColumn('DATE', 'Date', 'DATE', false, null, null);
-        $this->addForeignKey('SUPPLIER_ID', 'SupplierId', 'BIGINT', 'supplier', 'ID', false, 20, null);
+        $this->addForeignKey('SECOND_PARTY_ID', 'SecondPartyId', 'BIGINT', 'second_party', 'ID', false, 20, null);
         $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);
+        $this->addColumn('PAID', 'Paid', 'INTEGER', false, 10, null);
         $this->addColumn('NOTE', 'Note', 'CHAR', false, 32, null);
         $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
@@ -165,7 +171,8 @@ class PurchaseTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Supplier', '\\ORM\\Supplier', RelationMap::MANY_TO_ONE, array('supplier_id' => 'id', ), 'RESTRICT', 'RESTRICT');
+        $this->addRelation('SecondParty', '\\ORM\\SecondParty', RelationMap::MANY_TO_ONE, array('second_party_id' => 'id', ), 'RESTRICT', 'RESTRICT');
+        $this->addRelation('Debit', '\\ORM\\Debit', RelationMap::ONE_TO_MANY, array('id' => 'purchase_id', ), 'CASCADE', 'CASCADE', 'Debits');
         $this->addRelation('Detail', '\\ORM\\PurchaseDetail', RelationMap::ONE_TO_MANY, array('id' => 'purchase_id', ), 'CASCADE', 'RESTRICT', 'Details');
         $this->addRelation('History', '\\ORM\\PurchaseHistory', RelationMap::ONE_TO_MANY, array('id' => 'purchase_id', ), 'NO ACTION', 'RESTRICT', 'Histories');
     } // buildRelations()
@@ -176,6 +183,7 @@ class PurchaseTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        DebitTableMap::clearInstancePool();
         PurchaseDetailTableMap::clearInstancePool();
     }
 
@@ -322,15 +330,17 @@ class PurchaseTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(PurchaseTableMap::COL_ID);
             $criteria->addSelectColumn(PurchaseTableMap::COL_DATE);
-            $criteria->addSelectColumn(PurchaseTableMap::COL_SUPPLIER_ID);
+            $criteria->addSelectColumn(PurchaseTableMap::COL_SECOND_PARTY_ID);
             $criteria->addSelectColumn(PurchaseTableMap::COL_TOTAL_PRICE);
+            $criteria->addSelectColumn(PurchaseTableMap::COL_PAID);
             $criteria->addSelectColumn(PurchaseTableMap::COL_NOTE);
             $criteria->addSelectColumn(PurchaseTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.DATE');
-            $criteria->addSelectColumn($alias . '.SUPPLIER_ID');
+            $criteria->addSelectColumn($alias . '.SECOND_PARTY_ID');
             $criteria->addSelectColumn($alias . '.TOTAL_PRICE');
+            $criteria->addSelectColumn($alias . '.PAID');
             $criteria->addSelectColumn($alias . '.NOTE');
             $criteria->addSelectColumn($alias . '.STATUS');
         }

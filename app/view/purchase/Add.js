@@ -5,13 +5,14 @@ Ext.define('POS.view.purchase.Add' ,{
     controller: 'add-purchase',
 
     requires: [
-        'POS.custom.field.ComboSupplier',
+        'POS.custom.field.ComboSecondParty',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.PurchaseDetail',
         'POS.custom.panel.hint.Purchase',
         'POS.view.purchase.AddController',
-        'POS.view.purchase.AddDetail'
+        'POS.view.purchase.AddDetail',
+        'POS.view.secondparty.Add'
     ],
 
 	autoScroll: true,
@@ -66,10 +67,10 @@ Ext.define('POS.view.purchase.Add' ,{
                         value: new Date(),
                         width: 130
                     },{
-                        xtype: 'combo-supplier',
-                        fieldLabel: 'Supplier',
-                        name: 'supplier',
-                        reference: 'supplier',
+                        xtype: 'combo-second-party',
+                        fieldLabel: 'Dibeli Dari',
+                        name: 'second_party',
+                        reference: 'second_party',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
                         margin: '0 0 0 20',
@@ -77,7 +78,7 @@ Ext.define('POS.view.purchase.Add' ,{
                     },{
                         xtype: 'button',
                         text: '<i class="fa fa-plus"></i>',
-                        handler: 'addSupplier',
+                        handler: 'addSecondParty',
                         margin: '25 0 0 5'
                     },{
                         xtype: 'textfield',

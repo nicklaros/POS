@@ -21,7 +21,7 @@ Ext.define('POS.view.credit.Pay' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Bayar Piutang';
+        this.title = '<i class="fa fa-money glyph"></i> Bayar Piutang';
 
         this.items = [{
             xtype: 'form',
@@ -43,8 +43,8 @@ Ext.define('POS.view.credit.Pay' ,{
                 width:250
             },{
                 xtype: 'textfield',
-                fieldLabel: 'Pelanggan',
-                name: 'customer_name',
+                fieldLabel: 'Nama',
+                name: 'second_party_name',
                 readOnly: true,
                 width:250
             },{

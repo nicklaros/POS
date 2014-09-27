@@ -160,7 +160,7 @@ class PurchaseDetailTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addForeignKey('PURCHASE_ID', 'PurchaseId', 'BIGINT', 'purchase', 'ID', false, 20, null);
         $this->addForeignKey('STOCK_ID', 'StockId', 'BIGINT', 'stock', 'ID', false, 20, null);
-        $this->addColumn('AMOUNT', 'Amount', 'TINYINT', false, 3, null);
+        $this->addColumn('AMOUNT', 'Amount', 'DECIMAL', false, 10, null);
         $this->addColumn('TOTAL_PRICE', 'TotalPrice', 'INTEGER', false, 10, null);
         $this->addForeignKey('NOTIFICATION_ID', 'NotificationId', 'BIGINT', 'notification', 'ID', false, 20, null);
         $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);

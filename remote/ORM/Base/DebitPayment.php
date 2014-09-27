@@ -5,17 +5,17 @@ namespace ORM\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use ORM\Customer as ChildCustomer;
-use ORM\CustomerQuery as ChildCustomerQuery;
-use ORM\Sales as ChildSales;
-use ORM\SalesQuery as ChildSalesQuery;
-use ORM\Map\CustomerTableMap;
+use ORM\Debit as ChildDebit;
+use ORM\DebitPaymentQuery as ChildDebitPaymentQuery;
+use ORM\DebitQuery as ChildDebitQuery;
+use ORM\UserDetail as ChildUserDetail;
+use ORM\UserDetailQuery as ChildUserDetailQuery;
+use ORM\Map\DebitPaymentTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -24,12 +24,12 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
 
-abstract class Customer implements ActiveRecordInterface
+abstract class DebitPayment implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\ORM\\Map\\CustomerTableMap';
+    const TABLE_MAP = '\\ORM\\Map\\DebitPaymentTableMap';
 
 
     /**
@@ -65,40 +65,28 @@ abstract class Customer implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the registered_date field.
+     * The value for the date field.
      * @var        \DateTime
      */
-    protected $registered_date;
+    protected $date;
 
     /**
-     * The value for the name field.
+     * The value for the debit_id field.
      * @var        string
      */
-    protected $name;
+    protected $debit_id;
 
     /**
-     * The value for the address field.
+     * The value for the cashier_id field.
      * @var        string
      */
-    protected $address;
+    protected $cashier_id;
 
     /**
-     * The value for the birthday field.
-     * @var        \DateTime
+     * The value for the paid field.
+     * @var        int
      */
-    protected $birthday;
-
-    /**
-     * The value for the gender field.
-     * @var        string
-     */
-    protected $gender;
-
-    /**
-     * The value for the phone field.
-     * @var        string
-     */
-    protected $phone;
+    protected $paid;
 
     /**
      * The value for the status field.
@@ -107,10 +95,14 @@ abstract class Customer implements ActiveRecordInterface
     protected $status;
 
     /**
-     * @var        ObjectCollection|ChildSales[] Collection to store aggregation of ChildSales objects.
+     * @var        ChildDebit
      */
-    protected $collSaless;
-    protected $collSalessPartial;
+    protected $aDebit;
+
+    /**
+     * @var        ChildUserDetail
+     */
+    protected $aCashier;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -121,13 +113,7 @@ abstract class Customer implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildSales[]
-     */
-    protected $salessScheduledForDeletion = null;
-
-    /**
-     * Initializes internal state of ORM\Base\Customer object.
+     * Initializes internal state of ORM\Base\DebitPayment object.
      */
     public function __construct()
     {
@@ -222,9 +208,9 @@ abstract class Customer implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Customer</code> instance.  If
-     * <code>obj</code> is an instance of <code>Customer</code>, delegates to
-     * <code>equals(Customer)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>DebitPayment</code> instance.  If
+     * <code>obj</code> is an instance of <code>DebitPayment</code>, delegates to
+     * <code>equals(DebitPayment)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -290,7 +276,7 @@ abstract class Customer implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Customer The current object, for fluid interface
+     * @return $this|DebitPayment The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -354,7 +340,7 @@ abstract class Customer implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [registered_date] column value.
+     * Get the [optionally formatted] temporal [date] column value.
      *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
@@ -364,73 +350,43 @@ abstract class Customer implements ActiveRecordInterface
      *
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getRegisteredDate($format = NULL)
+    public function getDate($format = NULL)
     {
         if ($format === null) {
-            return $this->registered_date;
+            return $this->date;
         } else {
-            return $this->registered_date instanceof \DateTime ? $this->registered_date->format($format) : null;
+            return $this->date instanceof \DateTime ? $this->date->format($format) : null;
         }
     }
 
     /**
-     * Get the [name] column value.
+     * Get the [debit_id] column value.
      *
      * @return string
      */
-    public function getName()
+    public function getDebitId()
     {
-        return $this->name;
+        return $this->debit_id;
     }
 
     /**
-     * Get the [address] column value.
+     * Get the [cashier_id] column value.
      *
      * @return string
      */
-    public function getAddress()
+    public function getCashierId()
     {
-        return $this->address;
+        return $this->cashier_id;
     }
 
     /**
-     * Get the [optionally formatted] temporal [birthday] column value.
+     * Get the [paid] column value.
      *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw \DateTime object will be returned.
-     *
-     * @return string|\DateTime Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @return int
      */
-    public function getBirthday($format = NULL)
+    public function getPaid()
     {
-        if ($format === null) {
-            return $this->birthday;
-        } else {
-            return $this->birthday instanceof \DateTime ? $this->birthday->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [gender] column value.
-     *
-     * @return string
-     */
-    public function getGender()
-    {
-        return $this->gender;
-    }
-
-    /**
-     * Get the [phone] column value.
-     *
-     * @return string
-     */
-    public function getPhone()
-    {
-        return $this->phone;
+        return $this->paid;
     }
 
     /**
@@ -479,34 +435,25 @@ abstract class Customer implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CustomerTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : DebitPaymentTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CustomerTableMap::translateFieldName('RegisteredDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : DebitPaymentTableMap::translateFieldName('Date', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
-            $this->registered_date = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $this->date = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CustomerTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : DebitPaymentTableMap::translateFieldName('DebitId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->debit_id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CustomerTableMap::translateFieldName('Address', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->address = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : DebitPaymentTableMap::translateFieldName('CashierId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->cashier_id = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : CustomerTableMap::translateFieldName('Birthday', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00') {
-                $col = null;
-            }
-            $this->birthday = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DebitPaymentTableMap::translateFieldName('Paid', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->paid = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : CustomerTableMap::translateFieldName('Gender', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->gender = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : CustomerTableMap::translateFieldName('Phone', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->phone = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : CustomerTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : DebitPaymentTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -516,10 +463,10 @@ abstract class Customer implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = CustomerTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = DebitPaymentTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Customer'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\ORM\\DebitPayment'), 0, $e);
         }
     }
 
@@ -538,13 +485,19 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aDebit !== null && $this->debit_id !== $this->aDebit->getId()) {
+            $this->aDebit = null;
+        }
+        if ($this->aCashier !== null && $this->cashier_id !== $this->aCashier->getId()) {
+            $this->aCashier = null;
+        }
     } // ensureConsistency
 
     /**
      * Set the value of [id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -554,137 +507,105 @@ abstract class Customer implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_ID] = true;
+            $this->modifiedColumns[DebitPaymentTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Sets the value of [registered_date] column to a normalized version of the date/time value specified.
+     * Sets the value of [date] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
-    public function setRegisteredDate($v)
+    public function setDate($v)
     {
         $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->registered_date !== null || $dt !== null) {
-            if ($dt !== $this->registered_date) {
-                $this->registered_date = $dt;
-                $this->modifiedColumns[CustomerTableMap::COL_REGISTERED_DATE] = true;
+        if ($this->date !== null || $dt !== null) {
+            if ($dt !== $this->date) {
+                $this->date = $dt;
+                $this->modifiedColumns[DebitPaymentTableMap::COL_DATE] = true;
             }
         } // if either are not null
 
         return $this;
-    } // setRegisteredDate()
+    } // setDate()
 
     /**
-     * Set the value of [name] column.
+     * Set the value of [debit_id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
-    public function setName($v)
+    public function setDebitId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_NAME] = true;
+        if ($this->debit_id !== $v) {
+            $this->debit_id = $v;
+            $this->modifiedColumns[DebitPaymentTableMap::COL_DEBIT_ID] = true;
+        }
+
+        if ($this->aDebit !== null && $this->aDebit->getId() !== $v) {
+            $this->aDebit = null;
         }
 
         return $this;
-    } // setName()
+    } // setDebitId()
 
     /**
-     * Set the value of [address] column.
+     * Set the value of [cashier_id] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
-    public function setAddress($v)
+    public function setCashierId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->address !== $v) {
-            $this->address = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_ADDRESS] = true;
+        if ($this->cashier_id !== $v) {
+            $this->cashier_id = $v;
+            $this->modifiedColumns[DebitPaymentTableMap::COL_CASHIER_ID] = true;
+        }
+
+        if ($this->aCashier !== null && $this->aCashier->getId() !== $v) {
+            $this->aCashier = null;
         }
 
         return $this;
-    } // setAddress()
+    } // setCashierId()
 
     /**
-     * Sets the value of [birthday] column to a normalized version of the date/time value specified.
+     * Set the value of [paid] column.
      *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @param  int $v new value
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
-    public function setBirthday($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->birthday !== null || $dt !== null) {
-            if ($dt !== $this->birthday) {
-                $this->birthday = $dt;
-                $this->modifiedColumns[CustomerTableMap::COL_BIRTHDAY] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setBirthday()
-
-    /**
-     * Set the value of [gender] column.
-     *
-     * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
-     */
-    public function setGender($v)
+    public function setPaid($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->gender !== $v) {
-            $this->gender = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_GENDER] = true;
-        }
-
-        return $this;
-    } // setGender()
-
-    /**
-     * Set the value of [phone] column.
-     *
-     * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
-     */
-    public function setPhone($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->phone !== $v) {
-            $this->phone = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_PHONE] = true;
+        if ($this->paid !== $v) {
+            $this->paid = $v;
+            $this->modifiedColumns[DebitPaymentTableMap::COL_PAID] = true;
         }
 
         return $this;
-    } // setPhone()
+    } // setPaid()
 
     /**
      * Set the value of [status] column.
      *
      * @param  string $v new value
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      */
     public function setStatus($v)
     {
@@ -694,7 +615,7 @@ abstract class Customer implements ActiveRecordInterface
 
         if ($this->status !== $v) {
             $this->status = $v;
-            $this->modifiedColumns[CustomerTableMap::COL_STATUS] = true;
+            $this->modifiedColumns[DebitPaymentTableMap::COL_STATUS] = true;
         }
 
         return $this;
@@ -721,13 +642,13 @@ abstract class Customer implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(CustomerTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(DebitPaymentTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildCustomerQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildDebitPaymentQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -737,8 +658,8 @@ abstract class Customer implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collSaless = null;
-
+            $this->aDebit = null;
+            $this->aCashier = null;
         } // if (deep)
     }
 
@@ -748,8 +669,8 @@ abstract class Customer implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Customer::setDeleted()
-     * @see Customer::isDeleted()
+     * @see DebitPayment::setDeleted()
+     * @see DebitPayment::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -758,11 +679,11 @@ abstract class Customer implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CustomerTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(DebitPaymentTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildCustomerQuery::create()
+            $deleteQuery = ChildDebitPaymentQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -793,7 +714,7 @@ abstract class Customer implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(CustomerTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(DebitPaymentTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -812,7 +733,7 @@ abstract class Customer implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                CustomerTableMap::addInstanceToPool($this);
+                DebitPaymentTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -838,6 +759,25 @@ abstract class Customer implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aDebit !== null) {
+                if ($this->aDebit->isModified() || $this->aDebit->isNew()) {
+                    $affectedRows += $this->aDebit->save($con);
+                }
+                $this->setDebit($this->aDebit);
+            }
+
+            if ($this->aCashier !== null) {
+                if ($this->aCashier->isModified() || $this->aCashier->isNew()) {
+                    $affectedRows += $this->aCashier->save($con);
+                }
+                $this->setCashier($this->aCashier);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -847,24 +787,6 @@ abstract class Customer implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->salessScheduledForDeletion !== null) {
-                if (!$this->salessScheduledForDeletion->isEmpty()) {
-                    foreach ($this->salessScheduledForDeletion as $sales) {
-                        // need to save related object because we set the relation to null
-                        $sales->save($con);
-                    }
-                    $this->salessScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collSaless !== null) {
-                foreach ($this->collSaless as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -887,39 +809,33 @@ abstract class Customer implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[CustomerTableMap::COL_ID] = true;
+        $this->modifiedColumns[DebitPaymentTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CustomerTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . DebitPaymentTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CustomerTableMap::COL_ID)) {
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_REGISTERED_DATE)) {
-            $modifiedColumns[':p' . $index++]  = 'REGISTERED_DATE';
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'DATE';
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'NAME';
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_DEBIT_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'DEBIT_ID';
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_ADDRESS)) {
-            $modifiedColumns[':p' . $index++]  = 'ADDRESS';
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_CASHIER_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'CASHIER_ID';
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_BIRTHDAY)) {
-            $modifiedColumns[':p' . $index++]  = 'BIRTHDAY';
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_PAID)) {
+            $modifiedColumns[':p' . $index++]  = 'PAID';
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_GENDER)) {
-            $modifiedColumns[':p' . $index++]  = 'GENDER';
-        }
-        if ($this->isColumnModified(CustomerTableMap::COL_PHONE)) {
-            $modifiedColumns[':p' . $index++]  = 'PHONE';
-        }
-        if ($this->isColumnModified(CustomerTableMap::COL_STATUS)) {
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'STATUS';
         }
 
         $sql = sprintf(
-            'INSERT INTO customer (%s) VALUES (%s)',
+            'INSERT INTO debit_payment (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -931,23 +847,17 @@ abstract class Customer implements ActiveRecordInterface
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'REGISTERED_DATE':
-                        $stmt->bindValue($identifier, $this->registered_date ? $this->registered_date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'DATE':
+                        $stmt->bindValue($identifier, $this->date ? $this->date->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
-                    case 'NAME':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                    case 'DEBIT_ID':
+                        $stmt->bindValue($identifier, $this->debit_id, PDO::PARAM_INT);
                         break;
-                    case 'ADDRESS':
-                        $stmt->bindValue($identifier, $this->address, PDO::PARAM_STR);
+                    case 'CASHIER_ID':
+                        $stmt->bindValue($identifier, $this->cashier_id, PDO::PARAM_INT);
                         break;
-                    case 'BIRTHDAY':
-                        $stmt->bindValue($identifier, $this->birthday ? $this->birthday->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'GENDER':
-                        $stmt->bindValue($identifier, $this->gender, PDO::PARAM_STR);
-                        break;
-                    case 'PHONE':
-                        $stmt->bindValue($identifier, $this->phone, PDO::PARAM_STR);
+                    case 'PAID':
+                        $stmt->bindValue($identifier, $this->paid, PDO::PARAM_INT);
                         break;
                     case 'STATUS':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -998,7 +908,7 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = CustomerTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = DebitPaymentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1018,24 +928,18 @@ abstract class Customer implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getRegisteredDate();
+                return $this->getDate();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getDebitId();
                 break;
             case 3:
-                return $this->getAddress();
+                return $this->getCashierId();
                 break;
             case 4:
-                return $this->getBirthday();
+                return $this->getPaid();
                 break;
             case 5:
-                return $this->getGender();
-                break;
-            case 6:
-                return $this->getPhone();
-                break;
-            case 7:
                 return $this->getStatus();
                 break;
             default:
@@ -1061,20 +965,18 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Customer'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['DebitPayment'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Customer'][$this->getPrimaryKey()] = true;
-        $keys = CustomerTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['DebitPayment'][$this->getPrimaryKey()] = true;
+        $keys = DebitPaymentTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getRegisteredDate(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getAddress(),
-            $keys[4] => $this->getBirthday(),
-            $keys[5] => $this->getGender(),
-            $keys[6] => $this->getPhone(),
-            $keys[7] => $this->getStatus(),
+            $keys[1] => $this->getDate(),
+            $keys[2] => $this->getDebitId(),
+            $keys[3] => $this->getCashierId(),
+            $keys[4] => $this->getPaid(),
+            $keys[5] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1082,8 +984,11 @@ abstract class Customer implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collSaless) {
-                $result['Saless'] = $this->collSaless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aDebit) {
+                $result['Debit'] = $this->aDebit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aCashier) {
+                $result['Cashier'] = $this->aCashier->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1099,11 +1004,11 @@ abstract class Customer implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\ORM\Customer
+     * @return $this|\ORM\DebitPayment
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = CustomerTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = DebitPaymentTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1114,7 +1019,7 @@ abstract class Customer implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\ORM\Customer
+     * @return $this|\ORM\DebitPayment
      */
     public function setByPosition($pos, $value)
     {
@@ -1123,24 +1028,18 @@ abstract class Customer implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setRegisteredDate($value);
+                $this->setDate($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setDebitId($value);
                 break;
             case 3:
-                $this->setAddress($value);
+                $this->setCashierId($value);
                 break;
             case 4:
-                $this->setBirthday($value);
+                $this->setPaid($value);
                 break;
             case 5:
-                $this->setGender($value);
-                break;
-            case 6:
-                $this->setPhone($value);
-                break;
-            case 7:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -1167,31 +1066,25 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = CustomerTableMap::getFieldNames($keyType);
+        $keys = DebitPaymentTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setRegisteredDate($arr[$keys[1]]);
+            $this->setDate($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setDebitId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setAddress($arr[$keys[3]]);
+            $this->setCashierId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setBirthday($arr[$keys[4]]);
+            $this->setPaid($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setGender($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setPhone($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setStatus($arr[$keys[7]]);
+            $this->setStatus($arr[$keys[5]]);
         }
     }
 
@@ -1206,7 +1099,7 @@ abstract class Customer implements ActiveRecordInterface
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
      *
-     * @return $this|\ORM\Customer The current object, for fluid interface
+     * @return $this|\ORM\DebitPayment The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -1226,31 +1119,25 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(CustomerTableMap::DATABASE_NAME);
+        $criteria = new Criteria(DebitPaymentTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(CustomerTableMap::COL_ID)) {
-            $criteria->add(CustomerTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_ID)) {
+            $criteria->add(DebitPaymentTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_REGISTERED_DATE)) {
-            $criteria->add(CustomerTableMap::COL_REGISTERED_DATE, $this->registered_date);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_DATE)) {
+            $criteria->add(DebitPaymentTableMap::COL_DATE, $this->date);
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_NAME)) {
-            $criteria->add(CustomerTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_DEBIT_ID)) {
+            $criteria->add(DebitPaymentTableMap::COL_DEBIT_ID, $this->debit_id);
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_ADDRESS)) {
-            $criteria->add(CustomerTableMap::COL_ADDRESS, $this->address);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_CASHIER_ID)) {
+            $criteria->add(DebitPaymentTableMap::COL_CASHIER_ID, $this->cashier_id);
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_BIRTHDAY)) {
-            $criteria->add(CustomerTableMap::COL_BIRTHDAY, $this->birthday);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_PAID)) {
+            $criteria->add(DebitPaymentTableMap::COL_PAID, $this->paid);
         }
-        if ($this->isColumnModified(CustomerTableMap::COL_GENDER)) {
-            $criteria->add(CustomerTableMap::COL_GENDER, $this->gender);
-        }
-        if ($this->isColumnModified(CustomerTableMap::COL_PHONE)) {
-            $criteria->add(CustomerTableMap::COL_PHONE, $this->phone);
-        }
-        if ($this->isColumnModified(CustomerTableMap::COL_STATUS)) {
-            $criteria->add(CustomerTableMap::COL_STATUS, $this->status);
+        if ($this->isColumnModified(DebitPaymentTableMap::COL_STATUS)) {
+            $criteria->add(DebitPaymentTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -1268,8 +1155,8 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(CustomerTableMap::DATABASE_NAME);
-        $criteria->add(CustomerTableMap::COL_ID, $this->id);
+        $criteria = new Criteria(DebitPaymentTableMap::DATABASE_NAME);
+        $criteria->add(DebitPaymentTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1331,34 +1218,18 @@ abstract class Customer implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \ORM\Customer (or compatible) type.
+     * @param      object $copyObj An object of \ORM\DebitPayment (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setRegisteredDate($this->getRegisteredDate());
-        $copyObj->setName($this->getName());
-        $copyObj->setAddress($this->getAddress());
-        $copyObj->setBirthday($this->getBirthday());
-        $copyObj->setGender($this->getGender());
-        $copyObj->setPhone($this->getPhone());
+        $copyObj->setDate($this->getDate());
+        $copyObj->setDebitId($this->getDebitId());
+        $copyObj->setCashierId($this->getCashierId());
+        $copyObj->setPaid($this->getPaid());
         $copyObj->setStatus($this->getStatus());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getSaless() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addSales($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1374,7 +1245,7 @@ abstract class Customer implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \ORM\Customer Clone of current object.
+     * @return \ORM\DebitPayment Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1387,263 +1258,106 @@ abstract class Customer implements ActiveRecordInterface
         return $copyObj;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ChildDebit object.
      *
-     * @param      string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('Sales' == $relationName) {
-            return $this->initSaless();
-        }
-    }
-
-    /**
-     * Clears out the collSaless collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addSaless()
-     */
-    public function clearSaless()
-    {
-        $this->collSaless = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collSaless collection loaded partially.
-     */
-    public function resetPartialSaless($v = true)
-    {
-        $this->collSalessPartial = $v;
-    }
-
-    /**
-     * Initializes the collSaless collection.
-     *
-     * By default this just sets the collSaless collection to an empty array (like clearcollSaless());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initSaless($overrideExisting = true)
-    {
-        if (null !== $this->collSaless && !$overrideExisting) {
-            return;
-        }
-        $this->collSaless = new ObjectCollection();
-        $this->collSaless->setModel('\ORM\Sales');
-    }
-
-    /**
-     * Gets an array of ChildSales objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildCustomer is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     * @param  ChildDebit $v
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getSaless(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function setDebit(ChildDebit $v = null)
     {
-        $partial = $this->collSalessPartial && !$this->isNew();
-        if (null === $this->collSaless || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collSaless) {
-                // return empty collection
-                $this->initSaless();
-            } else {
-                $collSaless = ChildSalesQuery::create(null, $criteria)
-                    ->filterByCustomer($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collSalessPartial && count($collSaless)) {
-                        $this->initSaless(false);
-
-                        foreach ($collSaless as $obj) {
-                            if (false == $this->collSaless->contains($obj)) {
-                                $this->collSaless->append($obj);
-                            }
-                        }
-
-                        $this->collSalessPartial = true;
-                    }
-
-                    return $collSaless;
-                }
-
-                if ($partial && $this->collSaless) {
-                    foreach ($this->collSaless as $obj) {
-                        if ($obj->isNew()) {
-                            $collSaless[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collSaless = $collSaless;
-                $this->collSalessPartial = false;
-            }
+        if ($v === null) {
+            $this->setDebitId(NULL);
+        } else {
+            $this->setDebitId($v->getId());
         }
 
-        return $this->collSaless;
-    }
+        $this->aDebit = $v;
 
-    /**
-     * Sets a collection of ChildSales objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $saless A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildCustomer The current object (for fluent API support)
-     */
-    public function setSaless(Collection $saless, ConnectionInterface $con = null)
-    {
-        /** @var ChildSales[] $salessToDelete */
-        $salessToDelete = $this->getSaless(new Criteria(), $con)->diff($saless);
-
-
-        $this->salessScheduledForDeletion = $salessToDelete;
-
-        foreach ($salessToDelete as $salesRemoved) {
-            $salesRemoved->setCustomer(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildDebit object, it will not be re-added.
+        if ($v !== null) {
+            $v->addPayment($this);
         }
 
-        $this->collSaless = null;
-        foreach ($saless as $sales) {
-            $this->addSales($sales);
-        }
-
-        $this->collSaless = $saless;
-        $this->collSalessPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related Sales objects.
+     * Get the associated ChildDebit object
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Sales objects.
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildDebit The associated ChildDebit object.
      * @throws PropelException
      */
-    public function countSaless(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function getDebit(ConnectionInterface $con = null)
     {
-        $partial = $this->collSalessPartial && !$this->isNew();
-        if (null === $this->collSaless || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collSaless) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getSaless());
-            }
-
-            $query = ChildSalesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCustomer($this)
-                ->count($con);
+        if ($this->aDebit === null && (($this->debit_id !== "" && $this->debit_id !== null))) {
+            $this->aDebit = ChildDebitQuery::create()->findPk($this->debit_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aDebit->addPayments($this);
+             */
         }
 
-        return count($this->collSaless);
+        return $this->aDebit;
     }
 
     /**
-     * Method called to associate a ChildSales object to this object
-     * through the ChildSales foreign key attribute.
+     * Declares an association between this object and a ChildUserDetail object.
      *
-     * @param  ChildSales $l ChildSales
-     * @return $this|\ORM\Customer The current object (for fluent API support)
+     * @param  ChildUserDetail $v
+     * @return $this|\ORM\DebitPayment The current object (for fluent API support)
+     * @throws PropelException
      */
-    public function addSales(ChildSales $l)
+    public function setCashier(ChildUserDetail $v = null)
     {
-        if ($this->collSaless === null) {
-            $this->initSaless();
-            $this->collSalessPartial = true;
+        if ($v === null) {
+            $this->setCashierId(NULL);
+        } else {
+            $this->setCashierId($v->getId());
         }
 
-        if (!$this->collSaless->contains($l)) {
-            $this->doAddSales($l);
+        $this->aCashier = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildUserDetail object, it will not be re-added.
+        if ($v !== null) {
+            $v->addDebitPayment($this);
         }
 
-        return $this;
-    }
-
-    /**
-     * @param ChildSales $sales The ChildSales object to add.
-     */
-    protected function doAddSales(ChildSales $sales)
-    {
-        $this->collSaless[]= $sales;
-        $sales->setCustomer($this);
-    }
-
-    /**
-     * @param  ChildSales $sales The ChildSales object to remove.
-     * @return $this|ChildCustomer The current object (for fluent API support)
-     */
-    public function removeSales(ChildSales $sales)
-    {
-        if ($this->getSaless()->contains($sales)) {
-            $pos = $this->collSaless->search($sales);
-            $this->collSaless->remove($pos);
-            if (null === $this->salessScheduledForDeletion) {
-                $this->salessScheduledForDeletion = clone $this->collSaless;
-                $this->salessScheduledForDeletion->clear();
-            }
-            $this->salessScheduledForDeletion[]= $sales;
-            $sales->setCustomer(null);
-        }
 
         return $this;
     }
 
 
     /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Customer is new, it will return
-     * an empty collection; or if this Customer has previously
-     * been saved, it will retrieve related Saless from storage.
+     * Get the associated ChildUserDetail object
      *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Customer.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSales[] List of ChildSales objects
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildUserDetail The associated ChildUserDetail object.
+     * @throws PropelException
      */
-    public function getSalessJoinCashier(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getCashier(ConnectionInterface $con = null)
     {
-        $query = ChildSalesQuery::create(null, $criteria);
-        $query->joinWith('Cashier', $joinBehavior);
+        if ($this->aCashier === null && (($this->cashier_id !== "" && $this->cashier_id !== null))) {
+            $this->aCashier = ChildUserDetailQuery::create()->findPk($this->cashier_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCashier->addDebitPayments($this);
+             */
+        }
 
-        return $this->getSaless($query, $con);
+        return $this->aCashier;
     }
 
     /**
@@ -1653,13 +1367,17 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aDebit) {
+            $this->aDebit->removePayment($this);
+        }
+        if (null !== $this->aCashier) {
+            $this->aCashier->removeDebitPayment($this);
+        }
         $this->id = null;
-        $this->registered_date = null;
-        $this->name = null;
-        $this->address = null;
-        $this->birthday = null;
-        $this->gender = null;
-        $this->phone = null;
+        $this->date = null;
+        $this->debit_id = null;
+        $this->cashier_id = null;
+        $this->paid = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1679,14 +1397,10 @@ abstract class Customer implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collSaless) {
-                foreach ($this->collSaless as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collSaless = null;
+        $this->aDebit = null;
+        $this->aCashier = null;
     }
 
     /**
@@ -1696,7 +1410,7 @@ abstract class Customer implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(CustomerTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(DebitPaymentTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

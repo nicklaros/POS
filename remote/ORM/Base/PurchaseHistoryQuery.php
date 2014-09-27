@@ -21,14 +21,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildPurchaseHistoryQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildPurchaseHistoryQuery orderByUserID($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildPurchaseHistoryQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  * @method     ChildPurchaseHistoryQuery orderByPurchaseId($order = Criteria::ASC) Order by the purchase_id column
  * @method     ChildPurchaseHistoryQuery orderByTime($order = Criteria::ASC) Order by the time column
  * @method     ChildPurchaseHistoryQuery orderByOperation($order = Criteria::ASC) Order by the operation column
  * @method     ChildPurchaseHistoryQuery orderByData($order = Criteria::ASC) Order by the data column
  *
  * @method     ChildPurchaseHistoryQuery groupById() Group by the id column
- * @method     ChildPurchaseHistoryQuery groupByUserID() Group by the user_id column
+ * @method     ChildPurchaseHistoryQuery groupByUserId() Group by the user_id column
  * @method     ChildPurchaseHistoryQuery groupByPurchaseId() Group by the purchase_id column
  * @method     ChildPurchaseHistoryQuery groupByTime() Group by the time column
  * @method     ChildPurchaseHistoryQuery groupByOperation() Group by the operation column
@@ -52,7 +52,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPurchaseHistory findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPurchaseHistory matching the query, or a new ChildPurchaseHistory object populated from the query conditions when no match is found
  *
  * @method     ChildPurchaseHistory findOneById(string $id) Return the first ChildPurchaseHistory filtered by the id column
- * @method     ChildPurchaseHistory findOneByUserID(string $user_id) Return the first ChildPurchaseHistory filtered by the user_id column
+ * @method     ChildPurchaseHistory findOneByUserId(string $user_id) Return the first ChildPurchaseHistory filtered by the user_id column
  * @method     ChildPurchaseHistory findOneByPurchaseId(string $purchase_id) Return the first ChildPurchaseHistory filtered by the purchase_id column
  * @method     ChildPurchaseHistory findOneByTime(string $time) Return the first ChildPurchaseHistory filtered by the time column
  * @method     ChildPurchaseHistory findOneByOperation(string $operation) Return the first ChildPurchaseHistory filtered by the operation column
@@ -60,7 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildPurchaseHistory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPurchaseHistory objects based on current ModelCriteria
  * @method     ChildPurchaseHistory[]|ObjectCollection findById(string $id) Return ChildPurchaseHistory objects filtered by the id column
- * @method     ChildPurchaseHistory[]|ObjectCollection findByUserID(string $user_id) Return ChildPurchaseHistory objects filtered by the user_id column
+ * @method     ChildPurchaseHistory[]|ObjectCollection findByUserId(string $user_id) Return ChildPurchaseHistory objects filtered by the user_id column
  * @method     ChildPurchaseHistory[]|ObjectCollection findByPurchaseId(string $purchase_id) Return ChildPurchaseHistory objects filtered by the purchase_id column
  * @method     ChildPurchaseHistory[]|ObjectCollection findByTime(string $time) Return ChildPurchaseHistory objects filtered by the time column
  * @method     ChildPurchaseHistory[]|ObjectCollection findByOperation(string $operation) Return ChildPurchaseHistory objects filtered by the operation column
@@ -290,14 +290,14 @@ abstract class PurchaseHistoryQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByUserID(1234); // WHERE user_id = 1234
-     * $query->filterByUserID(array(12, 34)); // WHERE user_id IN (12, 34)
-     * $query->filterByUserID(array('min' => 12)); // WHERE user_id > 12
+     * $query->filterByUserId(1234); // WHERE user_id = 1234
+     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
+     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
      * </code>
      *
      * @see       filterByUserDetail()
      *
-     * @param     mixed $userID The value to use as filter.
+     * @param     mixed $userId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -305,16 +305,16 @@ abstract class PurchaseHistoryQuery extends ModelCriteria
      *
      * @return $this|ChildPurchaseHistoryQuery The current query, for fluid interface
      */
-    public function filterByUserID($userID = null, $comparison = null)
+    public function filterByUserId($userId = null, $comparison = null)
     {
-        if (is_array($userID)) {
+        if (is_array($userId)) {
             $useMinMax = false;
-            if (isset($userID['min'])) {
-                $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userID['min'], Criteria::GREATER_EQUAL);
+            if (isset($userId['min'])) {
+                $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($userID['max'])) {
-                $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userID['max'], Criteria::LESS_EQUAL);
+            if (isset($userId['max'])) {
+                $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -325,7 +325,7 @@ abstract class PurchaseHistoryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userID, $comparison);
+        return $this->addUsingAlias(PurchaseHistoryTableMap::COL_USER_ID, $userId, $comparison);
     }
 
     /**

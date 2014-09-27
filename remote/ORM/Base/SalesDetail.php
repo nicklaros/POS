@@ -82,7 +82,7 @@ abstract class SalesDetail implements ActiveRecordInterface
 
     /**
      * The value for the amount field.
-     * @var        int
+     * @var        string
      */
     protected $amount;
 
@@ -412,7 +412,7 @@ abstract class SalesDetail implements ActiveRecordInterface
     /**
      * Get the [amount] column value.
      *
-     * @return int
+     * @return string
      */
     public function getAmount()
     {
@@ -548,7 +548,7 @@ abstract class SalesDetail implements ActiveRecordInterface
             $this->stock_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SalesDetailTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->amount = (null !== $col) ? (int) $col : null;
+            $this->amount = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SalesDetailTableMap::translateFieldName('UnitPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_price = (null !== $col) ? (int) $col : null;
@@ -702,13 +702,13 @@ abstract class SalesDetail implements ActiveRecordInterface
     /**
      * Set the value of [amount] column.
      *
-     * @param  int $v new value
+     * @param  string $v new value
      * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setAmount($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->amount !== $v) {
@@ -1136,7 +1136,7 @@ abstract class SalesDetail implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->stock_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
-                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
                     case 'UNIT_PRICE':
                         $stmt->bindValue($identifier, $this->unit_price, PDO::PARAM_INT);

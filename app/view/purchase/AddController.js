@@ -7,12 +7,12 @@ Ext.define('POS.view.purchase.AddController', {
             boxready: function(panel){
                 var me = this;
                 
-                var supplier = Ext.create('POS.model.Supplier', {
+                var secondParty = Ext.create('POS.model.Supplier', {
                     id: 0,
                     name: '-'
                 });
                 
-                me.lookupReference('supplier').setValue(supplier);
+                me.lookupReference('second_party').setValue(secondParty);
 
                 me.keyMap(panel);
             
@@ -45,10 +45,12 @@ Ext.define('POS.view.purchase.AddController', {
         Ext.fn.App.window('add-purchase-detail');
     },
 
-    addSupplier: function(){
-        var panel = Ext.fn.App.window('add-supplier');
+    addSecondParty: function(){
+        var panel = Ext.fn.App.window('add-second-party');
 
-        panel.bindCombo = this.lookupReference('supplier').getId();
+        panel.bindCombo = this.lookupReference('second_party').getId();
+        
+        panel.down('[name = type]').setValue('Supplier');
     },
 
     close: function(){
@@ -93,14 +95,14 @@ Ext.define('POS.view.purchase.AddController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 84, // Ctrl + T
+                key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
-                key: 83, // Ctrl + S
+                key: 83, // Alt + S
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
@@ -131,7 +133,7 @@ Ext.define('POS.view.purchase.AddController', {
                 // safety first, sum total one more time before sending it to server ^_^
                 values.total_price = this.sumTotalPrice();
                 
-                values.supplier_id = values.supplier;
+                values.second_party_id = values.second_party;
 
                 Ext.fn.App.setLoading(true);
                 var monitor = Ext.fn.WebSocket.monitor(

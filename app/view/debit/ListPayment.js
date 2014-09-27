@@ -26,7 +26,7 @@ Ext.define('POS.view.debit.ListPayment' ,{
         this.columns = [
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
             {header: 'Kode Hutang', dataIndex:'debit_id', width: 125},
-            {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
+            {header: 'Nama', dataIndex: 'second_party_name', width: 200},
             {header: 'Bayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120}
         ];

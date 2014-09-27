@@ -59,7 +59,7 @@ $info = (object) $info;
 <body>
 <?php
     $sales = SalesQuery::create()
-        ->leftJoin('Customer')
+        ->leftJoin('SecondParty')
         ->leftJoin('Cashier')
         ->filterByStatus('Active')
         ->filterById($id)
@@ -70,7 +70,7 @@ $info = (object) $info;
             'paid',
             'note'
         ))
-        ->withColumn('Customer.Name', 'customer_name')
+        ->withColumn('SecondParty.Name', 'second_party_name')
         ->withColumn('Cashier.Id', 'cashier_id')
         ->withColumn('Cashier.Name', 'cashier_name')
         ->findOne($con);
@@ -116,7 +116,7 @@ $info = (object) $info;
         <tr>
             <td>Pelanggan</td>
             <td>:</td>
-            <td><?php echo $sales->customer_name;?></td>
+            <td><?php echo $sales->second_party_name;?></td>
         </tr>
     </table>
 </p>

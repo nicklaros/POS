@@ -2,11 +2,11 @@
 
 namespace ORM;
 
-use ORM\Base\CustomerQuery as BaseCustomerQuery;
+use ORM\Base\SecondPartyQuery as BaseSecondPartyQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'customer' table.
+ * Skeleton subclass for performing query and update operations on the 'second_party' table.
  *
  *
  *
@@ -15,7 +15,7 @@ use ORM\Base\CustomerQuery as BaseCustomerQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class CustomerQuery extends BaseCustomerQuery
+class SecondPartyQuery extends BaseSecondPartyQuery
 {
 
-} // CustomerQuery
+} // SecondPartyQuery

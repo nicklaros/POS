@@ -39,10 +39,10 @@ Ext.define('POS.view.sales.EditController', {
         Ext.fn.App.window('edit-sales-detail');
     },
 
-    addCustomer: function(){
-        var panel = Ext.fn.App.window('add-customer');
+    addSecondParty: function(){
+        var panel = Ext.fn.App.window('add-second-party');
 
-        panel.bindCombo = this.lookupReference('customer').getId();
+        panel.bindCombo = this.lookupReference('second_party').getId();
     },
 
     close: function(){
@@ -86,21 +86,21 @@ Ext.define('POS.view.sales.EditController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 84, // Ctrl + T
+                key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
-                key: 66, // Ctrl + B
+                key: 66, // Alt + B
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.lookupReference('paid').focus(true);
                 }
             },{
-                key: 83, // Ctrl + S
+                key: 83, // Alt + S
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
@@ -121,12 +121,12 @@ Ext.define('POS.view.sales.EditController', {
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
-                    var customer = Ext.create('POS.model.Customer', {
-                        id  : result.data.customer_id,
-                        name: result.data.customer_name
+                    var secondParty = Ext.create('POS.model.SecondParty', {
+                        id  : result.data.second_party_id,
+                        name: result.data.second_party_name
                     });
 
-                    result.data.customer_id = customer;
+                    result.data.second_party = secondParty;
 
                     var cashier = Ext.create('POS.model.Cashier', {
                         id  : result.data.cashier_id,
@@ -176,6 +176,8 @@ Ext.define('POS.view.sales.EditController', {
             // make sure there are any product to process sales
             if (products.length != 0) {
                 var values = form.getValues();
+                
+                values.second_party_id = values.second_party;
 
                 values.products = Ext.encode(products);
                 values.removed_id = removed_id;

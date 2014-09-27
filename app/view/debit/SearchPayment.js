@@ -23,9 +23,9 @@ Ext.define('POS.view.debit.SearchPayment' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Supplier',
-                name: 'supplier_name',
-                reference: 'supplier_name',
+                fieldLabel: 'Nama',
+                name: 'second_party_name',
+                reference: 'second_party_name',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

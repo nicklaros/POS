@@ -29,7 +29,7 @@ Ext.define('POS.view.credit.List' ,{
             {header: 'Kode', dataIndex:'id', width: 75},
             {header: 'Nota Penjualan', dataIndex:'sales_id', width: 125},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
+            {header: 'Nama', dataIndex: 'second_party_name', width: 200},
             {header: 'Piutang', dataIndex: 'total', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Sisa Piutang', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.creditBalance, align: 'right'},

@@ -24,7 +24,7 @@ Ext.define('POS.custom.grid.SalesReport', {
             }),
             {header: 'Nota', dataIndex:'id', width: 75},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200,
+            {header: 'Dijual Ke', dataIndex: 'second_party_name', width: 200,
                 summaryRenderer: function(value) {
                     return '<strong>Total</strong>';
                 }

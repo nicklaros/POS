@@ -71,13 +71,15 @@ Ext.define('POS.view.credit.PayController', {
                 Ext.ws.Main.on('credit/pay', function(websocket, result){
                     clearTimeout(monitor);
                     panel.setLoading(false);
+                    
+                    POS.app.getStore('Credit').load();
+                    POS.app.getStore('CreditPayment').load();
+                    
                     if (result.success){
                         panel.close();
                     }else{
                         Ext.fn.App.notification('Ups', result.errmsg);
                     }
-                    POS.app.getStore('Credit').load();
-                    POS.app.getStore('CreditPayment').load();
                 }, this, {
                     single: true,
                     destroyable: true

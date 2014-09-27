@@ -25,14 +25,14 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRowHistoryQuery orderByRowId($order = Criteria::ASC) Order by the row_id column
  * @method     ChildRowHistoryQuery orderByTime($order = Criteria::ASC) Order by the time column
  * @method     ChildRowHistoryQuery orderByOperation($order = Criteria::ASC) Order by the operation column
- * @method     ChildRowHistoryQuery orderByUserID($order = Criteria::ASC) Order by the user_id column
+ * @method     ChildRowHistoryQuery orderByUserId($order = Criteria::ASC) Order by the user_id column
  *
  * @method     ChildRowHistoryQuery groupById() Group by the id column
  * @method     ChildRowHistoryQuery groupByData() Group by the data column
  * @method     ChildRowHistoryQuery groupByRowId() Group by the row_id column
  * @method     ChildRowHistoryQuery groupByTime() Group by the time column
  * @method     ChildRowHistoryQuery groupByOperation() Group by the operation column
- * @method     ChildRowHistoryQuery groupByUserID() Group by the user_id column
+ * @method     ChildRowHistoryQuery groupByUserId() Group by the user_id column
  *
  * @method     ChildRowHistoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildRowHistoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -52,7 +52,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRowHistory findOneByRowId(string $row_id) Return the first ChildRowHistory filtered by the row_id column
  * @method     ChildRowHistory findOneByTime(string $time) Return the first ChildRowHistory filtered by the time column
  * @method     ChildRowHistory findOneByOperation(string $operation) Return the first ChildRowHistory filtered by the operation column
- * @method     ChildRowHistory findOneByUserID(string $user_id) Return the first ChildRowHistory filtered by the user_id column
+ * @method     ChildRowHistory findOneByUserId(string $user_id) Return the first ChildRowHistory filtered by the user_id column
  *
  * @method     ChildRowHistory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildRowHistory objects based on current ModelCriteria
  * @method     ChildRowHistory[]|ObjectCollection findById(string $id) Return ChildRowHistory objects filtered by the id column
@@ -60,7 +60,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRowHistory[]|ObjectCollection findByRowId(string $row_id) Return ChildRowHistory objects filtered by the row_id column
  * @method     ChildRowHistory[]|ObjectCollection findByTime(string $time) Return ChildRowHistory objects filtered by the time column
  * @method     ChildRowHistory[]|ObjectCollection findByOperation(string $operation) Return ChildRowHistory objects filtered by the operation column
- * @method     ChildRowHistory[]|ObjectCollection findByUserID(string $user_id) Return ChildRowHistory objects filtered by the user_id column
+ * @method     ChildRowHistory[]|ObjectCollection findByUserId(string $user_id) Return ChildRowHistory objects filtered by the user_id column
  * @method     ChildRowHistory[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -428,14 +428,14 @@ abstract class RowHistoryQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByUserID(1234); // WHERE user_id = 1234
-     * $query->filterByUserID(array(12, 34)); // WHERE user_id IN (12, 34)
-     * $query->filterByUserID(array('min' => 12)); // WHERE user_id > 12
+     * $query->filterByUserId(1234); // WHERE user_id = 1234
+     * $query->filterByUserId(array(12, 34)); // WHERE user_id IN (12, 34)
+     * $query->filterByUserId(array('min' => 12)); // WHERE user_id > 12
      * </code>
      *
      * @see       filterByUserDetail()
      *
-     * @param     mixed $userID The value to use as filter.
+     * @param     mixed $userId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -443,16 +443,16 @@ abstract class RowHistoryQuery extends ModelCriteria
      *
      * @return $this|ChildRowHistoryQuery The current query, for fluid interface
      */
-    public function filterByUserID($userID = null, $comparison = null)
+    public function filterByUserId($userId = null, $comparison = null)
     {
-        if (is_array($userID)) {
+        if (is_array($userId)) {
             $useMinMax = false;
-            if (isset($userID['min'])) {
-                $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userID['min'], Criteria::GREATER_EQUAL);
+            if (isset($userId['min'])) {
+                $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($userID['max'])) {
-                $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userID['max'], Criteria::LESS_EQUAL);
+            if (isset($userId['max'])) {
+                $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -463,7 +463,7 @@ abstract class RowHistoryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userID, $comparison);
+        return $this->addUsingAlias(RowHistoryTableMap::COL_USER_ID, $userId, $comparison);
     }
 
     /**

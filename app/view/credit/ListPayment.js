@@ -26,7 +26,7 @@ Ext.define('POS.view.credit.ListPayment' ,{
         this.columns = [
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
             {header: 'Kode Piutang', dataIndex:'credit_id', width: 125},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
+            {header: 'Nama', dataIndex: 'second_party_name', width: 200},
             {header: 'Bayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120}
         ];

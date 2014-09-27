@@ -23,9 +23,9 @@ Ext.define('POS.view.credit.SearchPayment' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Pelanggan',
-                name: 'customer',
-                reference: 'customer',
+                fieldLabel: 'Nama',
+                name: 'second_party',
+                reference: 'second_party',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

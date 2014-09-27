@@ -113,8 +113,8 @@ class PurchaseHistoryTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'UserID', 'PurchaseId', 'Time', 'Operation', 'Data', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'userID', 'purchaseId', 'time', 'operation', 'data', ),
+        self::TYPE_PHPNAME       => array('Id', 'UserId', 'PurchaseId', 'Time', 'Operation', 'Data', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'userId', 'purchaseId', 'time', 'operation', 'data', ),
         self::TYPE_COLNAME       => array(PurchaseHistoryTableMap::COL_ID, PurchaseHistoryTableMap::COL_USER_ID, PurchaseHistoryTableMap::COL_PURCHASE_ID, PurchaseHistoryTableMap::COL_TIME, PurchaseHistoryTableMap::COL_OPERATION, PurchaseHistoryTableMap::COL_DATA, ),
         self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_USER_ID', 'COL_PURCHASE_ID', 'COL_TIME', 'COL_OPERATION', 'COL_DATA', ),
         self::TYPE_FIELDNAME     => array('id', 'user_id', 'purchase_id', 'time', 'operation', 'data', ),
@@ -128,8 +128,8 @@ class PurchaseHistoryTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'UserID' => 1, 'PurchaseId' => 2, 'Time' => 3, 'Operation' => 4, 'Data' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'userID' => 1, 'purchaseId' => 2, 'time' => 3, 'operation' => 4, 'data' => 5, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'UserId' => 1, 'PurchaseId' => 2, 'Time' => 3, 'Operation' => 4, 'Data' => 5, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'userId' => 1, 'purchaseId' => 2, 'time' => 3, 'operation' => 4, 'data' => 5, ),
         self::TYPE_COLNAME       => array(PurchaseHistoryTableMap::COL_ID => 0, PurchaseHistoryTableMap::COL_USER_ID => 1, PurchaseHistoryTableMap::COL_PURCHASE_ID => 2, PurchaseHistoryTableMap::COL_TIME => 3, PurchaseHistoryTableMap::COL_OPERATION => 4, PurchaseHistoryTableMap::COL_DATA => 5, ),
         self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_USER_ID' => 1, 'COL_PURCHASE_ID' => 2, 'COL_TIME' => 3, 'COL_OPERATION' => 4, 'COL_DATA' => 5, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'user_id' => 1, 'purchase_id' => 2, 'time' => 3, 'operation' => 4, 'data' => 5, ),
@@ -153,7 +153,7 @@ class PurchaseHistoryTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
-        $this->addForeignKey('USER_ID', 'UserID', 'BIGINT', 'user_detail', 'ID', false, 20, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'BIGINT', 'user_detail', 'ID', false, 20, null);
         $this->addForeignKey('PURCHASE_ID', 'PurchaseId', 'BIGINT', 'purchase', 'ID', false, 20, null);
         $this->addColumn('TIME', 'Time', 'TIMESTAMP', false, null, null);
         $this->addColumn('OPERATION', 'Operation', 'CHAR', false, null, null);

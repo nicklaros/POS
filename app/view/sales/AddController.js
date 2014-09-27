@@ -12,7 +12,7 @@ Ext.define('POS.view.sales.AddController', {
                     name: '-'
                 });
                 
-                me.lookupReference('customer').setValue(customer);
+                me.lookupReference('second_party').setValue(customer);
                 
                 var cashier = Ext.create('POS.model.Cashier', {
                     id: Ext.main.ViewModel.data.current_user.id,
@@ -52,10 +52,10 @@ Ext.define('POS.view.sales.AddController', {
         Ext.fn.App.window('add-sales-detail');
     },
 
-    addCustomer: function(){
-        var panel = Ext.fn.App.window('add-customer');
+    addSecondParty: function(){
+        var panel = Ext.fn.App.window('add-second-party');
 
-        panel.bindCombo = this.lookupReference('customer').getId();
+        panel.bindCombo = this.lookupReference('second_party').getId();
     },
 
     close: function(){
@@ -100,21 +100,21 @@ Ext.define('POS.view.sales.AddController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 84, // Ctrl + T
+                key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
-                key: 66, // Ctrl + B
+                key: 66, // Alt + B
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.lookupReference('paid').focus(true);
                 }
             },{
-                key: 83, // Ctrl + S
+                key: 83, // Alt + S
                 alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
@@ -139,6 +139,8 @@ Ext.define('POS.view.sales.AddController', {
             // make sure there are any product to process sales
             if (products.length != 0) {
                 var values = form.getValues();
+                
+                values.second_party_id = values.second_party;
 
                 values.products = Ext.encode(products);
 

@@ -29,7 +29,7 @@ Ext.define('POS.view.debit.List' ,{
             {header: 'Kode', dataIndex:'id', width: 75},
             {header: 'Nota Pembelian', dataIndex:'purchase_id', width: 125},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Supplier', dataIndex: 'supplier_name', width: 200},
+            {header: 'Nama', dataIndex: 'second_party_name', width: 200},
             {header: 'Hutang', dataIndex: 'total', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Sisa Hutang', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.creditBalance, align: 'right'},

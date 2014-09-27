@@ -2,11 +2,11 @@
 
 namespace ORM;
 
-use ORM\Base\SupplierQuery as BaseSupplierQuery;
+use ORM\Base\DebitPaymentQuery as BaseDebitPaymentQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'supplier' table.
+ * Skeleton subclass for performing query and update operations on the 'debit_payment' table.
  *
  *
  *
@@ -15,7 +15,7 @@ use ORM\Base\SupplierQuery as BaseSupplierQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class SupplierQuery extends BaseSupplierQuery
+class DebitPaymentQuery extends BaseDebitPaymentQuery
 {
 
-} // SupplierQuery
+} // DebitPaymentQuery
