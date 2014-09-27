@@ -23,12 +23,22 @@ Ext.define('POS.view.purchase.AddDetailController', {
         },
         'textfield[tabOnEnter = true]': {
             specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
+                if(e.getKey() == e.ENTER) {
+                    setTimeout(function(){
+                        field.next('field').focus();
+                    }, 10);
+                }
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
     },
@@ -232,7 +242,9 @@ Ext.define('POS.view.purchase.AddDetailController', {
             Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
 
             form.reset();
-        
+            
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> dengan harga satuan <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> telah ditambahkan.');
+            
             this.lookupReference('price_status').update({});
             
             this.lookupReference('product').focus();

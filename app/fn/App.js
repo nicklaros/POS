@@ -198,6 +198,15 @@ Ext.define('Ext.fn.App', {
         });        
     },
     
+    showSecondPartyDebit: function(secondPartyId){
+        Ext.fn.App.newTab('list-debit');
+                
+        POS.app.getStore('Debit').search({
+            second_party_id: secondPartyId,
+            credit_status: 'Belum Lunas'
+        });        
+    },
+    
     showSecondPartySales: function(secondPartyId){
         Ext.fn.App.newTab('list-sales');
                 

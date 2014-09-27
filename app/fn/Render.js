@@ -51,6 +51,22 @@ Ext.define('Ext.fn.Render', {
         return (value == 0 ? '-' : Ext.util.Format.currency(value, ' Rp ', '.'));
     },
     
+    sellType: function(value){
+        switch (value) {
+            case 'Public':
+                return 'Biasa';
+                break;
+                
+            case 'Distributor':
+                return 'Grosir';
+                break;
+                
+            case 'Misc':
+                return 'Lain-lain';
+                break;
+        }
+    },
+    
     time: function(value){
         var format = 'l, d F Y H:i:s';
         

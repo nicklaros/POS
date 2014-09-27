@@ -87,19 +87,29 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     xtype: 'combo-sell-type',
                     fieldLabel: 'Tipe',
                     name: 'type',
+                    reference: 'type',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
                     saveOnEnter: true,
                     value: 'Public',
                     margin: '0 0 0 50',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        select: 'save'
+                    }
                 }]
             },{
                 xtype: 'toolbar',
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10'
+                },
+                    '->',
                 {
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'

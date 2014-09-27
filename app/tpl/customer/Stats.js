@@ -31,7 +31,12 @@ Ext.define('POS.tpl.customer.Stats', {
                 '<tr>',
                     '<td class="right">Piutang</td>',
                     '<td>:</td>',
-                    '<td class="left"><a onClick="Ext.fn.Customer.showCredit({customer_id})">{[ Ext.fn.Render.currency(values.credit) ]} <i class="fa fa-external-link-square glyph"></i> </a></td>',
+                    '<td class="left"><a onClick="Ext.fn.Customer.showCredit({customer_id})">{[ Ext.fn.Render.currency(values.credit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
+                '</tr>',
+                '<tr>',
+                    '<td class="right">Hutang</td>',
+                    '<td>:</td>',
+                    '<td class="left"><a onClick="Ext.fn.Customer.showDebit({customer_id})">{[ Ext.fn.Render.currency(values.debit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
                 '</tr>',
             '</table>',
         '</div>'

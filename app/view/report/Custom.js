@@ -134,6 +134,9 @@ Ext.define('POS.view.report.Custom' ,{
                             xtype: 'chart-sales-vs-purchase',
                             flex: 1
                         }]
+                    },{
+                        xtype: 'chart-transaction',
+                        width: 850
                     }]
                 }]
             },{

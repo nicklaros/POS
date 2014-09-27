@@ -58,14 +58,13 @@ Ext.define('Ext.fn.Util', {
     
     initStore: function(){
         var stores = [
-            'combo.Customer',
             'combo.Cashier',
             'combo.Product',
             'combo.SecondParty',
             'combo.Stock',
-            'combo.Supplier',
             'combo.Unit',
             
+            'chart.transaction.CustomDaily',
             'chart.transaction.customer.Last7Months',
             'chart.transaction.CustomSalesVsPurchase',
             'chart.transaction.Last30Days',

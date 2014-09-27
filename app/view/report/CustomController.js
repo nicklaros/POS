@@ -7,6 +7,9 @@ Ext.define('POS.view.report.CustomController', {
             boxready: function(){
                 var store = POS.app.getStore('chart.transaction.CustomSalesVsPurchase');
                 this.getView().down('chart-sales-vs-purchase polar').setStore(store);
+                
+                var store = POS.app.getStore('chart.transaction.CustomDaily');
+                this.getView().down('chart-transaction chart').setStore(store);
             }
         }
     },

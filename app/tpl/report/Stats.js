@@ -28,7 +28,9 @@ Ext.define('POS.tpl.report.Stats', {
             '</table>',
             '<br />',
             '<hr />',
-            'Laba bersih penjualan sebesar {[ Ext.fn.Render.currency(values.sales_netto) ]}',
+            'Laba bersih penjualan sebesar {[ Ext.fn.Render.currency(values.sales_netto) ]} <br />',
+            'Piutang belum terbayar sebesar {[ Ext.fn.Render.currency(values.credit) ]} <br />',
+            'Hutang belum terbayar sebesar {[ Ext.fn.Render.currency(values.debit) ]} <br />',
         '</div>'
     ],
 

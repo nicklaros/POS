@@ -29,6 +29,8 @@ Ext.define('POS.view.sales.Add' ,{
     maximized: true,
     modal: true,
     resizable: false,
+    
+    type: 'Public',
 
     initComponent: function(){
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan Baru';

@@ -159,7 +159,13 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10'
+                },
+                    '->',
                 {
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'

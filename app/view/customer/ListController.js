@@ -113,6 +113,12 @@ Ext.define('POS.view.customer.ListController', {
         Ext.fn.App.showSecondPartyCredit(rec.get('id'))
     },
     
+    showDebit: function(){
+        var rec = this.getView().getSelectionModel().getSelection()[0];
+
+        Ext.fn.App.showSecondPartyDebit(rec.get('id'))
+    },
+    
     showMenu: function(view, record, item, index, e, eOpts) {
         var me = this;
         
@@ -139,6 +145,11 @@ Ext.define('POS.view.customer.ListController', {
                     text: '<i class="fa fa-calculator main-nav-icon"></i> Data Piutang',
                     handler: function(){
                         me.showCredit();
+                    }
+                },{
+                    text: '<i class="fa fa-calculator main-nav-icon"></i> Data Hutang',
+                    handler: function(){
+                        me.showDebit();
                     }
                 },{
                     text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Pelanggan',

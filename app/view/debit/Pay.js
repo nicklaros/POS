@@ -54,6 +54,7 @@ Ext.define('POS.view.debit.Pay' ,{
                 reference: 'cashier',
                 afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
+                readOnly: true,
                 width: 200
             },{
                 xtype: 'field-price',

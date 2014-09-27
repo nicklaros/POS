@@ -3,7 +3,8 @@ Ext.define('POS.custom.field.ComboSecondParty', {
     alias: 'widget.combo-second-party',
 
     requires: [
-        'POS.store.combo.SecondParty'
+        'POS.store.combo.SecondParty',
+        'POS.tpl.combo.SecondParty'
     ],
 
     displayField: 'name',
@@ -25,6 +26,10 @@ Ext.define('POS.custom.field.ComboSecondParty', {
 
     initComponent: function(){
         this.store = POS.app.getStore('combo.SecondParty');
+
+        this.listConfig = {
+            itemTpl: Ext.create('POS.tpl.combo.SecondParty')
+        };
 
         this.callParent(arguments);
     }

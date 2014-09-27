@@ -6,7 +6,15 @@ Ext.define('Ext.fn.Customer', {
         
         if (customerDetail) customerDetail.close();
         
-        Ext.fn.App.showCustomerCredit(customerId);
+        Ext.fn.App.showSecondPartyCredit(customerId);
+    },
+
+    showDebit: function(customerId){
+        var customerDetail = Ext.ComponentQuery.query('customer-detail')[0];
+        
+        if (customerDetail) customerDetail.close();
+        
+        Ext.fn.App.showSecondPartyDebit(customerId);
     }
     
 });

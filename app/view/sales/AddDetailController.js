@@ -10,6 +10,10 @@ Ext.define('POS.view.sales.AddDetailController', {
                 setTimeout(function(){
                     stock.focus();
                 }, 10);
+            
+                var type = Ext.ComponentQuery.query('add-sales')[0].type;
+                
+                this.lookupReference('type').setValue(type);
             },
             close: function(){
                 var paid = Ext.ComponentQuery.query('add-sales')[0].down('[name = paid]');
@@ -21,12 +25,22 @@ Ext.define('POS.view.sales.AddDetailController', {
         },
         'textfield[tabOnEnter = true]': {
             specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
+                if(e.getKey() == e.ENTER) {
+                    setTimeout(function(){
+                        field.next('field').focus();
+                    }, 10);
+                }
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
     },
@@ -121,9 +135,16 @@ Ext.define('POS.view.sales.AddDetailController', {
                 rec.set(values);
             }
             
-            Ext.ComponentQuery.query('add-sales')[0].getController().setTotalPrice();
+            var addSales = Ext.ComponentQuery.query('add-sales')[0];
+            
+            addSales.getController().setTotalPrice();
+            addSales.type = values.type;
 
             form.reset();
+            
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> harga <span class="green">' + Ext.fn.Render.sellType(values.type) + '</span> telah ditambahkan.');
+            
+            this.lookupReference('type').setValue(values.type);
             
             this.lookupReference('stock').focus();
         }

@@ -35,11 +35,12 @@ Ext.define('POS.custom.grid.SalesDetail', {
             {
                 text: 'Harga',
                 columns:[
-                    {header: 'Satuan', dataIndex: 'unit_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+                    {header: 'Satuan', dataIndex: 'unit_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'},
                     {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'},
-                    {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'}
+                    {header: 'Total', dataIndex: 'total_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'}
                 ]
-            }
+            },
+            {header: 'Tipe', dataIndex: 'type', width: 90, renderer: Ext.fn.Render.sellType}
         );
         
         this.columns = columns;
