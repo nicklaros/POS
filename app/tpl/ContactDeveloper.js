@@ -1,4 +1,4 @@
-Ext.define('Ext.tpl.ContactDeveloper', {
+Ext.define('POS.tpl.ContactDeveloper', {
     extend: 'Ext.XTemplate',
 
     html: [

@@ -10,5 +10,11 @@ Ext.define('POS.custom.field.ProductName', {
         this.maskRe = MASK_RE_0;
         
         this.callParent(arguments);
+    },
+    
+    listeners: {
+        blur: function(field){
+            field.setValue(Ext.util.Format.uppercase(field.getValue()));
+        }
     }
 });

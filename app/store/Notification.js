@@ -10,6 +10,21 @@ Ext.define('POS.store.Notification', {
         direction: 'DESC'
     }],
     
+    init: function(){
+        this.setProxy({
+            type: 'websocket',
+            storeId: this.getStoreId(),
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'notification/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+    },
+    
     listeners: {
         'clear': function(store){
             Ext.main.ViewModel.set('notificationCount', 0);

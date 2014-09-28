@@ -154,8 +154,12 @@ class UserDetailTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('User', '\\ORM\\User', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
-        $this->addRelation('History', '\\ORM\\RowHistory', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'NO ACTION', 'RESTRICT', 'Histories');
-        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::ONE_TO_MANY, array('id' => 'cashier_id', ), 'NO ACTION', 'RESTRICT', 'Saless');
+        $this->addRelation('CreditPayment', '\\ORM\\CreditPayment', RelationMap::ONE_TO_MANY, array('id' => 'cashier_id', ), 'RESTRICT', 'RESTRICT', 'CreditPayments');
+        $this->addRelation('DebitPayment', '\\ORM\\DebitPayment', RelationMap::ONE_TO_MANY, array('id' => 'cashier_id', ), 'RESTRICT', 'RESTRICT', 'DebitPayments');
+        $this->addRelation('PurchaseHistory', '\\ORM\\PurchaseHistory', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', 'RESTRICT', 'PurchaseHistories');
+        $this->addRelation('History', '\\ORM\\RowHistory', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', 'RESTRICT', 'Histories');
+        $this->addRelation('Sales', '\\ORM\\Sales', RelationMap::ONE_TO_MANY, array('id' => 'cashier_id', ), 'RESTRICT', 'RESTRICT', 'Saless');
+        $this->addRelation('SalesHistory', '\\ORM\\SalesHistory', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'RESTRICT', 'RESTRICT', 'SalesHistories');
     } // buildRelations()
 
     /**

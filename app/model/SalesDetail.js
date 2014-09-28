@@ -5,7 +5,7 @@ Ext.define('POS.model.SalesDetail', {
         {name: 'sales_id',                  type: 'int'},
         {name: 'stock_id',                  type: 'int'},
         {name: 'product_name',              type: 'string'},
-        {name: 'amount',                    type: 'int'},
+        {name: 'amount',                    type: 'number'},
         {name: 'discount',                  type: 'int'},
         {name: 'unit_id',                   type: 'int'},
         {name: 'unit_name',                 type: 'string'},

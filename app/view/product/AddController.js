@@ -11,8 +11,14 @@ Ext.define('POS.view.product.AddController', {
                 }, 10);
             }
         },
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
         'textfield[saveOnEnter = true]': {
-            specialkey: function(f, e){
+            specialkey: function(field, e){
+                field.fireEvent('blur', field);
                 if(e.getKey() == e.ENTER) this.save();
             }
         }
@@ -30,22 +36,35 @@ Ext.define('POS.view.product.AddController', {
             var values = form.getValues();
 
             Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('product/create', values);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('product/create', function(websocket, data){
+                Ext.ws.Main.on('product/create', function(websocket, result){
                     clearTimeout(monitor);
                     Ext.fn.App.setLoading(false);
-                    if (data.success){
+                    if (result.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Product').load();
+                        POS.app.getStore('Product').load();
+                        POS.app.getStore('Stock').load();
+                        
+                        var bindCombo = Ext.getCmp(panel.bindCombo);
+                        
+                        if (!Ext.isEmpty(bindCombo) && (bindCombo.xtype == 'combo-product')) {                            
+                            var product = Ext.create('POS.model.Product', result.data);
+                            
+                            bindCombo.getStore().add(product);
+                            
+                            bindCombo.select(product);
+                            
+                            bindCombo.fireEvent('select', bindCombo, [product]);
+                        }
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        Ext.fn.App.notification('Ups', result.errmsg);
                     }
                 }, this, {
                     single: true,
                     destroyable: true
                 })
             );
+            Ext.ws.Main.send('product/create', values);
         }
     }
 });

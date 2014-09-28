@@ -5,34 +5,30 @@ Ext.define('POS.view.sales.AddController', {
     control: {
         '#': {
             boxready: function(panel){
+                var me = this;
+                
                 var customer = Ext.create('POS.model.Customer', {
                     id: 0,
                     name: '-'
                 });
                 
-                this.lookupReference('customer').setValue(customer);
+                me.lookupReference('second_party').setValue(customer);
                 
                 var cashier = Ext.create('POS.model.Cashier', {
                     id: Ext.main.ViewModel.data.current_user.id,
                     name: Ext.main.ViewModel.data.current_user.name
                 });
                 
-                this.lookupReference('cashier').setValue(cashier);   
+                me.lookupReference('cashier').setValue(cashier);   
 
-                this.keyMap(panel);
+                me.keyMap(panel);
             
-                var add = this.lookupReference('add');
                 setTimeout(function(){
-                    add.focus();
+                    me.add();
                 }, 10);
             },
             close: function(){
-                POS.app.getStore('POS.store.SalesDetail').removeAll(true);
-            }
-        },
-        'textfield[name = paid]': {
-            change: function(){
-                this.setBalance();
+                POS.app.getStore('SalesDetail').removeAll(true);
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -48,9 +44,7 @@ Ext.define('POS.view.sales.AddController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: function(){
-                this.edit();
-            }
+            celldblclick: 'edit'
         }
     },
     
@@ -58,12 +52,19 @@ Ext.define('POS.view.sales.AddController', {
         Ext.fn.App.window('add-sales-detail');
     },
 
+    addSecondParty: function(){
+        var panel = Ext.fn.App.window('add-second-party');
+
+        panel.bindCombo = this.lookupReference('second_party').getId();
+    },
+
     close: function(){
         this.getView().close();
     },
     
     remove: function(){
-        var grid    = this.lookupReference('grid-sales-detail'),
+        var me      = this,
+            grid    = me.lookupReference('grid-sales-detail'),
             store   = grid.getStore(),
             sm      = grid.getSelectionModel(),
             sel     = sm.getSelection(),
@@ -78,6 +79,8 @@ Ext.define('POS.view.sales.AddController', {
                     for(i=0;i<smCount;i++){
                         store.remove(sel[i]);
                     }
+                    
+                    me.setTotalPrice();
                 }
             }
         );
@@ -97,22 +100,22 @@ Ext.define('POS.view.sales.AddController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
-                key: 65, // Ctrl + A
-                ctrl: true,
+                key: 84, // Alt + T
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
                 }
             },{
-                key: 66, // Ctrl + B
-                ctrl: true,
+                key: 66, // Alt + B
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.lookupReference('paid').focus(true);
                 }
             },{
-                key: 83, // Ctrl + S
-                ctrl: true,
+                key: 83, // Alt + S
+                alt: true,
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.save();
@@ -126,7 +129,7 @@ Ext.define('POS.view.sales.AddController', {
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('POS.store.SalesDetail');
+            var storeDetail = POS.app.getStore('SalesDetail');
 
             var products = [];
             storeDetail.each(function(rec){
@@ -136,6 +139,8 @@ Ext.define('POS.view.sales.AddController', {
             // make sure there are any product to process sales
             if (products.length != 0) {
                 var values = form.getValues();
+                
+                values.second_party_id = values.second_party;
 
                 values.products = Ext.encode(products);
 
@@ -147,7 +152,7 @@ Ext.define('POS.view.sales.AddController', {
                         Ext.fn.App.setLoading(false);
                         if (data.success){
                             panel.close();
-                            POS.app.getStore('POS.store.Sales').load();
+                            POS.app.getStore('Sales').load();
 
                             Ext.Msg.confirm(
                                 '<i class="fa fa-exclamation-triangle glyph"></i> Print',
@@ -190,14 +195,14 @@ Ext.define('POS.view.sales.AddController', {
         var buyPrice = this.lookupReference('buy_price');
         buyPrice.setValue(this.sumBuyPrice());
 
-        this.setBalance()
+        this.setBalance();
     },
 
     sumBuyPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_buy_price');
+        return POS.app.getStore('SalesDetail').sum('total_buy_price');
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('POS.store.SalesDetail').sum('total_price');
+        return POS.app.getStore('SalesDetail').sum('total_price');
     }
 });

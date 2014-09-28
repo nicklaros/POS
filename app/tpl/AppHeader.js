@@ -1,4 +1,4 @@
-Ext.define('Ext.tpl.AppHeader', {
+Ext.define('POS.tpl.AppHeader', {
     extend: 'Ext.XTemplate',
 
     html: [

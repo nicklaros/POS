@@ -10,7 +10,7 @@ var FORMAT_0 = 'Y-m-d|dmY|d-m-Y|d/m/Y'; // alternate date input format
 var FORMAT_1 = 'H:i:s'; // alternate time input format
 
 // MaskRe
-var MASK_RE_0 = /[() A-Z a-z 0-9 , . \- ']/; //char
+var MASK_RE_0 = /[() A-Z a-z 0-9 , . \- \/ ']/; //char
 var MASK_RE_1 = /[A-Za-z0-9]/; //char tanpa spasi
 var MASK_RE_2 = /[0-9]/; //integer
 
@@ -24,3 +24,6 @@ var REGEX_ERROR_1 = "Tipe file yang Anda upload ditolak.  Tipe file yang diizink
 
 // Miscellineous
 var REQUIRED = "<span style='color: red;'>*</span>"
+
+// Stock Hint
+var STOCK_HINT_0 = 'Apabila Harga Grosir atau Harga Lain dikosongi, maka akan disamakan dengan Harga Biasa';

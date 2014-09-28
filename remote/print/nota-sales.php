@@ -1,5 +1,6 @@
 <?php
 
+use ORM\OptionQuery;
 use ORM\SalesQuery;
 use ORM\SalesDetailQuery;
 use Propel\Runtime\Propel;
@@ -15,8 +16,32 @@ $con->beginTransaction();
 
 $id = (isset($_GET['id']) ? $_GET['id'] : die('Missing Parameter.'));
 
-// Get Client info from session
-$info = (object) $session->get('pos/info');
+// Get application info from database
+$info = [];
+$options = OptionQuery::create()
+    ->filterByName([
+        'app_name',
+        'app_photo',
+        'dev_name',
+        'dev_email',
+        'dev_phone',
+        'dev_website',
+        'dev_address',
+        'client_name',
+        'client_email',
+        'client_phone',
+        'client_website',
+        'client_address',
+        'homepath'
+    ])
+    ->find($con);
+
+foreach($options as $row){
+    $info[$row->getName()] = $row->getValue();
+}
+
+$info = (object) $info;
+
 ?>
 
 <!DOCTYPE html>
@@ -28,12 +53,13 @@ $info = (object) $session->get('pos/info');
 <script>
     setTimeout(function(){
         window.print();
+        window.close();
     }, 10)
 </script>
 <body>
 <?php
     $sales = SalesQuery::create()
-        ->leftJoin('Customer')
+        ->leftJoin('SecondParty')
         ->leftJoin('Cashier')
         ->filterByStatus('Active')
         ->filterById($id)
@@ -44,7 +70,8 @@ $info = (object) $session->get('pos/info');
             'paid',
             'note'
         ))
-        ->withColumn('Customer.Name', 'customer_name')
+        ->withColumn('SecondParty.Name', 'second_party_name')
+        ->withColumn('Cashier.Id', 'cashier_id')
         ->withColumn('Cashier.Name', 'cashier_name')
         ->findOne($con);
 
@@ -53,7 +80,6 @@ $info = (object) $session->get('pos/info');
     $sales = (object) $sales;
 
     $salesDetails = SalesDetailQuery::create()
-        ->leftJoin('Unit')
         ->filterBySalesId($sales->id)
         ->select(array(
             'amount',
@@ -63,13 +89,14 @@ $info = (object) $session->get('pos/info');
         ))
         ->useStockQuery()
             ->leftJoin('Product')
+            ->leftJoin('Unit')
             ->withColumn('Product.Name', 'product_name')
+            ->withColumn('Unit.Name', 'unit_name')
         ->endUse()
-        ->withColumn('Unit.Name', 'unit_name')
         ->find($con);
 ?>
 
-<div style="font-weight: bold; font-size: 23px; text-align: center;">
+<div style="font-weight: bold; font-size: 15px; text-align: center;">
     <?php echo $info->client_name;?>
 </div>
 <div style="text-align: center;"><?php echo $info->client_address;?>. Telp <?php echo $info->client_phone;?></div>
@@ -89,7 +116,7 @@ $info = (object) $session->get('pos/info');
         <tr>
             <td>Pelanggan</td>
             <td>:</td>
-            <td><?php echo $sales->customer_name;?></td>
+            <td><?php echo $sales->second_party_name;?></td>
         </tr>
     </table>
 </p>
@@ -132,9 +159,9 @@ $info = (object) $session->get('pos/info');
         </tbody>
     </table>
 </p>
-<div style="margin-top: 25px; text-align: center; font-size: 17px; font-weight: bold;">
+<div style="margin-top: 25px; text-align: center; font-size: 13px; font-weight: bold;">
     Terima Kasih Atas Kunjungan Anda
 </div>
-<div style="text-align: center;"><small>Kasir: <?php echo $sales->cashier_name; ?></small></div>
+<div style="text-align: center;"><small>Kasir: <?php echo $sales->cashier_id . '. ' . $sales->cashier_name; ?></small></div>
 </body>
 </html>

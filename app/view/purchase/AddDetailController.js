@@ -12,31 +12,62 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 }, 10);
             },
             close: function(){
-                POS.app.getStore('POS.store.combo.Stock').removeAll();
+                POS.app.getStore('combo.Stock').removeAll();
+                
+                var paid = Ext.ComponentQuery.query('add-purchase')[0].down('[name = paid]');
+                
+                setTimeout(function(){
+                    paid.focus();
+                }, 10);
             }
         },
         'textfield[tabOnEnter = true]': {
             specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
+                if(e.getKey() == e.ENTER) {
+                    setTimeout(function(){
+                        field.next('field').focus();
+                    }, 10);
+                }
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
+    },
+
+    addProduct: function(){
+        var panel = Ext.fn.App.window('add-product');
+
+        panel.bindCombo = this.lookupReference('product').getId();
     },
 
     addVariant: function(){
         var product = this.lookupReference('product').getSelectedRecord();
             
-        // make sure product is selected
+        // make sure a product is selected
         if (!Ext.isEmpty(product)) {
-            var panel = Ext.widget('add-stock-variant')
+            var panel           = Ext.fn.App.window('add-stock'),
+                panelController = panel.getController();
             
-            panel.bindCombo = this.lookupReference('stock');
-            panel.setTitle(panel.getTitle() + product.get('name'));
-            panel.down('[name = product_id]').setValue(product.get('id'));
+            panel.bindCombo = this.lookupReference('stock').getId();
+            
+            var comboProduct = panelController.lookupReference('product');            
+            comboProduct.setValue(product);
+            comboProduct.setReadOnly(true);
+            
+            panelController.lookupReference('add_product').hide();
+            
+            setTimeout(function(){
+                panelController.lookupReference('unit').focus();
+            }, 10);
         } else {
             Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
         }
@@ -73,7 +104,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    POS.app.getStore('POS.store.combo.Stock').loadData(result.data);
+                    POS.app.getStore('combo.Stock').loadData(result.data);
                 }else{
                     Ext.fn.App.notification('Ups', result.errmsg);
                 }
@@ -91,7 +122,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             Ext.ws.Main.on('stock/getOne', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    this.onStockSetValue(result.data);
+                    this.onSetValueStock(result.data);
                 }else{
                     Ext.fn.App.notification('Ups', result.errmsg);
                 }
@@ -103,21 +134,23 @@ Ext.define('POS.view.purchase.AddDetailController', {
         Ext.ws.Main.send('stock/getOne', params);
     },
     
-    onProductChange: function(combo){
+    onChangeProduct: function(combo){
         if (combo.getRawValue() == '') {
             combo.clear();
-            this.onProductClear();
+            this.onClearProduct();
         }
     },
     
-    onProductClear: function(){
+    onClearProduct: function(){
         var stock = this.lookupReference('stock');
         
         stock.clear();
         stock.getStore().removeAll();
+
+        this.lookupReference('price_status').update({});
     },
     
-    onProductSelect: function(combo, record){
+    onSelectProduct: function(combo, record){
         var params = {
             product_id: record[0].getData().id
         }
@@ -126,14 +159,14 @@ Ext.define('POS.view.purchase.AddDetailController', {
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
-                    this.onProductClear();
+                    this.onClearProduct();
                     
-                    POS.app.getStore('POS.store.combo.Stock').loadData(result.data);
+                    POS.app.getStore('combo.Stock').loadData(result.data);
                     
                     var resultLength = result.data.length;
                     
                     if (resultLength == 0) {
-                        this.lookupReference('add_variant').focus();
+                        this.addVariant();
                         
                     } else if (resultLength == 1) {
                         var stock = Ext.create('POS.model.Stock', result.data[0]);
@@ -157,16 +190,16 @@ Ext.define('POS.view.purchase.AddDetailController', {
         Ext.ws.Main.send('populate/stock', params);
     },
     
-    onStockClear: function(){
+    onClearStock: function(){
         this.lookupReference('unit').setHtml('');        
         this.lookupReference('detail_container').hide();
     },
     
-    onStockSelect: function(combo, record){
-        this.onStockSetValue(record[0].getData());
+    onSelectStock: function(combo, record){
+        this.onSetValueStock(record[0].getData());
     },
     
-    onStockSetValue: function(value){
+    onSetValueStock: function(value){
         this.getViewModel().set('stock', value);
         
         this.setUnitPrice();
@@ -195,7 +228,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             values.unit_price = parseInt(values.total_price / values.amount);
             
             if (!panel.isEdit) {            
-                var store = POS.app.getStore('POS.store.PurchaseDetail'),
+                var store = POS.app.getStore('PurchaseDetail'),
                     rec = Ext.create('POS.model.PurchaseDetail');
                     
                 rec.set(values);
@@ -205,10 +238,16 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 var rec = Ext.ComponentQuery.query('add-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
                 rec.set(values);
             }
-
-            panel.close();
             
             Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
+
+            form.reset();
+            
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> dengan harga satuan <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> telah ditambahkan.');
+            
+            this.lookupReference('price_status').update({});
+            
+            this.lookupReference('product').focus();
         }
     },
     

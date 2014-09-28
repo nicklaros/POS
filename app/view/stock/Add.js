@@ -13,9 +13,10 @@ Ext.define('POS.view.stock.Add' ,{
         'POS.view.stock.AddController'
     ],
 
+    layout: 'anchor',
+    
     autoShow: true,
     constrain: true,
-    layout: 'anchor',
     resizable: false,
     width: 600,
 
@@ -33,12 +34,21 @@ Ext.define('POS.view.stock.Add' ,{
                 margin: '0 0 10 0',
                 items:[{
                     xtype: 'combo-product',
-                    fieldLabel: 'Ketik nama / kode barang',
+                    fieldLabel: 'Ketik nama / kode produk',
                     name: 'product_id',
                     reference: 'product',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
-                    width: 350
+                    width: 300,
+                    listeners: {
+                        'select': 'onSelectProduct'
+                    }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    reference: 'add_product',
+                    handler: 'addProduct',
+                    margin: '25 0 0 5'
                 },{
                     xtype: 'combo-unit',
                     fieldLabel: 'Satuan',
@@ -46,9 +56,71 @@ Ext.define('POS.view.stock.Add' ,{
                     reference: 'unit',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
+                    selectOnFocus: true,
                     margin: '0 0 0 20',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        'select': 'onSelectUnit'
+                    }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    handler: 'addUnit',
+                    margin: '25 0 0 5'
                 }]
+            },{
+                xtype: 'fieldset',
+                title: 'Harga Jual',
+                anchor: '100%',
+                layout: 'vbox',
+                margin: '10 0 10 0',
+                padding: 10,
+                items:[{
+                    xtype: 'container',
+                    anchor: '100%',
+                    layout: 'hbox',
+                    margin: '0 0 10 0',
+                    items:[{
+                        xtype: 'field-price',
+                        fieldLabel: 'Biasa',
+                        name: 'sell_public',
+                        reference: 'sell_public',
+                        tabOnEnter: true,
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Grosir',
+                        name: 'sell_distributor',
+                        reference: 'sell_distributor',
+                        tabOnEnter: true,
+                        margin: '0 0 0 20',
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Lain',
+                        name: 'sell_misc',
+                        reference: 'sell_misc',
+                        margin: '0 0 0 20',
+                        width: 150,
+                        listeners: {
+                            'specialkey': 'onKeyMisc'
+                        }
+                    }]
+                },{
+                    xtype: 'container',
+                    cls: 'hint-text',
+                    html: STOCK_HINT_0,
+                    width: '100%'
+                }]
+            },{
+                xtype: 'field-price',
+                fieldLabel: 'Harga Beli',
+                name: 'buy',
+                reference: 'buy',
+                width: 150,
+                listeners: {
+                    'specialkey': 'onKeyBuy'
+                }
             },{
                 xtype: 'container',
                 anchor: '100%',
@@ -59,62 +131,31 @@ Ext.define('POS.view.stock.Add' ,{
                     fieldLabel: 'Jumlah Stock',
                     name: 'amount',
                     reference: 'amount',
-                    saveOnEnter: true,
-                    width: 100
+                    width: 100,
+                    listeners: {
+                        'specialkey': 'onKeyAmount'
+                    }
                 },{
                     xtype: 'container',
                     html: 'atau',
-                    margin: '30 0 0 30'
+                    margin: '30 0 0 15'
                 },{
                     xtype: 'checkbox',
                     boxLabel: 'Tak terhingga',
                     name: 'unlimited',
                     inputValue: true,
-                    margin: '26 0 0 30',
+                    margin: '26 0 0 15',
                     listeners: {
                         'change': 'onChangeUnlimited'
                     }
                 }]
             },{
-                xtype: 'field-price',
-                fieldLabel: 'Harga Beli',
-                name: 'buy',
-                saveOnEnter: true,
-                width: 150
-            },{
-                xtype: 'fieldset',
-                title: 'Harga Jual',
-                anchor: '100%',
-                layout: 'hbox',
-                margin: '10 0 10 0',
-                padding: 10,
-                items:[{
-                    xtype: 'field-price',
-                    fieldLabel: 'Biasa',
-                    name: 'sell_public',
-                    saveOnEnter: true,
-                    width: 150
-                },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Grosir',
-                    name: 'sell_distributor',
-                    saveOnEnter: true,
-                    margin: '0 0 0 20',
-                    width: 150
-                },{
-                    xtype: 'field-price',
-                    fieldLabel: 'Lain',
-                    name: 'sell_misc',
-                    saveOnEnter: true,
-                    margin: '0 0 0 20',
-                    width: 150
-                }]
-            },{
                 xtype: 'field-discount',
                 fieldLabel: 'Diskon (%)',
                 name: 'discount',
+                reference: 'discount',
                 saveOnEnter: true,
-                width:150
+                width:125
             }]
         }];
 

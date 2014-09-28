@@ -15,9 +15,11 @@ Ext.define('POS.view.product.Add' ,{
     layout: 'anchor',
     resizable: false,
     width: 350,
+    
+    bindCombo: null,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Data Product';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Tambah Data Produk';
 
         this.items = [{
             xtype: 'form',
@@ -28,7 +30,7 @@ Ext.define('POS.view.product.Add' ,{
                 fieldLabel: 'Kode produk',
                 name: 'code',
                 reference: 'code',
-                saveOnEnter: true,
+                tabOnEnter: true,
                 width: 150
             },{
                 xtype: 'field-product-name',

@@ -13,17 +13,18 @@ Ext.define('POS.custom.field.ComboUnit', {
     autoSelect: true,
     enableKeyEvents: true,
     forceSelection: true,
-    hideTrigger: true,
+    hideTrigger: false,
     matchFieldWidth: true,
     minChars: 1,
     queryDelay: 50,
     queryMode: 'remote',
-    triggerAction: 'query',
+    selectOnFocus: true,
+    triggerAction: 'all',
     typeAhead: true,
     typeAheadDelay: 250,
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Unit');
+        this.store = POS.app.getStore('combo.Unit');
 
         this.callParent(arguments);
     }

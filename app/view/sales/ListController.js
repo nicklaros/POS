@@ -21,9 +21,8 @@ Ext.define('POS.view.sales.ListController', {
                 btnDelete.setDisabled(selected.length === 0);
                 btnPrint.setDisabled(selected.length !== 1);
             },
-            celldblclick: function(){
-                this.detail();
-            }
+            celldblclick: 'detail',
+            itemcontextmenu: 'showMenu'
         }
     },
     
@@ -73,21 +72,21 @@ Ext.define('POS.view.sales.ListController', {
                     }
 
                     Ext.fn.App.setLoading(true);
-                    Ext.ws.Main.send('sales/destroy', {id: id});
                     var monitor = Ext.fn.WebSocket.monitor(
-                        Ext.ws.Main.on('sales/destroy', function(websocket, data){
+                        Ext.ws.Main.on('sales/cancel', function(websocket, result){
                             clearTimeout(monitor);
                             Ext.fn.App.setLoading(false);
-                            if (data.success){
-                                POS.app.getStore('POS.store.Sales').load();
+                            if (result.success){
+                                POS.app.getStore('Sales').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                Ext.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
                             destroyable: true
                         })
                     );
+                    Ext.ws.Main.send('sales/cancel', {id: id});
                 }
             }
         );
@@ -95,6 +94,39 @@ Ext.define('POS.view.sales.ListController', {
     
     search: function(){
         Ext.fn.App.window('search-sales');
+    },
+    
+    showMenu: function(view, record, item, index, e, eOpts) {
+        var me = this;
+        
+        e.stopEvent();
+        if (!me.menu) {
+            me.menu = new Ext.menu.Menu({
+                plain: true,
+                items : [{
+                    text: '<i class="fa fa-credit-card main-nav-icon"></i> Detail Penjualan',
+                    handler: function(){
+                        me.detail();
+                    }
+                },{
+                    text: '<i class="fa fa-edit main-nav-icon"></i> Ubah Data Penjualan',
+                    handler: function(){
+                        me.edit();
+                    }
+                },{
+                    text: '<i class="fa fa-undo main-nav-icon"></i> Batalkan Penjualan',
+                    handler: function(){
+                        me.cancel();
+                    }
+                },{
+                    text: '<i class="fa fa-print main-nav-icon"></i> Print',
+                    handler: function(){
+                        me.print();
+                    }
+                }]
+            });
+        }
+        me.menu.showAt(e.getXY());
     },
     
     reset: function(){

@@ -3,13 +3,17 @@ Ext.define('POS.view.sales.AddDetail' ,{
     alias : 'widget.add-sales-detail',
     id: 'add-sales-detail',
     controller: 'add-sales-detail',
+    viewModel: {
+        type: 'add-sales-detail'
+    },
 
     requires: [
         'POS.custom.field.ComboStock',
         'POS.custom.field.StockAmount',
         'POS.custom.field.ComboSellType',
         'POS.custom.field.Price',
-        'POS.view.sales.AddDetailController'
+        'POS.view.sales.AddDetailController',
+        'POS.view.sales.AddDetailModel'
     ],
 
 	autoScroll: true,
@@ -25,6 +29,8 @@ Ext.define('POS.view.sales.AddDetail' ,{
     maximized: true,
     modal: true,
     resizable: false,
+    
+    record: null,
 
     initComponent: function(){
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dijual';
@@ -68,36 +74,44 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     allowBlank: false,
                     step: 1,
                     tabOnEnter: true,
-                    minValue: 1,
+                    minValue: 0,
                     value: 1,
                     margin: '0 0 0 50',
                     width: 75
                 },{
-                    xtype: 'textfield',
-                    fieldLabel: 'Unit',
-                    name: 'unit_name',
-                    readOnly: true,
-                    tabOnEnter: true,
-                    width: 75
+                    xtype: 'label',
+                    reference: 'unit',
+                    html: 'unit',
+                    margin: '30 0 0 10'
                 },{
                     xtype: 'combo-sell-type',
                     fieldLabel: 'Tipe',
                     name: 'type',
+                    reference: 'type',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
                     saveOnEnter: true,
                     value: 'Public',
                     margin: '0 0 0 50',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        select: 'save'
+                    }
                 }]
             },{
                 xtype: 'toolbar',
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10'
+                },
+                    '->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',

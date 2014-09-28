@@ -30,6 +30,10 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildRoleQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method     ChildRoleQuery leftJoinNotificationOption($relationAlias = null) Adds a LEFT JOIN clause to the query using the NotificationOption relation
+ * @method     ChildRoleQuery rightJoinNotificationOption($relationAlias = null) Adds a RIGHT JOIN clause to the query using the NotificationOption relation
+ * @method     ChildRoleQuery innerJoinNotificationOption($relationAlias = null) Adds a INNER JOIN clause to the query using the NotificationOption relation
+ *
  * @method     ChildRoleQuery leftJoinPermission($relationAlias = null) Adds a LEFT JOIN clause to the query using the Permission relation
  * @method     ChildRoleQuery rightJoinPermission($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Permission relation
  * @method     ChildRoleQuery innerJoinPermission($relationAlias = null) Adds a INNER JOIN clause to the query using the Permission relation
@@ -38,7 +42,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRoleQuery rightJoinUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the User relation
  * @method     ChildRoleQuery innerJoinUser($relationAlias = null) Adds a INNER JOIN clause to the query using the User relation
  *
- * @method     \ORM\RolePermissionQuery|\ORM\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\NotificationOptionQuery|\ORM\RolePermissionQuery|\ORM\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildRole findOne(ConnectionInterface $con = null) Return the first ChildRole matching the query
  * @method     ChildRole findOneOrCreate(ConnectionInterface $con = null) Return the first ChildRole matching the query, or a new ChildRole object populated from the query conditions when no match is found
@@ -296,6 +300,79 @@ abstract class RoleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(RoleTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \ORM\NotificationOption object
+     *
+     * @param \ORM\NotificationOption|ObjectCollection $notificationOption  the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildRoleQuery The current query, for fluid interface
+     */
+    public function filterByNotificationOption($notificationOption, $comparison = null)
+    {
+        if ($notificationOption instanceof \ORM\NotificationOption) {
+            return $this
+                ->addUsingAlias(RoleTableMap::COL_ID, $notificationOption->getRoleId(), $comparison);
+        } elseif ($notificationOption instanceof ObjectCollection) {
+            return $this
+                ->useNotificationOptionQuery()
+                ->filterByPrimaryKeys($notificationOption->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByNotificationOption() only accepts arguments of type \ORM\NotificationOption or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the NotificationOption relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildRoleQuery The current query, for fluid interface
+     */
+    public function joinNotificationOption($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('NotificationOption');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'NotificationOption');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the NotificationOption relation NotificationOption object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \ORM\NotificationOptionQuery A secondary query class using the current class as primary query
+     */
+    public function useNotificationOptionQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinNotificationOption($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'NotificationOption', '\ORM\NotificationOptionQuery');
     }
 
     /**

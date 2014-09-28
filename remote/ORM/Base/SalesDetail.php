@@ -9,8 +9,6 @@ use ORM\SalesDetailQuery as ChildSalesDetailQuery;
 use ORM\SalesQuery as ChildSalesQuery;
 use ORM\Stock as ChildStock;
 use ORM\StockQuery as ChildStockQuery;
-use ORM\Unit as ChildUnit;
-use ORM\UnitQuery as ChildUnitQuery;
 use ORM\Map\SalesDetailTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -84,15 +82,9 @@ abstract class SalesDetail implements ActiveRecordInterface
 
     /**
      * The value for the amount field.
-     * @var        int
-     */
-    protected $amount;
-
-    /**
-     * The value for the unit_id field.
      * @var        string
      */
-    protected $unit_id;
+    protected $amount;
 
     /**
      * The value for the unit_price field.
@@ -151,11 +143,6 @@ abstract class SalesDetail implements ActiveRecordInterface
      * @var        ChildStock
      */
     protected $aStock;
-
-    /**
-     * @var        ChildUnit
-     */
-    protected $aUnit;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -425,21 +412,11 @@ abstract class SalesDetail implements ActiveRecordInterface
     /**
      * Get the [amount] column value.
      *
-     * @return int
+     * @return string
      */
     public function getAmount()
     {
         return $this->amount;
-    }
-
-    /**
-     * Get the [unit_id] column value.
-     *
-     * @return string
-     */
-    public function getUnitId()
-    {
-        return $this->unit_id;
     }
 
     /**
@@ -571,33 +548,30 @@ abstract class SalesDetail implements ActiveRecordInterface
             $this->stock_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : SalesDetailTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->amount = (null !== $col) ? (int) $col : null;
+            $this->amount = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SalesDetailTableMap::translateFieldName('UnitId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->unit_id = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SalesDetailTableMap::translateFieldName('UnitPrice', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : SalesDetailTableMap::translateFieldName('UnitPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unit_price = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SalesDetailTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : SalesDetailTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->discount = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SalesDetailTableMap::translateFieldName('TotalPrice', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : SalesDetailTableMap::translateFieldName('TotalPrice', TableMap::TYPE_PHPNAME, $indexType)];
             $this->total_price = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SalesDetailTableMap::translateFieldName('Buy', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SalesDetailTableMap::translateFieldName('Buy', TableMap::TYPE_PHPNAME, $indexType)];
             $this->buy = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SalesDetailTableMap::translateFieldName('SellPublic', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SalesDetailTableMap::translateFieldName('SellPublic', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sell_public = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SalesDetailTableMap::translateFieldName('SellDistributor', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SalesDetailTableMap::translateFieldName('SellDistributor', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sell_distributor = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SalesDetailTableMap::translateFieldName('SellMisc', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SalesDetailTableMap::translateFieldName('SellMisc', TableMap::TYPE_PHPNAME, $indexType)];
             $this->sell_misc = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : SalesDetailTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SalesDetailTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -607,7 +581,7 @@ abstract class SalesDetail implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 14; // 14 = SalesDetailTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = SalesDetailTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\SalesDetail'), 0, $e);
@@ -634,9 +608,6 @@ abstract class SalesDetail implements ActiveRecordInterface
         }
         if ($this->aStock !== null && $this->stock_id !== $this->aStock->getId()) {
             $this->aStock = null;
-        }
-        if ($this->aUnit !== null && $this->unit_id !== $this->aUnit->getId()) {
-            $this->aUnit = null;
         }
     } // ensureConsistency
 
@@ -731,13 +702,13 @@ abstract class SalesDetail implements ActiveRecordInterface
     /**
      * Set the value of [amount] column.
      *
-     * @param  int $v new value
+     * @param  string $v new value
      * @return $this|\ORM\SalesDetail The current object (for fluent API support)
      */
     public function setAmount($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->amount !== $v) {
@@ -747,30 +718,6 @@ abstract class SalesDetail implements ActiveRecordInterface
 
         return $this;
     } // setAmount()
-
-    /**
-     * Set the value of [unit_id] column.
-     *
-     * @param  string $v new value
-     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
-     */
-    public function setUnitId($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->unit_id !== $v) {
-            $this->unit_id = $v;
-            $this->modifiedColumns[SalesDetailTableMap::COL_UNIT_ID] = true;
-        }
-
-        if ($this->aUnit !== null && $this->aUnit->getId() !== $v) {
-            $this->aUnit = null;
-        }
-
-        return $this;
-    } // setUnitId()
 
     /**
      * Set the value of [unit_price] column.
@@ -971,7 +918,6 @@ abstract class SalesDetail implements ActiveRecordInterface
 
             $this->aSales = null;
             $this->aStock = null;
-            $this->aUnit = null;
         } // if (deep)
     }
 
@@ -1090,13 +1036,6 @@ abstract class SalesDetail implements ActiveRecordInterface
                 $this->setStock($this->aStock);
             }
 
-            if ($this->aUnit !== null) {
-                if ($this->aUnit->isModified() || $this->aUnit->isNew()) {
-                    $affectedRows += $this->aUnit->save($con);
-                }
-                $this->setUnit($this->aUnit);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1149,9 +1088,6 @@ abstract class SalesDetail implements ActiveRecordInterface
         if ($this->isColumnModified(SalesDetailTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'AMOUNT';
         }
-        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'UNIT_ID';
-        }
         if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_PRICE)) {
             $modifiedColumns[':p' . $index++]  = 'UNIT_PRICE';
         }
@@ -1200,10 +1136,7 @@ abstract class SalesDetail implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->stock_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
-                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
-                        break;
-                    case 'UNIT_ID':
-                        $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
                     case 'UNIT_PRICE':
                         $stmt->bindValue($identifier, $this->unit_price, PDO::PARAM_INT);
@@ -1307,30 +1240,27 @@ abstract class SalesDetail implements ActiveRecordInterface
                 return $this->getAmount();
                 break;
             case 5:
-                return $this->getUnitId();
-                break;
-            case 6:
                 return $this->getUnitPrice();
                 break;
-            case 7:
+            case 6:
                 return $this->getDiscount();
                 break;
-            case 8:
+            case 7:
                 return $this->getTotalPrice();
                 break;
-            case 9:
+            case 8:
                 return $this->getBuy();
                 break;
-            case 10:
+            case 9:
                 return $this->getSellPublic();
                 break;
-            case 11:
+            case 10:
                 return $this->getSellDistributor();
                 break;
-            case 12:
+            case 11:
                 return $this->getSellMisc();
                 break;
-            case 13:
+            case 12:
                 return $this->getStatus();
                 break;
             default:
@@ -1367,15 +1297,14 @@ abstract class SalesDetail implements ActiveRecordInterface
             $keys[2] => $this->getType(),
             $keys[3] => $this->getStockId(),
             $keys[4] => $this->getAmount(),
-            $keys[5] => $this->getUnitId(),
-            $keys[6] => $this->getUnitPrice(),
-            $keys[7] => $this->getDiscount(),
-            $keys[8] => $this->getTotalPrice(),
-            $keys[9] => $this->getBuy(),
-            $keys[10] => $this->getSellPublic(),
-            $keys[11] => $this->getSellDistributor(),
-            $keys[12] => $this->getSellMisc(),
-            $keys[13] => $this->getStatus(),
+            $keys[5] => $this->getUnitPrice(),
+            $keys[6] => $this->getDiscount(),
+            $keys[7] => $this->getTotalPrice(),
+            $keys[8] => $this->getBuy(),
+            $keys[9] => $this->getSellPublic(),
+            $keys[10] => $this->getSellDistributor(),
+            $keys[11] => $this->getSellMisc(),
+            $keys[12] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1388,9 +1317,6 @@ abstract class SalesDetail implements ActiveRecordInterface
             }
             if (null !== $this->aStock) {
                 $result['Stock'] = $this->aStock->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aUnit) {
-                $result['Unit'] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1442,30 +1368,27 @@ abstract class SalesDetail implements ActiveRecordInterface
                 $this->setAmount($value);
                 break;
             case 5:
-                $this->setUnitId($value);
-                break;
-            case 6:
                 $this->setUnitPrice($value);
                 break;
-            case 7:
+            case 6:
                 $this->setDiscount($value);
                 break;
-            case 8:
+            case 7:
                 $this->setTotalPrice($value);
                 break;
-            case 9:
+            case 8:
                 $this->setBuy($value);
                 break;
-            case 10:
+            case 9:
                 $this->setSellPublic($value);
                 break;
-            case 11:
+            case 10:
                 $this->setSellDistributor($value);
                 break;
-            case 12:
+            case 11:
                 $this->setSellMisc($value);
                 break;
-            case 13:
+            case 12:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -1510,31 +1433,28 @@ abstract class SalesDetail implements ActiveRecordInterface
             $this->setAmount($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUnitId($arr[$keys[5]]);
+            $this->setUnitPrice($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUnitPrice($arr[$keys[6]]);
+            $this->setDiscount($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setDiscount($arr[$keys[7]]);
+            $this->setTotalPrice($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setTotalPrice($arr[$keys[8]]);
+            $this->setBuy($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setBuy($arr[$keys[9]]);
+            $this->setSellPublic($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setSellPublic($arr[$keys[10]]);
+            $this->setSellDistributor($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setSellDistributor($arr[$keys[11]]);
+            $this->setSellMisc($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setSellMisc($arr[$keys[12]]);
-        }
-        if (array_key_exists($keys[13], $arr)) {
-            $this->setStatus($arr[$keys[13]]);
+            $this->setStatus($arr[$keys[12]]);
         }
     }
 
@@ -1585,9 +1505,6 @@ abstract class SalesDetail implements ActiveRecordInterface
         }
         if ($this->isColumnModified(SalesDetailTableMap::COL_AMOUNT)) {
             $criteria->add(SalesDetailTableMap::COL_AMOUNT, $this->amount);
-        }
-        if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_ID)) {
-            $criteria->add(SalesDetailTableMap::COL_UNIT_ID, $this->unit_id);
         }
         if ($this->isColumnModified(SalesDetailTableMap::COL_UNIT_PRICE)) {
             $criteria->add(SalesDetailTableMap::COL_UNIT_PRICE, $this->unit_price);
@@ -1703,7 +1620,6 @@ abstract class SalesDetail implements ActiveRecordInterface
         $copyObj->setType($this->getType());
         $copyObj->setStockId($this->getStockId());
         $copyObj->setAmount($this->getAmount());
-        $copyObj->setUnitId($this->getUnitId());
         $copyObj->setUnitPrice($this->getUnitPrice());
         $copyObj->setDiscount($this->getDiscount());
         $copyObj->setTotalPrice($this->getTotalPrice());
@@ -1843,57 +1759,6 @@ abstract class SalesDetail implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildUnit object.
-     *
-     * @param  ChildUnit $v
-     * @return $this|\ORM\SalesDetail The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setUnit(ChildUnit $v = null)
-    {
-        if ($v === null) {
-            $this->setUnitId(NULL);
-        } else {
-            $this->setUnitId($v->getId());
-        }
-
-        $this->aUnit = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUnit object, it will not be re-added.
-        if ($v !== null) {
-            $v->addSales($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildUnit object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildUnit The associated ChildUnit object.
-     * @throws PropelException
-     */
-    public function getUnit(ConnectionInterface $con = null)
-    {
-        if ($this->aUnit === null && (($this->unit_id !== "" && $this->unit_id !== null))) {
-            $this->aUnit = ChildUnitQuery::create()->findPk($this->unit_id, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aUnit->addSaless($this);
-             */
-        }
-
-        return $this->aUnit;
-    }
-
-    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1906,15 +1771,11 @@ abstract class SalesDetail implements ActiveRecordInterface
         if (null !== $this->aStock) {
             $this->aStock->removeSales($this);
         }
-        if (null !== $this->aUnit) {
-            $this->aUnit->removeSales($this);
-        }
         $this->id = null;
         $this->sales_id = null;
         $this->type = null;
         $this->stock_id = null;
         $this->amount = null;
-        $this->unit_id = null;
         $this->unit_price = null;
         $this->discount = null;
         $this->total_price = null;
@@ -1945,7 +1806,6 @@ abstract class SalesDetail implements ActiveRecordInterface
 
         $this->aSales = null;
         $this->aStock = null;
-        $this->aUnit = null;
     }
 
     /**

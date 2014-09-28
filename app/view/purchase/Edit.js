@@ -5,12 +5,14 @@ Ext.define('POS.view.purchase.Edit' ,{
     controller: 'edit-purchase',
 
     requires: [
-        'POS.custom.field.ComboSupplier',
+        'POS.custom.field.ComboSecondParty',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.PurchaseDetail',
+        'POS.custom.panel.hint.Purchase',
         'POS.view.purchase.EditController',
-        'POS.view.purchase.EditDetail'
+        'POS.view.purchase.EditDetail',
+        'POS.view.secondparty.Add'
     ],
 
 	autoScroll: true,
@@ -38,6 +40,13 @@ Ext.define('POS.view.purchase.Edit' ,{
             },
             width: 900,
             items: [{
+                xtype: 'purchase-hint',
+                bind: {
+                    data: '{shortcutKeys}'
+                },
+                margin: '0 0 20 0',
+                width: 900
+            },{
                 xtype: 'form',
                 bodyPadding: 10,
                 cls: 'panel',
@@ -61,25 +70,56 @@ Ext.define('POS.view.purchase.Edit' ,{
                         value: new Date(),
                         width: 130
                     },{
-                        xtype: 'combo-supplier',
-                        fieldLabel: 'Supplier',
-                        name: 'supplier',
-                        reference: 'supplier',
+                        xtype: 'combo-second-party',
+                        fieldLabel: 'Dibeli Dari',
+                        name: 'second_party',
+                        reference: 'second_party',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
                         margin: '0 0 0 20',
                         width: 200
+                    },{
+                        xtype: 'button',
+                        text: '<i class="fa fa-plus"></i>',
+                        handler: 'addSecondParty',
+                        margin: '25 0 0 5'
                     },{
                         xtype: 'textfield',
                         fieldLabel: 'Catatan',
                         name: 'note',
                         margin: '0 0 0 20',
                         width: 200
-                    },{
+                    }]
+                },{
+                    xtype: 'container',
+                    anchor: '100%',
+                    layout: 'hbox',
+                    margin: '0 0 10 0',
+                    items:[{
                         xtype: 'field-price',
                         fieldLabel: 'Harga Total',
                         name: 'total_price',
                         reference: 'total_price',
+                        readOnly: true,
+                        saveOnEnter: true,
+                        width: 150
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Dibayar',
+                        name: 'paid',
+                        reference: 'paid',
+                        saveOnEnter: true,
+                        selectOnFocus: true,
+                        margin: '0 0 0 20',
+                        width: 150,
+                        listeners: {
+                            change: 'setBalance'
+                        }
+                    },{
+                        xtype: 'field-price',
+                        fieldLabel: 'Sisa',
+                        name: 'balance',
+                        reference: 'balance',
                         readOnly: true,
                         saveOnEnter: true,
                         margin: '0 0 0 20',

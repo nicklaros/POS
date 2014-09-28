@@ -20,9 +20,9 @@ Ext.define('POS.view.product.List' ,{
     stripeRows: true,
 
     initComponent: function() {
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Product';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Produk';
 
-        var store = POS.app.getStore('POS.store.Product');
+        var store = POS.app.getStore('Product');
         this.store = store;
 
         this.columns = [

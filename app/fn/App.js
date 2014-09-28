@@ -2,28 +2,41 @@ Ext.define('Ext.fn.App', {
     singleton: true,
 
     init: function(){
-        // Create WebSocket container
+        // add native javascript function
+        Ext.fn.Util.addNativeFunction();
+        
+        // create WebSocket container
         Ext.ws = {};
 
-        // Initialize QuickTips
+        // initialize QuickTips
         Ext.QuickTips.init();
 
-        // Initiating
+        // initiating application data
         Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(App.init);
 
         if (App.init.state == 1) { // if already loged in then
             Ext.fn.Util.afterLogin();
         }
-
+    
+        // disable browser context menu
+        Ext.fn.Util.disableBrowserContextMenu();
+                
         console.log('Application successfully initiated.');
     },
-    
-    mnChangeBiodata: function(){
-        Ext.widget('ubah-biodata');
+
+    mnAppOption: function(){
+        Ext.widget('app-option');
     },
 
     mnChangePassword: function(){
-        Ext.widget('ubah-password');
+        Ext.widget('change-password');
+    },
+
+    mnCustomReport: function(){
+        var report = Ext.widget('custom-report');
+        
+        this.setLoading(true);
+        report.getController().viewReport();
     },
 
     mnDashboard: function(){
@@ -31,7 +44,22 @@ Ext.define('Ext.fn.App', {
     },
 
     mnDeveloperInfo: function(){
-        Ext.widget('about-dev');
+        Ext.widget('developer-info');
+    },
+
+    mnListCredit: function(){
+        var panel = this.newTab('list-credit');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListCustomer: function(){
+        var panel = this.newTab('list-customer');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListDebit: function(){
+        var panel = this.newTab('list-debit');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
     mnListProduct: function(){
@@ -51,6 +79,16 @@ Ext.define('Ext.fn.App', {
 
     mnListStock: function(){
         var panel = this.newTab('list-stock');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListSupplier: function(){
+        var panel = this.newTab('list-supplier');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
+    mnListUnit: function(){
+        var panel = this.newTab('list-unit');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
@@ -84,8 +122,19 @@ Ext.define('Ext.fn.App', {
         });
     },
 
+    mnMonthlyReport: function(){
+        var report = Ext.widget('monthly-report');
+        
+        this.setLoading(true);
+        report.getController().viewReport();
+    },
+    
+    mnUpdateBiodata: function(){
+        Ext.widget('update-biodata');
+    },
+
     newTab: function(alias, state){
-        var main = Ext.ComponentQuery.query('app-main')[0].getViewModel(),
+        var main = Ext.main.ViewModel,
             tab = Ext.ComponentQuery.query('app-tab')[0],
             panel = Ext.ComponentQuery.query(alias)[0];
 
@@ -98,67 +147,28 @@ Ext.define('Ext.fn.App', {
             if(!panel){
                 var panel = tab.add({xtype:alias});
                 panel.show();
-            }else{
-                tab.setActiveTab(panel);
             }
+            tab.setActiveTab(panel);
             return panel;
         }else{
             Ext.Msg.alert('Akses ditolak', E0);
         }
     },
 
-    notify: function(title, message, manager, icon){
-        return this.notification(title, message, manager, icon);
+    notify: function(title, message, icon, manager){
+        Ext.fn.Notification.show(title, message, icon, manager);
     },
 
-    notification: function(title, message, manager, icon){
-        setTimeout(function(){
-            Ext.create('widget.uxNotification', {
-                title: '<i class="fa fa-' + (icon || 'exclamation-triangle') + ' glyph"></i> ' + title,
-                autoCloseDelay: 5000,
-                cls: 'ux-notification-light',
-                hideDuration: 50,
-                html: message,
-                manager: (manager || Ext.getBody()),
-                position: 'br',
-                slideBackAnimation: 'bounceOut',
-                slideBackDuration: 500,
-                slideInAnimation: 'bounceOut',
-                slideInDuration: 1000,
-                maxWidth: 350
-            }).show();
-        }, 10);
+    notification: function(title, message, icon, manager){
+        Ext.fn.Notification.show(title, message, icon, manager);
+    },
+
+    printNotaCredit: function(id){
+        window.open("remote/print/nota-credit.php?id=" + id, "_blank");
     },
 
     printNotaSales: function(id){
         window.open("remote/print/nota-sales.php?id=" + id, "_blank");
-    },
-    
-    removeNotification: function(id){
-        var panel = Ext.ComponentQuery.query('list-notification')[0];
-        
-        if (panel) panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('notification/destroy', function(websocket, data){
-                clearTimeout(monitor);
-                panel.setLoading(false);
-                if (data.success){
-                    var store = POS.app.getStore('POS.store.Notification');
-                    
-                    id.forEach(function(id){
-                        store.remove(store.getById(id));
-                    });
-                }else{
-                    Ext.fn.App.notification('Ups', data.errmsg);
-                }
-            }, this, {
-                single: true,
-                destroyable: true
-            }),
-            panel,
-            false
-        );
-        Ext.ws.Main.send('notification/destroy', {id: id});
     },
 
     setLoading: function(bool){
@@ -177,6 +187,40 @@ Ext.define('Ext.fn.App', {
             Ext.main.Windows = [];
         }
         if (Ext.main.View) Ext.main.View.setLoading(bool);
+    },
+    
+    showSecondPartyCredit: function(secondPartyId){
+        Ext.fn.App.newTab('list-credit');
+                
+        POS.app.getStore('Credit').search({
+            second_party_id: secondPartyId,
+            credit_status: 'Belum Lunas'
+        });        
+    },
+    
+    showSecondPartyDebit: function(secondPartyId){
+        Ext.fn.App.newTab('list-debit');
+                
+        POS.app.getStore('Debit').search({
+            second_party_id: secondPartyId,
+            credit_status: 'Belum Lunas'
+        });        
+    },
+    
+    showSecondPartySales: function(secondPartyId){
+        Ext.fn.App.newTab('list-sales');
+                
+        POS.app.getStore('Sales').search({
+            second_party_id: secondPartyId
+        });
+    },
+    
+    showProductPrice: function(productId){
+        Ext.fn.App.newTab('list-stock');
+                
+        POS.app.getStore('Stock').search({
+            product_id: productId
+        });        
     },
 
     window: function(id){

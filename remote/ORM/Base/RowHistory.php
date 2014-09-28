@@ -387,7 +387,7 @@ abstract class RowHistory implements ActiveRecordInterface
      *
      * @return string
      */
-    public function getUserID()
+    public function getUserId()
     {
         return $this->user_id;
     }
@@ -446,7 +446,7 @@ abstract class RowHistory implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : RowHistoryTableMap::translateFieldName('Operation', TableMap::TYPE_PHPNAME, $indexType)];
             $this->operation = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RowHistoryTableMap::translateFieldName('UserID', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RowHistoryTableMap::translateFieldName('UserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->user_id = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -589,7 +589,7 @@ abstract class RowHistory implements ActiveRecordInterface
      * @param  string $v new value
      * @return $this|\ORM\RowHistory The current object (for fluent API support)
      */
-    public function setUserID($v)
+    public function setUserId($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -605,7 +605,7 @@ abstract class RowHistory implements ActiveRecordInterface
         }
 
         return $this;
-    } // setUserID()
+    } // setUserId()
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -918,7 +918,7 @@ abstract class RowHistory implements ActiveRecordInterface
                 return $this->getOperation();
                 break;
             case 5:
-                return $this->getUserID();
+                return $this->getUserId();
                 break;
             default:
                 return null;
@@ -954,7 +954,7 @@ abstract class RowHistory implements ActiveRecordInterface
             $keys[2] => $this->getRowId(),
             $keys[3] => $this->getTime(),
             $keys[4] => $this->getOperation(),
-            $keys[5] => $this->getUserID(),
+            $keys[5] => $this->getUserId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1015,7 +1015,7 @@ abstract class RowHistory implements ActiveRecordInterface
                 $this->setOperation($value);
                 break;
             case 5:
-                $this->setUserID($value);
+                $this->setUserId($value);
                 break;
         } // switch()
 
@@ -1059,7 +1059,7 @@ abstract class RowHistory implements ActiveRecordInterface
             $this->setOperation($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUserID($arr[$keys[5]]);
+            $this->setUserId($arr[$keys[5]]);
         }
     }
 
@@ -1204,7 +1204,7 @@ abstract class RowHistory implements ActiveRecordInterface
         $copyObj->setRowId($this->getRowId());
         $copyObj->setTime($this->getTime());
         $copyObj->setOperation($this->getOperation());
-        $copyObj->setUserID($this->getUserID());
+        $copyObj->setUserId($this->getUserId());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1243,9 +1243,9 @@ abstract class RowHistory implements ActiveRecordInterface
     public function setUserDetail(ChildUserDetail $v = null)
     {
         if ($v === null) {
-            $this->setUserID(NULL);
+            $this->setUserId(NULL);
         } else {
-            $this->setUserID($v->getId());
+            $this->setUserId($v->getId());
         }
 
         $this->aUserDetail = $v;

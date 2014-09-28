@@ -6,7 +6,7 @@ Ext.define('POS.model.PurchaseDetail', {
         {name: 'stock_id',      type: 'int'},
         {name: 'product_id',    type: 'int'},
         {name: 'product_name',  type: 'string'},
-        {name: 'amount',        type: 'int'},
+        {name: 'amount',        type: 'number'},
         {name: 'unit_name',     type: 'string'},
         {name: 'unit_price',    type: 'int'},
         {name: 'total_price',   type: 'int'}

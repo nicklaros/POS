@@ -23,16 +23,16 @@ Ext.define('POS.view.sales.List' ,{
     initComponent: function() {
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan';
 
-        var store = POS.app.getStore('POS.store.Sales');
+        var store = POS.app.getStore('Sales');
         this.store = store;
 
         this.columns = [
             {header: 'Nota', dataIndex:'id', width: 75},
             {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Pelanggan', dataIndex: 'customer_name', width: 200},
+            {header: 'Dijual Ke', dataIndex: 'second_party_name', width: 200},
             {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.paymentBalance, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
@@ -42,14 +42,14 @@ Ext.define('POS.view.sales.List' ,{
             dock: 'top',
             ui: 'footer',
             items: [{
+                text: '<i class="fa fa-plus-square glyph"></i> Tambah',
+                reference: 'add',
+                handler: 'add'
+            }, '-', {
                 text: '<i class="fa fa-credit-card glyph"></i> Detail',
                 reference: 'detail',
                 handler: 'detail',
                 disabled: true
-            },{
-                text: '<i class="fa fa-plus-square glyph"></i> Tambah',
-                reference: 'add',
-                handler: 'add'
             },{
                 text: '<i class="fa fa-edit glyph"></i> Ubah',
                 reference: 'edit',

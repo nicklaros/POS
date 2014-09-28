@@ -15,7 +15,7 @@ Ext.define('POS.view.product.Search' ,{
     width: 300,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Product';
+        this.title = '<i class="fa fa-file-archive-o glyph"></i> Pencarian Produk';
 
         this.items = [{
             xtype: 'form',
@@ -23,17 +23,9 @@ Ext.define('POS.view.product.Search' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'textfield',
-                fieldLabel: 'Nama Produk',
-                name: 'name',
-                reference: 'name',
-                emptyText: EMPTY_TEXT_0,
-                searchOnEnter: true,
-                selectOnFocus: true,
-                anchor: '100%'
-            },{
-                xtype: 'textfield',
-                fieldLabel: 'Kode Produk',
-                name: 'code',
+                fieldLabel: 'Kode / Nama Produk',
+                name: 'code_or_name',
+                reference: 'code_or_name',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

@@ -3,6 +3,11 @@ Ext.define('POS.view.stock.EditController', {
     alias: 'controller.edit-stock',
 
     control: {
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.save();
@@ -10,13 +15,46 @@ Ext.define('POS.view.stock.EditController', {
         }
     },
 
+    addProduct: function(){
+        var panel = Ext.fn.App.window('add-product');
+
+        panel.bindCombo = this.lookupReference('product').getId();
+    },
+
+    addUnit: function(){
+        var panel = Ext.fn.App.window('add-unit');
+
+        panel.bindCombo = this.lookupReference('unit').getId();
+    },
+
     close: function(){
         this.getView().close();
+    },
+    
+    onKeyAmount: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('discount').focus(true);
+    },
+    
+    onKeyBuy: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('amount').focus(true);
+    },
+    
+    onKeyMisc: function(field, e){
+        if(e.getKey() == e.ENTER) this.lookupReference('buy').focus(true);
     },
     
     onChangeUnlimited: function(field, value){
         this.lookupReference('amount').setDisabled(value);
     },
+    
+    onSelectProduct: function(combo, record){
+        this.lookupReference('unit').focus(true);
+    },
+    
+    onSelectUnit: function(combo, record){
+        this.lookupReference('sell_public').focus(true);
+    },
+
 
     load: function(id){
         var panel = this.getView(),
@@ -69,7 +107,7 @@ Ext.define('POS.view.stock.EditController', {
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Stock').load();
+                        POS.app.getStore('Stock').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

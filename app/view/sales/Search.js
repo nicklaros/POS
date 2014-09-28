@@ -5,6 +5,8 @@ Ext.define('POS.view.sales.Search' ,{
     controller: 'search-sales',
 
     requires: [
+        'POS.custom.field.ComboPaymentStatus',
+        'POS.custom.field.Date',
         'POS.view.sales.SearchController'
     ],
 
@@ -24,8 +26,8 @@ Ext.define('POS.view.sales.Search' ,{
             items: [{
                 xtype: 'textfield',
                 fieldLabel: 'Nomor Nota',
-                name: 'nota',
-                reference: 'nota',
+                name: 'id',
+                reference: 'id',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,
@@ -38,6 +40,29 @@ Ext.define('POS.view.sales.Search' ,{
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,
+                anchor: '100%'
+            },{
+                xtype: 'field-date',
+                fieldLabel: 'Mulai Tanggal',
+                name: 'start_date',
+                emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
+                selectOnFocus: true,
+                anchor: '100%'
+            },{
+                xtype: 'field-date',
+                fieldLabel: 'Hingga Tanggal',
+                name: 'until_date',
+                emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
+                selectOnFocus: true,
+                anchor: '100%'
+            },{
+                xtype: 'combo-payment-status',
+                fieldLabel: 'Status Pembayaran',
+                name: 'payment_status',
+                emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
                 anchor: '100%'
             }]
         }];

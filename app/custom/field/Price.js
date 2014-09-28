@@ -3,5 +3,7 @@ Ext.define('POS.custom.field.Price', {
     alias: 'widget.field-price',
 
     symbol: 'Rp',
-    thousandSeparator: '.'
+    thousandSeparator: '.',
+    selectOnFocus: true
+    
 });

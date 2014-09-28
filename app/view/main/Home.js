@@ -3,8 +3,12 @@ Ext.define('POS.view.main.Home' ,{
     alias : 'widget.home',
 
     requires: [
-        'POS.view.form.Login',
-        'Ext.tpl.ContactDeveloper'
+        'POS.custom.chart.transaction.Transaction',
+        'POS.custom.panel.hint.Dashboard',
+        'POS.store.chart.transaction.Last30Days',
+        'POS.tpl.AppHeader',
+        'POS.tpl.ContactDeveloper',
+        'POS.view.form.Login'
     ],
 	
 	autoScroll: true,
@@ -28,10 +32,11 @@ Ext.define('POS.view.main.Home' ,{
             },
             items: [{
                 xtype: 'container',
+                itemId: 'app-header',
                 bind: {
                     data: '{info}'
                 },
-                tpl: Ext.create('Ext.tpl.AppHeader'),
+                tpl: Ext.create('POS.tpl.AppHeader'),
                 margin: '0 0 25 0',
                 width: 800
             },{
@@ -62,7 +67,29 @@ Ext.define('POS.view.main.Home' ,{
                     padding: 3,
                     width: 570,
                     height: 249,
-                    html: '<img src="resources/images/image_700x300.fw.png" style="width: 562px; height: 241px; border-radius: 2px;" />'
+                    html: '<img src="resources/images/image_700x300.fw.png" style="width: 562px; height: 241px; border-radius: 2px;" />',
+                    bind: {
+                        html: '<img src="resources/images/{info.app_photo}" style="width: 562px; height: 241px; border-radius: 2px;" />'
+                    }
+                }]
+            },{
+                xtype: 'container',
+                hidden: true,
+                margin: '0 0 25 0',
+                width: 800,
+                bind: {
+                    visible: '{state}'
+                },
+                items:[{
+                    xtype: 'dashboard-hint',
+                    bind: {
+                        data: '{shortcutKeys}'
+                    },
+                    margin: '0 0 20 0',
+                    width: 800
+                },{
+                    xtype: 'chart-transaction',
+                    width: 800
                 }]
             },{
                 xtype: 'container',
@@ -82,7 +109,7 @@ Ext.define('POS.view.main.Home' ,{
                     bind: {
                         data: '{info}'
                     },
-                    tpl: Ext.create('Ext.tpl.ContactDeveloper')
+                    tpl: Ext.create('POS.tpl.ContactDeveloper')
                 }]
             }]
         }];

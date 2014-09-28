@@ -5,6 +5,7 @@ Ext.define('POS.view.purchase.Search' ,{
     controller: 'search-purchase',
 
     requires: [
+        'POS.custom.field.Date',
         'POS.view.purchase.SearchController'
     ],
 
@@ -26,6 +27,22 @@ Ext.define('POS.view.purchase.Search' ,{
                 fieldLabel: 'Supplier',
                 name: 'supplier',
                 reference: 'supplier',
+                emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
+                selectOnFocus: true,
+                anchor: '100%'
+            },{
+                xtype: 'field-date',
+                fieldLabel: 'Mulai Tanggal',
+                name: 'start_date',
+                emptyText: EMPTY_TEXT_0,
+                searchOnEnter: true,
+                selectOnFocus: true,
+                anchor: '100%'
+            },{
+                xtype: 'field-date',
+                fieldLabel: 'Hingga Tanggal',
+                name: 'until_date',
                 emptyText: EMPTY_TEXT_0,
                 searchOnEnter: true,
                 selectOnFocus: true,

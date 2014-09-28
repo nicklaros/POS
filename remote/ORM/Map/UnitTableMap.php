@@ -59,7 +59,7 @@ class UnitTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 2;
+    const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UnitTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 2;
+    const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the ID field
@@ -80,6 +80,11 @@ class UnitTableMap extends TableMap
      * the column name for the NAME field
      */
     const COL_NAME = 'unit.NAME';
+
+    /**
+     * the column name for the STATUS field
+     */
+    const COL_STATUS = 'unit.STATUS';
 
     /**
      * The default string format for model objects of the related table
@@ -93,12 +98,12 @@ class UnitTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Name', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'name', ),
-        self::TYPE_COLNAME       => array(UnitTableMap::COL_ID, UnitTableMap::COL_NAME, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NAME', ),
-        self::TYPE_FIELDNAME     => array('id', 'name', ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('Id', 'Name', 'Status', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'name', 'status', ),
+        self::TYPE_COLNAME       => array(UnitTableMap::COL_ID, UnitTableMap::COL_NAME, UnitTableMap::COL_STATUS, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NAME', 'COL_STATUS', ),
+        self::TYPE_FIELDNAME     => array('id', 'name', 'status', ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -108,12 +113,12 @@ class UnitTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'name' => 1, ),
-        self::TYPE_COLNAME       => array(UnitTableMap::COL_ID => 0, UnitTableMap::COL_NAME => 1, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NAME' => 1, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, ),
-        self::TYPE_NUM           => array(0, 1, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Status' => 2, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'name' => 1, 'status' => 2, ),
+        self::TYPE_COLNAME       => array(UnitTableMap::COL_ID => 0, UnitTableMap::COL_NAME => 1, UnitTableMap::COL_STATUS => 2, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NAME' => 1, 'COL_STATUS' => 2, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'status' => 2, ),
+        self::TYPE_NUM           => array(0, 1, 2, )
     );
 
     /**
@@ -134,6 +139,7 @@ class UnitTableMap extends TableMap
         // columns
         $this->addPrimaryKey('ID', 'Id', 'BIGINT', true, 20, null);
         $this->addColumn('NAME', 'Name', 'CHAR', true, 32, null);
+        $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()
 
     /**
@@ -141,7 +147,6 @@ class UnitTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Sales', '\\ORM\\SalesDetail', RelationMap::ONE_TO_MANY, array('id' => 'unit_id', ), 'NO ACTION', 'RESTRICT', 'Saless');
         $this->addRelation('Stock', '\\ORM\\Stock', RelationMap::ONE_TO_MANY, array('id' => 'unit_id', ), 'NO ACTION', 'RESTRICT', 'Stocks');
     } // buildRelations()
 
@@ -288,9 +293,11 @@ class UnitTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(UnitTableMap::COL_ID);
             $criteria->addSelectColumn(UnitTableMap::COL_NAME);
+            $criteria->addSelectColumn(UnitTableMap::COL_STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.NAME');
+            $criteria->addSelectColumn($alias . '.STATUS');
         }
     }
 

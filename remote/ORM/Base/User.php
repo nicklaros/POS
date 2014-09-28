@@ -4,8 +4,11 @@ namespace ORM\Base;
 
 use \Exception;
 use \PDO;
+use ORM\NotificationOnUser as ChildNotificationOnUser;
+use ORM\NotificationOnUserQuery as ChildNotificationOnUserQuery;
 use ORM\Role as ChildRole;
 use ORM\RoleQuery as ChildRoleQuery;
+use ORM\User as ChildUser;
 use ORM\UserDetail as ChildUserDetail;
 use ORM\UserDetailQuery as ChildUserDetailQuery;
 use ORM\UserQuery as ChildUserQuery;
@@ -15,6 +18,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -92,6 +96,12 @@ abstract class User implements ActiveRecordInterface
     protected $aRole;
 
     /**
+     * @var        ObjectCollection|ChildNotificationOnUser[] Collection to store aggregation of ChildNotificationOnUser objects.
+     */
+    protected $collNotifications;
+    protected $collNotificationsPartial;
+
+    /**
      * @var        ChildUserDetail one-to-one related ChildUserDetail object
      */
     protected $singleDetail;
@@ -103,6 +113,12 @@ abstract class User implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNotificationOnUser[]
+     */
+    protected $notificationsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of ORM\Base\User object.
@@ -598,6 +614,8 @@ abstract class User implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aRole = null;
+            $this->collNotifications = null;
+
             $this->singleDetail = null;
 
         } // if (deep)
@@ -720,6 +738,23 @@ abstract class User implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->notificationsScheduledForDeletion !== null) {
+                if (!$this->notificationsScheduledForDeletion->isEmpty()) {
+                    \ORM\NotificationOnUserQuery::create()
+                        ->filterByPrimaryKeys($this->notificationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->notificationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNotifications !== null) {
+                foreach ($this->collNotifications as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->singleDetail !== null) {
@@ -915,6 +950,9 @@ abstract class User implements ActiveRecordInterface
         if ($includeForeignObjects) {
             if (null !== $this->aRole) {
                 $result['Role'] = $this->aRole->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collNotifications) {
+                $result['Notifications'] = $this->collNotifications->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->singleDetail) {
                 $result['Detail'] = $this->singleDetail->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
@@ -1155,6 +1193,12 @@ abstract class User implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getNotifications() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNotification($relObj->copy($deepCopy));
+                }
+            }
+
             $relObj = $this->getDetail();
             if ($relObj) {
                 $copyObj->setDetail($relObj->copy($deepCopy));
@@ -1252,6 +1296,252 @@ abstract class User implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Notification' == $relationName) {
+            return $this->initNotifications();
+        }
+    }
+
+    /**
+     * Clears out the collNotifications collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNotifications()
+     */
+    public function clearNotifications()
+    {
+        $this->collNotifications = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNotifications collection loaded partially.
+     */
+    public function resetPartialNotifications($v = true)
+    {
+        $this->collNotificationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collNotifications collection.
+     *
+     * By default this just sets the collNotifications collection to an empty array (like clearcollNotifications());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNotifications($overrideExisting = true)
+    {
+        if (null !== $this->collNotifications && !$overrideExisting) {
+            return;
+        }
+        $this->collNotifications = new ObjectCollection();
+        $this->collNotifications->setModel('\ORM\NotificationOnUser');
+    }
+
+    /**
+     * Gets an array of ChildNotificationOnUser objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNotificationOnUser[] List of ChildNotificationOnUser objects
+     * @throws PropelException
+     */
+    public function getNotifications(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNotificationsPartial && !$this->isNew();
+        if (null === $this->collNotifications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNotifications) {
+                // return empty collection
+                $this->initNotifications();
+            } else {
+                $collNotifications = ChildNotificationOnUserQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNotificationsPartial && count($collNotifications)) {
+                        $this->initNotifications(false);
+
+                        foreach ($collNotifications as $obj) {
+                            if (false == $this->collNotifications->contains($obj)) {
+                                $this->collNotifications->append($obj);
+                            }
+                        }
+
+                        $this->collNotificationsPartial = true;
+                    }
+
+                    return $collNotifications;
+                }
+
+                if ($partial && $this->collNotifications) {
+                    foreach ($this->collNotifications as $obj) {
+                        if ($obj->isNew()) {
+                            $collNotifications[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNotifications = $collNotifications;
+                $this->collNotificationsPartial = false;
+            }
+        }
+
+        return $this->collNotifications;
+    }
+
+    /**
+     * Sets a collection of ChildNotificationOnUser objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $notifications A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setNotifications(Collection $notifications, ConnectionInterface $con = null)
+    {
+        /** @var ChildNotificationOnUser[] $notificationsToDelete */
+        $notificationsToDelete = $this->getNotifications(new Criteria(), $con)->diff($notifications);
+
+
+        $this->notificationsScheduledForDeletion = $notificationsToDelete;
+
+        foreach ($notificationsToDelete as $notificationRemoved) {
+            $notificationRemoved->setUser(null);
+        }
+
+        $this->collNotifications = null;
+        foreach ($notifications as $notification) {
+            $this->addNotification($notification);
+        }
+
+        $this->collNotifications = $notifications;
+        $this->collNotificationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related NotificationOnUser objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related NotificationOnUser objects.
+     * @throws PropelException
+     */
+    public function countNotifications(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNotificationsPartial && !$this->isNew();
+        if (null === $this->collNotifications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNotifications) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNotifications());
+            }
+
+            $query = ChildNotificationOnUserQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collNotifications);
+    }
+
+    /**
+     * Method called to associate a ChildNotificationOnUser object to this object
+     * through the ChildNotificationOnUser foreign key attribute.
+     *
+     * @param  ChildNotificationOnUser $l ChildNotificationOnUser
+     * @return $this|\ORM\User The current object (for fluent API support)
+     */
+    public function addNotification(ChildNotificationOnUser $l)
+    {
+        if ($this->collNotifications === null) {
+            $this->initNotifications();
+            $this->collNotificationsPartial = true;
+        }
+
+        if (!$this->collNotifications->contains($l)) {
+            $this->doAddNotification($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNotificationOnUser $notification The ChildNotificationOnUser object to add.
+     */
+    protected function doAddNotification(ChildNotificationOnUser $notification)
+    {
+        $this->collNotifications[]= $notification;
+        $notification->setUser($this);
+    }
+
+    /**
+     * @param  ChildNotificationOnUser $notification The ChildNotificationOnUser object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeNotification(ChildNotificationOnUser $notification)
+    {
+        if ($this->getNotifications()->contains($notification)) {
+            $pos = $this->collNotifications->search($notification);
+            $this->collNotifications->remove($pos);
+            if (null === $this->notificationsScheduledForDeletion) {
+                $this->notificationsScheduledForDeletion = clone $this->collNotifications;
+                $this->notificationsScheduledForDeletion->clear();
+            }
+            $this->notificationsScheduledForDeletion[]= $notification;
+            $notification->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Notifications from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildNotificationOnUser[] List of ChildNotificationOnUser objects
+     */
+    public function getNotificationsJoinNotification(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildNotificationOnUserQuery::create(null, $criteria);
+        $query->joinWith('Notification', $joinBehavior);
+
+        return $this->getNotifications($query, $con);
     }
 
     /**
@@ -1323,11 +1613,17 @@ abstract class User implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collNotifications) {
+                foreach ($this->collNotifications as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->singleDetail) {
                 $this->singleDetail->clearAllReferences($deep);
             }
         } // if ($deep)
 
+        $this->collNotifications = null;
         $this->singleDetail = null;
         $this->aRole = null;
     }

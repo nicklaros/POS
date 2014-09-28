@@ -65,5 +65,12 @@ Ext.define('Ext.chart.LegendBase', {
     onItemTap: function (container, target, index, e) {
         this.callParent(arguments);
         this.toggleItem(index);
+    },
+    
+    clearViewEl: function () {
+        this.callParent(arguments);
+        // The legend-container div is not removed automatically.
+        Ext.removeNode(this.getNodeContainer());
     }
+    
 });

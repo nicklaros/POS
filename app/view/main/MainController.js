@@ -10,7 +10,7 @@ Ext.define('POS.view.main.MainController', {
 
     control: {
         '#': {
-            boxready: function(panel){
+            boxready: function(panel){    
                 // Create global variable container
                 Ext.main = {};
 
@@ -26,13 +26,17 @@ Ext.define('POS.view.main.MainController', {
                 setTimeout(function(){
                     user.focus();
                 }, 10);
+                
+                var store = POS.app.getStore('chart.transaction.Last30Days');
+                this.getView().down('chart-transaction chart').setStore(store);
+                
             }
         }
     },
     
     isKeyBlocked: function(){
         return !(
-            App.init.state == 1
+            Ext.main.ViewModel.get('state') == 1
             &&
             Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
             &&
@@ -56,7 +60,7 @@ Ext.define('POS.view.main.MainController', {
         var me = this;
         
         new Ext.util.KeyMap({
-            target: panel.getEl(),
+            target: Ext.getDoc(),
             binding: [{
                 key: 112, // F1 ---> dedicated for add-sales module
                 defaultEventAction: 'preventDefault',

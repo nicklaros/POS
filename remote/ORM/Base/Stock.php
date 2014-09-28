@@ -6,6 +6,8 @@ use \Exception;
 use \PDO;
 use ORM\Product as ChildProduct;
 use ORM\ProductQuery as ChildProductQuery;
+use ORM\PurchaseDetail as ChildPurchaseDetail;
+use ORM\PurchaseDetailQuery as ChildPurchaseDetailQuery;
 use ORM\SalesDetail as ChildSalesDetail;
 use ORM\SalesDetailQuery as ChildSalesDetailQuery;
 use ORM\Stock as ChildStock;
@@ -115,6 +117,12 @@ abstract class Stock implements ActiveRecordInterface
     protected $discount;
 
     /**
+     * The value for the unlimited field.
+     * @var        boolean
+     */
+    protected $unlimited;
+
+    /**
      * The value for the status field.
      * @var        string
      */
@@ -131,6 +139,12 @@ abstract class Stock implements ActiveRecordInterface
     protected $aUnit;
 
     /**
+     * @var        ObjectCollection|ChildPurchaseDetail[] Collection to store aggregation of ChildPurchaseDetail objects.
+     */
+    protected $collPurchases;
+    protected $collPurchasesPartial;
+
+    /**
      * @var        ObjectCollection|ChildSalesDetail[] Collection to store aggregation of ChildSalesDetail objects.
      */
     protected $collSaless;
@@ -143,6 +157,12 @@ abstract class Stock implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildPurchaseDetail[]
+     */
+    protected $purchasesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -458,6 +478,26 @@ abstract class Stock implements ActiveRecordInterface
     }
 
     /**
+     * Get the [unlimited] column value.
+     *
+     * @return boolean
+     */
+    public function getUnlimited()
+    {
+        return $this->unlimited;
+    }
+
+    /**
+     * Get the [unlimited] column value.
+     *
+     * @return boolean
+     */
+    public function isUnlimited()
+    {
+        return $this->getUnlimited();
+    }
+
+    /**
      * Get the [status] column value.
      *
      * @return string
@@ -530,7 +570,10 @@ abstract class Stock implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StockTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->discount = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StockTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StockTableMap::translateFieldName('Unlimited', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->unlimited = (null !== $col) ? (boolean) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : StockTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
             $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -540,7 +583,7 @@ abstract class Stock implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = StockTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 11; // 11 = StockTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Stock'), 0, $e);
@@ -759,6 +802,34 @@ abstract class Stock implements ActiveRecordInterface
     } // setDiscount()
 
     /**
+     * Sets the value of the [unlimited] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param  boolean|integer|string $v The new value
+     * @return $this|\ORM\Stock The current object (for fluent API support)
+     */
+    public function setUnlimited($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->unlimited !== $v) {
+            $this->unlimited = $v;
+            $this->modifiedColumns[StockTableMap::COL_UNLIMITED] = true;
+        }
+
+        return $this;
+    } // setUnlimited()
+
+    /**
      * Set the value of [status] column.
      *
      * @param  string $v new value
@@ -817,6 +888,8 @@ abstract class Stock implements ActiveRecordInterface
 
             $this->aProduct = null;
             $this->aUnit = null;
+            $this->collPurchases = null;
+
             $this->collSaless = null;
 
         } // if (deep)
@@ -948,6 +1021,24 @@ abstract class Stock implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->purchasesScheduledForDeletion !== null) {
+                if (!$this->purchasesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->purchasesScheduledForDeletion as $purchase) {
+                        // need to save related object because we set the relation to null
+                        $purchase->save($con);
+                    }
+                    $this->purchasesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPurchases !== null) {
+                foreach ($this->collPurchases as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->salessScheduledForDeletion !== null) {
                 if (!$this->salessScheduledForDeletion->isEmpty()) {
                     foreach ($this->salessScheduledForDeletion as $sales) {
@@ -1019,6 +1110,9 @@ abstract class Stock implements ActiveRecordInterface
         if ($this->isColumnModified(StockTableMap::COL_DISCOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'DISCOUNT';
         }
+        if ($this->isColumnModified(StockTableMap::COL_UNLIMITED)) {
+            $modifiedColumns[':p' . $index++]  = 'UNLIMITED';
+        }
         if ($this->isColumnModified(StockTableMap::COL_STATUS)) {
             $modifiedColumns[':p' . $index++]  = 'STATUS';
         }
@@ -1040,7 +1134,7 @@ abstract class Stock implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
                         break;
                     case 'AMOUNT':
-                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->amount, PDO::PARAM_STR);
                         break;
                     case 'UNIT_ID':
                         $stmt->bindValue($identifier, $this->unit_id, PDO::PARAM_INT);
@@ -1059,6 +1153,9 @@ abstract class Stock implements ActiveRecordInterface
                         break;
                     case 'DISCOUNT':
                         $stmt->bindValue($identifier, $this->discount, PDO::PARAM_INT);
+                        break;
+                    case 'UNLIMITED':
+                        $stmt->bindValue($identifier, (int) $this->unlimited, PDO::PARAM_INT);
                         break;
                     case 'STATUS':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -1153,6 +1250,9 @@ abstract class Stock implements ActiveRecordInterface
                 return $this->getDiscount();
                 break;
             case 9:
+                return $this->getUnlimited();
+                break;
+            case 10:
                 return $this->getStatus();
                 break;
             default:
@@ -1193,7 +1293,8 @@ abstract class Stock implements ActiveRecordInterface
             $keys[6] => $this->getSellDistributor(),
             $keys[7] => $this->getSellMisc(),
             $keys[8] => $this->getDiscount(),
-            $keys[9] => $this->getStatus(),
+            $keys[9] => $this->getUnlimited(),
+            $keys[10] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1206,6 +1307,9 @@ abstract class Stock implements ActiveRecordInterface
             }
             if (null !== $this->aUnit) {
                 $result['Unit'] = $this->aUnit->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collPurchases) {
+                $result['Purchases'] = $this->collPurchases->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collSaless) {
                 $result['Saless'] = $this->collSaless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1272,6 +1376,9 @@ abstract class Stock implements ActiveRecordInterface
                 $this->setDiscount($value);
                 break;
             case 9:
+                $this->setUnlimited($value);
+                break;
+            case 10:
                 $this->setStatus($value);
                 break;
         } // switch()
@@ -1328,7 +1435,10 @@ abstract class Stock implements ActiveRecordInterface
             $this->setDiscount($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setStatus($arr[$keys[9]]);
+            $this->setUnlimited($arr[$keys[9]]);
+        }
+        if (array_key_exists($keys[10], $arr)) {
+            $this->setStatus($arr[$keys[10]]);
         }
     }
 
@@ -1391,6 +1501,9 @@ abstract class Stock implements ActiveRecordInterface
         }
         if ($this->isColumnModified(StockTableMap::COL_DISCOUNT)) {
             $criteria->add(StockTableMap::COL_DISCOUNT, $this->discount);
+        }
+        if ($this->isColumnModified(StockTableMap::COL_UNLIMITED)) {
+            $criteria->add(StockTableMap::COL_UNLIMITED, $this->unlimited);
         }
         if ($this->isColumnModified(StockTableMap::COL_STATUS)) {
             $criteria->add(StockTableMap::COL_STATUS, $this->status);
@@ -1489,12 +1602,19 @@ abstract class Stock implements ActiveRecordInterface
         $copyObj->setSellDistributor($this->getSellDistributor());
         $copyObj->setSellMisc($this->getSellMisc());
         $copyObj->setDiscount($this->getDiscount());
+        $copyObj->setUnlimited($this->getUnlimited());
         $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
+
+            foreach ($this->getPurchases() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPurchase($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getSaless() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -1645,9 +1765,280 @@ abstract class Stock implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('Purchase' == $relationName) {
+            return $this->initPurchases();
+        }
         if ('Sales' == $relationName) {
             return $this->initSaless();
         }
+    }
+
+    /**
+     * Clears out the collPurchases collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addPurchases()
+     */
+    public function clearPurchases()
+    {
+        $this->collPurchases = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collPurchases collection loaded partially.
+     */
+    public function resetPartialPurchases($v = true)
+    {
+        $this->collPurchasesPartial = $v;
+    }
+
+    /**
+     * Initializes the collPurchases collection.
+     *
+     * By default this just sets the collPurchases collection to an empty array (like clearcollPurchases());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPurchases($overrideExisting = true)
+    {
+        if (null !== $this->collPurchases && !$overrideExisting) {
+            return;
+        }
+        $this->collPurchases = new ObjectCollection();
+        $this->collPurchases->setModel('\ORM\PurchaseDetail');
+    }
+
+    /**
+     * Gets an array of ChildPurchaseDetail objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildStock is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildPurchaseDetail[] List of ChildPurchaseDetail objects
+     * @throws PropelException
+     */
+    public function getPurchases(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPurchasesPartial && !$this->isNew();
+        if (null === $this->collPurchases || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPurchases) {
+                // return empty collection
+                $this->initPurchases();
+            } else {
+                $collPurchases = ChildPurchaseDetailQuery::create(null, $criteria)
+                    ->filterByStock($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collPurchasesPartial && count($collPurchases)) {
+                        $this->initPurchases(false);
+
+                        foreach ($collPurchases as $obj) {
+                            if (false == $this->collPurchases->contains($obj)) {
+                                $this->collPurchases->append($obj);
+                            }
+                        }
+
+                        $this->collPurchasesPartial = true;
+                    }
+
+                    return $collPurchases;
+                }
+
+                if ($partial && $this->collPurchases) {
+                    foreach ($this->collPurchases as $obj) {
+                        if ($obj->isNew()) {
+                            $collPurchases[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPurchases = $collPurchases;
+                $this->collPurchasesPartial = false;
+            }
+        }
+
+        return $this->collPurchases;
+    }
+
+    /**
+     * Sets a collection of ChildPurchaseDetail objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $purchases A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildStock The current object (for fluent API support)
+     */
+    public function setPurchases(Collection $purchases, ConnectionInterface $con = null)
+    {
+        /** @var ChildPurchaseDetail[] $purchasesToDelete */
+        $purchasesToDelete = $this->getPurchases(new Criteria(), $con)->diff($purchases);
+
+
+        $this->purchasesScheduledForDeletion = $purchasesToDelete;
+
+        foreach ($purchasesToDelete as $purchaseRemoved) {
+            $purchaseRemoved->setStock(null);
+        }
+
+        $this->collPurchases = null;
+        foreach ($purchases as $purchase) {
+            $this->addPurchase($purchase);
+        }
+
+        $this->collPurchases = $purchases;
+        $this->collPurchasesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PurchaseDetail objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related PurchaseDetail objects.
+     * @throws PropelException
+     */
+    public function countPurchases(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collPurchasesPartial && !$this->isNew();
+        if (null === $this->collPurchases || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPurchases) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPurchases());
+            }
+
+            $query = ChildPurchaseDetailQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByStock($this)
+                ->count($con);
+        }
+
+        return count($this->collPurchases);
+    }
+
+    /**
+     * Method called to associate a ChildPurchaseDetail object to this object
+     * through the ChildPurchaseDetail foreign key attribute.
+     *
+     * @param  ChildPurchaseDetail $l ChildPurchaseDetail
+     * @return $this|\ORM\Stock The current object (for fluent API support)
+     */
+    public function addPurchase(ChildPurchaseDetail $l)
+    {
+        if ($this->collPurchases === null) {
+            $this->initPurchases();
+            $this->collPurchasesPartial = true;
+        }
+
+        if (!$this->collPurchases->contains($l)) {
+            $this->doAddPurchase($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildPurchaseDetail $purchase The ChildPurchaseDetail object to add.
+     */
+    protected function doAddPurchase(ChildPurchaseDetail $purchase)
+    {
+        $this->collPurchases[]= $purchase;
+        $purchase->setStock($this);
+    }
+
+    /**
+     * @param  ChildPurchaseDetail $purchase The ChildPurchaseDetail object to remove.
+     * @return $this|ChildStock The current object (for fluent API support)
+     */
+    public function removePurchase(ChildPurchaseDetail $purchase)
+    {
+        if ($this->getPurchases()->contains($purchase)) {
+            $pos = $this->collPurchases->search($purchase);
+            $this->collPurchases->remove($pos);
+            if (null === $this->purchasesScheduledForDeletion) {
+                $this->purchasesScheduledForDeletion = clone $this->collPurchases;
+                $this->purchasesScheduledForDeletion->clear();
+            }
+            $this->purchasesScheduledForDeletion[]= $purchase;
+            $purchase->setStock(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Stock is new, it will return
+     * an empty collection; or if this Stock has previously
+     * been saved, it will retrieve related Purchases from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Stock.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPurchaseDetail[] List of ChildPurchaseDetail objects
+     */
+    public function getPurchasesJoinPurchase(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPurchaseDetailQuery::create(null, $criteria);
+        $query->joinWith('Purchase', $joinBehavior);
+
+        return $this->getPurchases($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Stock is new, it will return
+     * an empty collection; or if this Stock has previously
+     * been saved, it will retrieve related Purchases from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Stock.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildPurchaseDetail[] List of ChildPurchaseDetail objects
+     */
+    public function getPurchasesJoinNotification(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildPurchaseDetailQuery::create(null, $criteria);
+        $query->joinWith('Notification', $joinBehavior);
+
+        return $this->getPurchases($query, $con);
     }
 
     /**
@@ -1893,31 +2284,6 @@ abstract class Stock implements ActiveRecordInterface
         return $this->getSaless($query, $con);
     }
 
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Stock is new, it will return
-     * an empty collection; or if this Stock has previously
-     * been saved, it will retrieve related Saless from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Stock.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildSalesDetail[] List of ChildSalesDetail objects
-     */
-    public function getSalessJoinUnit(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildSalesDetailQuery::create(null, $criteria);
-        $query->joinWith('Unit', $joinBehavior);
-
-        return $this->getSaless($query, $con);
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1940,6 +2306,7 @@ abstract class Stock implements ActiveRecordInterface
         $this->sell_distributor = null;
         $this->sell_misc = null;
         $this->discount = null;
+        $this->unlimited = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
@@ -1959,6 +2326,11 @@ abstract class Stock implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collPurchases) {
+                foreach ($this->collPurchases as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collSaless) {
                 foreach ($this->collSaless as $o) {
                     $o->clearAllReferences($deep);
@@ -1966,6 +2338,7 @@ abstract class Stock implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collPurchases = null;
         $this->collSaless = null;
         $this->aProduct = null;
         $this->aUnit = null;

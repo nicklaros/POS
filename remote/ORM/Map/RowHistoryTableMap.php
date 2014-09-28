@@ -113,8 +113,8 @@ class RowHistoryTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Data', 'RowId', 'Time', 'Operation', 'UserID', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'data', 'rowId', 'time', 'operation', 'userID', ),
+        self::TYPE_PHPNAME       => array('Id', 'Data', 'RowId', 'Time', 'Operation', 'UserId', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'data', 'rowId', 'time', 'operation', 'userId', ),
         self::TYPE_COLNAME       => array(RowHistoryTableMap::COL_ID, RowHistoryTableMap::COL_DATA, RowHistoryTableMap::COL_ROW_ID, RowHistoryTableMap::COL_TIME, RowHistoryTableMap::COL_OPERATION, RowHistoryTableMap::COL_USER_ID, ),
         self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_DATA', 'COL_ROW_ID', 'COL_TIME', 'COL_OPERATION', 'COL_USER_ID', ),
         self::TYPE_FIELDNAME     => array('id', 'data', 'row_id', 'time', 'operation', 'user_id', ),
@@ -128,8 +128,8 @@ class RowHistoryTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Data' => 1, 'RowId' => 2, 'Time' => 3, 'Operation' => 4, 'UserID' => 5, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'data' => 1, 'rowId' => 2, 'time' => 3, 'operation' => 4, 'userID' => 5, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Data' => 1, 'RowId' => 2, 'Time' => 3, 'Operation' => 4, 'UserId' => 5, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'data' => 1, 'rowId' => 2, 'time' => 3, 'operation' => 4, 'userId' => 5, ),
         self::TYPE_COLNAME       => array(RowHistoryTableMap::COL_ID => 0, RowHistoryTableMap::COL_DATA => 1, RowHistoryTableMap::COL_ROW_ID => 2, RowHistoryTableMap::COL_TIME => 3, RowHistoryTableMap::COL_OPERATION => 4, RowHistoryTableMap::COL_USER_ID => 5, ),
         self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_DATA' => 1, 'COL_ROW_ID' => 2, 'COL_TIME' => 3, 'COL_OPERATION' => 4, 'COL_USER_ID' => 5, ),
         self::TYPE_FIELDNAME     => array('id' => 0, 'data' => 1, 'row_id' => 2, 'time' => 3, 'operation' => 4, 'user_id' => 5, ),
@@ -157,7 +157,7 @@ class RowHistoryTableMap extends TableMap
         $this->addColumn('ROW_ID', 'RowId', 'BIGINT', false, 20, null);
         $this->addColumn('TIME', 'Time', 'TIMESTAMP', false, null, null);
         $this->addColumn('OPERATION', 'Operation', 'VARCHAR', false, null, null);
-        $this->addForeignKey('USER_ID', 'UserID', 'BIGINT', 'user_detail', 'ID', false, 20, null);
+        $this->addForeignKey('USER_ID', 'UserId', 'BIGINT', 'user_detail', 'ID', false, 20, null);
     } // initialize()
 
     /**
@@ -165,7 +165,7 @@ class RowHistoryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('UserDetail', '\\ORM\\UserDetail', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('UserDetail', '\\ORM\\UserDetail', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), 'RESTRICT', 'RESTRICT');
     } // buildRelations()
 
     /**

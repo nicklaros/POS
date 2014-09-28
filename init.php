@@ -18,6 +18,7 @@ try{
     $options = OptionQuery::create()
         ->filterByName([
             'app_name',
+            'app_photo',
             'dev_name',
             'dev_email',
             'dev_phone',
@@ -38,6 +39,28 @@ try{
 
     $root['info'] = $info;
     
+    // get shortcut key from database
+    $shortcutKeys = [];
+    $keys = OptionQuery::create()
+        ->filterByName([
+            'sales_key',
+            'sales_add_key',
+            'sales_pay_key',
+            'sales_save_key',
+            'sales_cancel_key',
+            'purchase_key',
+            'purchase_add_key',
+            'purchase_save_key',
+            'purchase_cancel_key'
+        ])
+        ->find($con);
+
+    foreach($keys as $key){
+        $shortcutKeys[$key->getName()] = $key->getValue();
+    }
+
+    $root['shortcutKeys'] = $shortcutKeys;
+    
     // Check previous session
     try{
         if (
@@ -57,6 +80,8 @@ try{
             ])
             ->leftJoin('Detail')
             ->withColumn('Detail.Name', 'name')
+            ->withColumn('Detail.Address', 'address')
+            ->withColumn('Detail.Phone', 'phone')
             ->findOne($con);
         if(!$user) throw new Exception();
 
@@ -93,10 +118,18 @@ try{
 
     $root['menu'] = $menu;
 
+    // get application root folder
+    $homepath       = $info['homepath'];
+    $localpath      = getenv('SCRIPT_NAME');
+    $absolutepath   = realpath(basename($localpath));
+    $absolutepath   = str_replace("\\","/", $absolutepath);
+    $root['folder'] = substr($absolutepath, 0, strpos($absolutepath, $localpath)) . $homepath;
+    
     $session->set('pos/state', $root['state']);
     $session->set('pos/current_user', $root['current_user']);
     $session->set('pos/info', $root['info']);
     $session->set('pos/menu', $root['menu']);
+    $session->set('pos/folder', $root['folder']);
 
     $con->commit();
 }catch (Exception $e){

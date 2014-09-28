@@ -9,12 +9,18 @@ Ext.define('POS.custom.grid.Notification', {
     
     columnLines: true,
     hideHeaders: true,
+    selModel: {
+        pruneRemoved: false
+    },
     selType: 'rowmodel',
+    viewConfig: {
+        preserveScrollOnRefresh: true
+    },
     
     minHeight: 150,
     
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.Notification');
+        this.store = POS.app.getStore('Notification');
 
         this.columns = [{
             xtype   : 'templatecolumn', 

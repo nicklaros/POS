@@ -33,6 +33,7 @@ Ext.define('POS.view.main.Main', {
         xtype: 'app-nav',
         dockedItems: [{
             xtype: 'toolbar',
+            hidden: true,
             dock: 'top',
             style: {
                 'background': '#789'
@@ -43,11 +44,14 @@ Ext.define('POS.view.main.Main', {
                     text: '<i class="fa fa-bell-o glyph"></i> {notificationCount} Pemberitahuan'
                 },
                 handler: 'openNotification'
-            }]
+            }],
+            bind: {
+                visible: '{state}'
+            }
         }]
     },{
         region: 'center',
         xtype: 'app-tab'
-    }],
+    }]
     
 });

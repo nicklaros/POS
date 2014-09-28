@@ -8,7 +8,12 @@ Ext.define('POS.view.form.LoginController', {
     ],
 
     control: {
-        'textfield': {
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
+        'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
                 if(e.getKey() == e.ENTER) this.login();
             }

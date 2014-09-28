@@ -22,33 +22,33 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUnitQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUnitQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildUnitQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildUnitQuery groupById() Group by the id column
  * @method     ChildUnitQuery groupByName() Group by the name column
+ * @method     ChildUnitQuery groupByStatus() Group by the status column
  *
  * @method     ChildUnitQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUnitQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     ChildUnitQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUnitQuery leftJoinSales($relationAlias = null) Adds a LEFT JOIN clause to the query using the Sales relation
- * @method     ChildUnitQuery rightJoinSales($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Sales relation
- * @method     ChildUnitQuery innerJoinSales($relationAlias = null) Adds a INNER JOIN clause to the query using the Sales relation
- *
  * @method     ChildUnitQuery leftJoinStock($relationAlias = null) Adds a LEFT JOIN clause to the query using the Stock relation
  * @method     ChildUnitQuery rightJoinStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Stock relation
  * @method     ChildUnitQuery innerJoinStock($relationAlias = null) Adds a INNER JOIN clause to the query using the Stock relation
  *
- * @method     \ORM\SalesDetailQuery|\ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \ORM\StockQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUnit findOne(ConnectionInterface $con = null) Return the first ChildUnit matching the query
  * @method     ChildUnit findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUnit matching the query, or a new ChildUnit object populated from the query conditions when no match is found
  *
  * @method     ChildUnit findOneById(string $id) Return the first ChildUnit filtered by the id column
  * @method     ChildUnit findOneByName(string $name) Return the first ChildUnit filtered by the name column
+ * @method     ChildUnit findOneByStatus(string $status) Return the first ChildUnit filtered by the status column
  *
  * @method     ChildUnit[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUnit objects based on current ModelCriteria
  * @method     ChildUnit[]|ObjectCollection findById(string $id) Return ChildUnit objects filtered by the id column
  * @method     ChildUnit[]|ObjectCollection findByName(string $name) Return ChildUnit objects filtered by the name column
+ * @method     ChildUnit[]|ObjectCollection findByStatus(string $status) Return ChildUnit objects filtered by the status column
  * @method     ChildUnit[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -138,7 +138,7 @@ abstract class UnitQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME FROM unit WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME, STATUS FROM unit WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -299,76 +299,32 @@ abstract class UnitQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \ORM\SalesDetail object
+     * Filter the query on the status column
      *
-     * @param \ORM\SalesDetail|ObjectCollection $salesDetail  the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * Example usage:
+     * <code>
+     * $query->filterByStatus('fooValue');   // WHERE status = 'fooValue'
+     * $query->filterByStatus('%fooValue%'); // WHERE status LIKE '%fooValue%'
+     * </code>
      *
-     * @return ChildUnitQuery The current query, for fluid interface
-     */
-    public function filterBySales($salesDetail, $comparison = null)
-    {
-        if ($salesDetail instanceof \ORM\SalesDetail) {
-            return $this
-                ->addUsingAlias(UnitTableMap::COL_ID, $salesDetail->getUnitId(), $comparison);
-        } elseif ($salesDetail instanceof ObjectCollection) {
-            return $this
-                ->useSalesQuery()
-                ->filterByPrimaryKeys($salesDetail->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterBySales() only accepts arguments of type \ORM\SalesDetail or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Sales relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param     string $status The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildUnitQuery The current query, for fluid interface
      */
-    public function joinSales($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function filterByStatus($status = null, $comparison = null)
     {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Sales');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
+        if (null === $comparison) {
+            if (is_array($status)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $status)) {
+                $status = str_replace('*', '%', $status);
+                $comparison = Criteria::LIKE;
+            }
         }
 
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Sales');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Sales relation SalesDetail object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \ORM\SalesDetailQuery A secondary query class using the current class as primary query
-     */
-    public function useSalesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinSales($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Sales', '\ORM\SalesDetailQuery');
+        return $this->addUsingAlias(UnitTableMap::COL_STATUS, $status, $comparison);
     }
 
     /**

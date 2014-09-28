@@ -1,8 +1,7 @@
 /* global */
 a{
 	text-decoration:none;
-	color:#333;
-	font-weight:bold;
+    cursor: pointer;
 }
 body{
     background-color: #789;
@@ -12,7 +11,6 @@ body{
 html{
     height: 100%;
 }
-
 
 /* id */
 #initLoader{
@@ -30,7 +28,29 @@ html{
 }
 
 
-/* field class */
+/* body */
+.body-text{
+    color: #838383;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    float: left;
+    padding: 1.5px;
+    white-space: normal;
+}
+
+
+/* glyph */
+.glyph{
+    font-size:18px !important;
+    margin-right: 5px;
+}
+.glyph-closer{
+    font-size:18px !important;
+}
+
+
+/* field */
 .field-highlight{
     background-color: antiquewhite;
     font-size: 20px;
@@ -51,9 +71,9 @@ html{
 }
 
 
-/* panel class */
+/* panel */
 .panel{
-    border: 1px solid #d3d3d3;
+    border: 1px solid #d3d3d3 !important;
     border-radius: 2px;
     padding: 0;
     background-color: #ffffff;
@@ -78,7 +98,7 @@ html{
 }
 
 
-/* window class */
+/* window */
 .window{
     border:0 !important;
     border-radius: 3px !important;
@@ -87,11 +107,32 @@ html{
     border-bottom: solid #d3d3d3;
 }
 
+/* hint */
+.hint-container{
+    color: #838383;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 12px;
+    height: auto;
+    line-height: 2;
+    white-space: normal;
+}
+.hint-container .block{
+    float: left;
+    width: 200px;
+}
+.hint-text{
+    font-size: 12px;
+    color: #7C7C7C;
+}
+
 
 /* notification */
-.notification-block{
+.notification-container{
     color: #868686;
     font-family: tahoma, arial, sans-serif;
+    width: 570px;
+}
+.notification-container .body{
     font-size: 12px;
     line-height: 1.5;
     overflow: hidden;
@@ -99,16 +140,27 @@ html{
     white-space: normal;
     width: auto;
 }
-.notification-delete a{
-    color: #868686;
+.notification-container .body .time{
+    font-size: 10px;
+}
+.notification-container .body a{
+    color: #ADB6CC;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: normal;
+}
+.notification-container .body a:hover{
+    color: #223AB4;
+}
+.notification-container .delete a{
+    color: #ccc;
     cursor: pointer;
     display: block;
     float: right;
-    font-family: tahoma, arial, sans-serif;
     font-size: 8px;
     padding: 5px 10px;
 }
-.notification-delete a:hover{
+.notification-container .delete a:hover{
     color: #333;
     background-color: #ddd;
     border: 1px solid #f3f3f3;
@@ -116,7 +168,18 @@ html{
     padding: 4px 9px;
 }
 
-/* color class */
+/* align */
+.left{
+    text-align: left;
+}
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+}
+
+/* color */
 .bg-body{
     background-color: #ffffff;
 }
@@ -128,6 +191,9 @@ html{
 }
 .grey{
      color: #D5D5D5 !important;
+ }
+.black{
+     color: #000000 !important;
  }
 .blue{
     color: #0075D4 !important;
@@ -142,8 +208,22 @@ html{
     color: #FFCC00 !important;
 }
 
+/* text styling */
+.bold{
+    font-weight: bold;
+}
+.underline{
+    text-decoration: underline;
+}
+.line-through{
+    text-decoration: line-through;
+}
+.overline{
+    text-decoration: overline;
+}
 
-/* miscellaneous class */
+
+/* miscellaneous */
 .app-header{
     clear: both;
     float: left;
@@ -169,10 +249,10 @@ html{
     border-right: 0;
     margin-right: 0;
 }
-.glyph{
-    font-size:18px !important;
-    margin-right: 5px;
-}
+
+
+
+
 .harga{
     border: 1px solid rgb(151, 151, 151);
     margin: 7px;
@@ -183,7 +263,8 @@ html{
 }
 .home-logo{
     float: left;
-    width: 95px;
+    height: 60px;
+    margin-top: -6px;
     margin-right: 25px;
 }
 .history-trans{
@@ -271,14 +352,6 @@ html{
     font-size: 12px;
     line-height: 25px;
 }
-.value{
-    font-family: tahoma, arial, sans-serif;
-    float: left;
-    font-size: 12px;
-    white-space: normal;
-    color: #838383;
-    padding: 1.5px;
-}
 .warning{
     font-family: tahoma, arial, sans-serif;
     font-size:12px;
@@ -288,11 +361,4 @@ html{
     border:2px solid #193f4b;
     padding: 10px;
     margin: 10px 0;
-}
-
-.right{
-    text-align: right;
-}
-.left{
-    text-align: left;
 }

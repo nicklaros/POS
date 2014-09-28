@@ -9,6 +9,21 @@ Ext.define('POS.store.Sales', {
         property: 'date',
         direction: 'DESC'
     }],
+    
+    init: function(){
+        this.setProxy({
+            type: 'websocket',
+            storeId: this.getStoreId(),
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'sales/read'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+    },
 
     search: function(params){
         this.getProxy().extraParams = params;

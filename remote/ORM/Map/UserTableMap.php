@@ -160,6 +160,7 @@ class UserTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('Role', '\\ORM\\Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'NO ACTION', 'RESTRICT');
+        $this->addRelation('Notification', '\\ORM\\NotificationOnUser', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', 'RESTRICT', 'Notifications');
         $this->addRelation('Detail', '\\ORM\\UserDetail', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', 'RESTRICT');
     } // buildRelations()
     /**
@@ -169,6 +170,7 @@ class UserTableMap extends TableMap
     {
         // Invalidate objects in related instance pools,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        NotificationOnUserTableMap::clearInstancePool();
         UserDetailTableMap::clearInstancePool();
     }
 

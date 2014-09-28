@@ -5,7 +5,7 @@ Ext.define('POS.view.purchase.DetailController', {
     control: {
         '#': {
             close: function(){
-                POS.app.getStore('POS.store.PurchaseDetail').removeAll(true);
+                POS.app.getStore('PurchaseDetail').removeAll(true);
             }
         }
     },
@@ -28,7 +28,7 @@ Ext.define('POS.view.purchase.DetailController', {
                     // update purchase detail template
                     this.lookupReference('detail-panel').update(result.data);
 
-                    POS.app.getStore('POS.store.PurchaseDetail').loadData(result.detail);
+                    POS.app.getStore('PurchaseDetail').loadData(result.detail);
 
                     panel.show();
                 }else{
@@ -39,7 +39,8 @@ Ext.define('POS.view.purchase.DetailController', {
                 single: true,
                 destroyable: true
             }),
-            panel
+            panel,
+            true
         );
         Ext.ws.Main.send('purchase/viewDetail', params);
     }

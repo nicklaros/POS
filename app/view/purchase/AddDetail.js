@@ -69,10 +69,15 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         allowBlank: false,
                         width: 300,
                         listeners: {
-                            'change': 'onProductChange',
-                            'clear': 'onProductClear',
-                            'select': 'onProductSelect'
+                            'change': 'onChangeProduct',
+                            'clear': 'onClearProduct',
+                            'select': 'onSelectProduct'
                         }
+                    },{
+                        xtype: 'button',
+                        text: '<i class="fa fa-plus"></i>',
+                        handler: 'addProduct',
+                        margin: '25 0 0 5'
                     },{
                         xtype: 'combo-stock-variant',
                         fieldLabel: 'Stock Variant',
@@ -80,20 +85,16 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         reference: 'stock',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
-                        margin: '0 0 0 20',
+                        margin: '0 0 0 50',
                         width: 200,
                         listeners: {
-                            'clear': 'onStockClear',
-                            'select': 'onStockSelect',
-                            'setvalue': 'onStockSetValue'
+                            'clear': 'onClearStock',
+                            'select': 'onSelectStock',
+                            'setvalue': 'onSetValueStock'
                         }
                     },{
-                        xtype: 'label',
-                        html: 'atau',
-                        margin: '30 0 0 10'
-                    },{
                         xtype: 'button',
-                        text: 'Tambah Variant',
+                        text: '<i class="fa fa-plus"></i>',
                         reference: 'add_variant',
                         handler: 'addVariant',
                         margin: '25 0 0 10'
@@ -112,7 +113,7 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         allowBlank: false,
                         step: 1,
                         tabOnEnter: true,
-                        minValue: 1,
+                        minValue: 0,
                         value: 1,
                         width: 75,
                         listeners: {
@@ -131,6 +132,7 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
                         saveOnEnter: true,
+                        selectOnFocus: true,
                         margin: '0 0 0 50',
                         width: 150,
                         listeners: {
@@ -157,9 +159,15 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10'
+                },
+                    '->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',

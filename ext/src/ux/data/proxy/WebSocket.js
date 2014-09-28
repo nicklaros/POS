@@ -395,8 +395,9 @@ Ext.define('Ext.ux.data.proxy.WebSocket', {
                 store.commitChanges();
             }
             else {
+                store.fireEvent('beforepush', store);
                 store.loadData(resultSet.records, true);
-                store.fireEvent('load', store);
+                store.fireEvent('load', store, resultSet.records);
             }
         }
         // Client request case: a callback function (operation) has to be called

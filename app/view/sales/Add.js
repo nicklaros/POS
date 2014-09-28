@@ -6,12 +6,14 @@ Ext.define('POS.view.sales.Add' ,{
 
     requires: [
         'POS.custom.field.ComboCashier',
-        'POS.custom.field.ComboCustomer',
+        'POS.custom.field.ComboSecondParty',
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
+        'POS.custom.panel.hint.Sales',
         'POS.view.sales.AddController',
-        'POS.view.sales.AddDetail'
+        'POS.view.sales.AddDetail',
+        'POS.view.secondparty.Add'
     ],
 
 	autoScroll: true,
@@ -27,9 +29,11 @@ Ext.define('POS.view.sales.Add' ,{
     maximized: true,
     modal: true,
     resizable: false,
+    
+    type: 'Public',
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambah Data Penjualan';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan Baru';
 
         this.items = [{
             xtype: 'container',
@@ -39,6 +43,13 @@ Ext.define('POS.view.sales.Add' ,{
             },
             width: 900,
             items: [{
+                xtype: 'sales-hint',
+                bind: {
+                    data: '{shortcutKeys}'
+                },
+                margin: '0 0 20 0',
+                width: 900
+            },{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 10 0',
@@ -61,14 +72,19 @@ Ext.define('POS.view.sales.Add' ,{
                             value: new Date(),
                             width: 130
                         },{
-                            xtype: 'combo-customer',
-                            fieldLabel: 'Pelanggan',
-                            name: 'customer_id',
-                            reference: 'customer',
+                            xtype: 'combo-second-party',
+                            fieldLabel: 'Dijual Ke',
+                            name: 'second_party',
+                            reference: 'second_party',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
                             margin: '0 0 0 20',
                             width: 200
+                        },{
+                            xtype: 'button',
+                            text: '<i class="fa fa-plus"></i>',
+                            handler: 'addSecondParty',
+                            margin: '25 0 0 5'
                         },{
                             xtype: 'textfield',
                             fieldLabel: 'Catatan',
@@ -82,6 +98,7 @@ Ext.define('POS.view.sales.Add' ,{
                             reference: 'cashier',
                             afterLabelTextTpl: REQUIRED,
                             allowBlank: false,
+                            readOnly: true,
                             margin: '0 0 0 20',
                             width: 200
                         }]
@@ -106,13 +123,16 @@ Ext.define('POS.view.sales.Add' ,{
                             saveOnEnter: true,
                             selectOnFocus: true,
                             margin: '0 0 0 20',
-                            width: 150
+                            width: 150,
+                            listeners: {
+                                change: 'setBalance'
+                            }
                         },{
                             xtype: 'field-price',
                             fieldLabel: 'Sisa',
                             name: 'balance',
                             reference: 'balance',
-                            raedOnly: true,
+                            readOnly: true,
                             saveOnEnter: true,
                             margin: '0 0 0 20',
                             width: 150
@@ -130,7 +150,7 @@ Ext.define('POS.view.sales.Add' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Simpan',
+                    text: '<i class="fa fa-save glyph"></i> Bayar',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',

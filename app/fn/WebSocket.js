@@ -31,7 +31,7 @@ Ext.define('Ext.fn.WebSocket', {
 
     monitor: function(listener, panel, close){
         listener.panel = panel || '';
-        listener.close = close || true;
+        listener.close = (Ext.isEmpty(close) ? true : close);
         return Ext.defer(function(){
             if (this.observable.hasListener(this.args[0])){
                 Ext.fn.App.setLoading(false);

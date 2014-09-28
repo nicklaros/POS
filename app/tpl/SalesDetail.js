@@ -10,9 +10,9 @@ Ext.define('POS.tpl.SalesDetail', {
                     '<td>{[ Ext.fn.Render.date(values.date, true) ]}</td>',
                 '</tr>',
                 '<tr>',
-                    '<td>Pelanggan</td>',
+                    '<td>Dijual Ke</td>',
                     '<td>:</td>',
-                    '<td>{customer_name}</td>',
+                    '<td>{second_party_name}</td>',
                 '</tr>',
                 '<tr>',
                     '<td>Catatan</td>',
@@ -39,12 +39,12 @@ Ext.define('POS.tpl.SalesDetail', {
                     '<td class="right">{[ Ext.fn.Render.currency(values.paid) ]}</td>',
                 '</tr>',
                 '<tr>',
-                    '<td>Sisa</td>',
+                    '<td>Kembali</td>',
                     '<td>:</td>',
                     '<td class="right">{[ Ext.fn.Render.currency(values.balance) ]}</td>',
                 '</tr>',
             '</table>',
-        '</div>',
+        '</div>'
     ],
 
     constructor: function() {

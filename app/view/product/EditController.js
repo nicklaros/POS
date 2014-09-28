@@ -3,8 +3,14 @@ Ext.define('POS.view.product.EditController', {
     alias: 'controller.edit-product',
 
     control: {
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) field.next('field').focus();
+            }
+        },
         'textfield[saveOnEnter = true]': {
-            specialkey: function(f, e){
+            specialkey: function(field, e){
+                field.fireEvent('blur', field);
                 if(e.getKey() == e.ENTER) this.save();
             }
         }
@@ -55,7 +61,8 @@ Ext.define('POS.view.product.EditController', {
                     Ext.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('POS.store.Product').load();
+                        POS.app.getStore('Product').load();
+                        POS.app.getStore('Stock').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }

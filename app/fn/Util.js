@@ -1,7 +1,20 @@
 Ext.define('Ext.fn.Util', {
     singleton: true,
+    
+    addNativeFunction: function(){
+        // add function to Date object used to add or sub the date
+        Date.prototype.addDays = function(days){
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+    },
 
     afterLogin: function(){
+        setTimeout(function(){
+            Ext.fn.App.setLoading(true);
+        }, 10);
+        
         // Create WebSocket connection
         Ext.ws.Main = Ext.fn.WebSocket.create('ws://pos.localhost:8080/POS/Mains');
 
@@ -12,196 +25,92 @@ Ext.define('Ext.fn.Util', {
 
         // Listen WebSocket
         Ext.fn.WebSocket.listen(Ext.ws.Main);
+        
+        // Initialize store
+        this.initStore();
 
-        // Give the store a proxy
-        Ext.fn.Util.applyProxy();
-
-        // wait until websocket connection is opened and then load store
+        // Wait until websocket connection is opened and then load store and remove application mask
         this.waitAndLoadStore();
-
-        // show some stuff
-        //Ext.ComponentQuery.query('home container#refresh')[0].show();
-
-        // hide some stuff
-        //Ext.ComponentQuery.query('home #login-n-banner')[0].hide();
-
-        // start some task
-        //Ext.TaskManager.start(autorefreshHome);
+        
+        // Start some task
     },
 
     afterLogout: function(){
         // Close WebSocket connection
         if (Ext.ws.Main && Ext.ws.Main.getStatus() == 1) Ext.ws.Main.close();
 
-        // clear store
-        POS.app.getStore('POS.store.Notification').removeAll();
+        // Clear store
+        POS.app.getStore('Notification').removeAll();
 
-        // hide some stuff
-        //Ext.ComponentQuery.query('home container#refresh')[0].hide();
-
-        // show some stuff
-        //Ext.ComponentQuery.query('home #login-n-banner')[0].show();
-
-        // stop some task
-        //Ext.TaskManager.stop(autorefreshHome);
+        // Stop some task
     },
+    
+    disableBrowserContextMenu: function(){
+        Ext.getDoc().on('contextmenu', function(e,t,eOpts)  { 
+            if (e.preventDefault) {
+                e.preventDefault();
+            } else {
+                e.returnValue = false;
+            }
+            return false;
+        });
+    },
+    
+    initStore: function(){
+        var stores = [
+            'combo.Cashier',
+            'combo.Product',
+            'combo.SecondParty',
+            'combo.Stock',
+            'combo.Unit',
+            
+            'chart.transaction.CustomDaily',
+            'chart.transaction.customer.Last7Months',
+            'chart.transaction.CustomSalesVsPurchase',
+            'chart.transaction.Last30Days',
+            'chart.transaction.Daily',
+            'chart.transaction.MonthlySalesVsPurchase',
+            
+            'Credit',
+            'CreditPayment',
+            
+            'Customer',
+            'customer.MonthlySales',
+            
+            'Debit',
+            'DebitPayment',
+            
+            'Notification',
+            
+            'Product',
+            
+            'Purchase',
+            
+            'report.CustomPurchase',
+            'report.CustomPurchasedProduct',
+            'report.CustomSaledProduct',
+            'report.CustomSales',
+            'report.CustomSalesCashier',
+            'report.MonthlyPurchase',
+            'report.MonthlyPurchasedProduct',
+            'report.MonthlySaledProduct',
+            'report.MonthlySales',
+            'report.MonthlySalesCashier',
+            
+            'Sales',
+            
+            'Stock',
+            
+            'Supplier',
+            
+            'Unit',
+            
+            'User'
+        ];
 
-    applyProxy: function(){
-        POS.app.getStore('POS.store.combo.Cashier').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.combo.Cashier',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'combo/cashier'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-        
-        POS.app.getStore('POS.store.combo.Customer').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.combo.Customer',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'combo/customer'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-        
-        POS.app.getStore('POS.store.combo.Product').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.combo.Product',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'combo/product'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.combo.Stock').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.combo.Stock',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'combo/stock'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.combo.Unit').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.combo.Unit',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'combo/unit'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.Product').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.Product',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'product/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.Purchase').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.Purchase',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'purchase/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.Notification').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.Notification',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'notification/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.Sales').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.Sales',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'sales/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.SalesDetail').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.SalesDetail',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'salesdetail/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.Stock').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.Stock',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'stock/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
-
-        POS.app.getStore('POS.store.User').setProxy({
-            type: 'websocket',
-            storeId: 'POS.store.User',
-            websocket: Ext.ws.Main,
-            api: {
-                read: 'user/read'
-            },
-            reader: {
-                type: 'json',
-                rootProperty: 'data'
-            }
-        });
+        for (i=0; i<stores.length; i++) {
+            POS.app.getStore(stores[i]).init();
+        }
     },
 
     overrides: function(){
@@ -222,6 +131,45 @@ Ext.define('Ext.fn.Util', {
         Ext.override(Ext.tab.Tab, {
             height: 31
         });
+
+        // enable text selection inside all grid
+        Ext.override(Ext.grid.View, {
+            enableTextSelection: true
+        });
+        
+        // Add the additional 'advanced' VTypes
+        Ext.apply(Ext.form.field.VTypes, {
+            daterange: function(val, field) {
+                var date = field.parseDate(val);
+
+                if (!date) {
+                    return false;
+                }
+                if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
+                    var start = field.previousSibling('#' + field.startDateField);
+                    start.setMaxValue(date);
+                    start.validate();
+                    this.dateRangeMax = date;
+                }
+                else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
+                    var end = field.nextSibling('#' + field.endDateField);
+                    end.setMinValue(date);
+                    end.validate();
+                    this.dateRangeMin = date;
+                }
+                /*
+                 * Always return true since we're only using this vtype to set the
+                 * min/max allowed values (these are tested for after the vtype test)
+                 */
+                return true;
+            },
+
+            daterangeText: 'Start date must be less than end date'
+        });
+    },
+    
+    removeAppMask: function(){
+        Ext.fn.App.setLoading(false);
     },
 
     SHA512: function(str){
@@ -498,7 +446,16 @@ Ext.define('Ext.fn.Util', {
     waitAndLoadStore: function(){
         var me = this;
         if (Ext.ws.Main.getStatus() == 1) {
-            POS.app.getStore('POS.store.Notification').load();
+            var stores = [
+                'chart.transaction.Last30Days',
+                'Notification'
+            ];
+            
+            for (i=0; i<stores.length; i++) {
+                POS.app.getStore(stores[i]).load();
+            }
+            
+            me.removeAppMask();
         } else {
             setTimeout(function(){
                 me.waitAndLoadStore();

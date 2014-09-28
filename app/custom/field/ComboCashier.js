@@ -18,12 +18,13 @@ Ext.define('POS.custom.field.ComboCashier', {
     minChars: 1,
     queryDelay: 50,
     queryMode: 'remote',
+    selectOnFocus: true,
     triggerAction: 'query',
     typeAhead: true,
     typeAheadDelay: 250,
 
     initComponent: function(){
-        this.store = POS.app.getStore('POS.store.combo.Cashier');
+        this.store = POS.app.getStore('combo.Cashier');
 
         this.callParent(arguments);
     }

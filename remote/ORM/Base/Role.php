@@ -4,6 +4,8 @@ namespace ORM\Base;
 
 use \Exception;
 use \PDO;
+use ORM\NotificationOption as ChildNotificationOption;
+use ORM\NotificationOptionQuery as ChildNotificationOptionQuery;
 use ORM\Role as ChildRole;
 use ORM\RolePermission as ChildRolePermission;
 use ORM\RolePermissionQuery as ChildRolePermissionQuery;
@@ -71,6 +73,12 @@ abstract class Role implements ActiveRecordInterface
     protected $name;
 
     /**
+     * @var        ObjectCollection|ChildNotificationOption[] Collection to store aggregation of ChildNotificationOption objects.
+     */
+    protected $collNotificationOptions;
+    protected $collNotificationOptionsPartial;
+
+    /**
      * @var        ChildRolePermission one-to-one related ChildRolePermission object
      */
     protected $singlePermission;
@@ -88,6 +96,12 @@ abstract class Role implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildNotificationOption[]
+     */
+    protected $notificationOptionsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -482,6 +496,8 @@ abstract class Role implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collNotificationOptions = null;
+
             $this->singlePermission = null;
 
             $this->collUsers = null;
@@ -594,6 +610,23 @@ abstract class Role implements ActiveRecordInterface
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->notificationOptionsScheduledForDeletion !== null) {
+                if (!$this->notificationOptionsScheduledForDeletion->isEmpty()) {
+                    \ORM\NotificationOptionQuery::create()
+                        ->filterByPrimaryKeys($this->notificationOptionsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->notificationOptionsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collNotificationOptions !== null) {
+                foreach ($this->collNotificationOptions as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->singlePermission !== null) {
@@ -774,6 +807,9 @@ abstract class Role implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collNotificationOptions) {
+                $result['NotificationOptions'] = $this->collNotificationOptions->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->singlePermission) {
                 $result['Permission'] = $this->singlePermission->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
@@ -986,6 +1022,12 @@ abstract class Role implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getNotificationOptions() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addNotificationOption($relObj->copy($deepCopy));
+                }
+            }
+
             $relObj = $this->getPermission();
             if ($relObj) {
                 $copyObj->setPermission($relObj->copy($deepCopy));
@@ -1038,9 +1080,230 @@ abstract class Role implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('NotificationOption' == $relationName) {
+            return $this->initNotificationOptions();
+        }
         if ('User' == $relationName) {
             return $this->initUsers();
         }
+    }
+
+    /**
+     * Clears out the collNotificationOptions collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addNotificationOptions()
+     */
+    public function clearNotificationOptions()
+    {
+        $this->collNotificationOptions = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collNotificationOptions collection loaded partially.
+     */
+    public function resetPartialNotificationOptions($v = true)
+    {
+        $this->collNotificationOptionsPartial = $v;
+    }
+
+    /**
+     * Initializes the collNotificationOptions collection.
+     *
+     * By default this just sets the collNotificationOptions collection to an empty array (like clearcollNotificationOptions());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initNotificationOptions($overrideExisting = true)
+    {
+        if (null !== $this->collNotificationOptions && !$overrideExisting) {
+            return;
+        }
+        $this->collNotificationOptions = new ObjectCollection();
+        $this->collNotificationOptions->setModel('\ORM\NotificationOption');
+    }
+
+    /**
+     * Gets an array of ChildNotificationOption objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildRole is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildNotificationOption[] List of ChildNotificationOption objects
+     * @throws PropelException
+     */
+    public function getNotificationOptions(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNotificationOptionsPartial && !$this->isNew();
+        if (null === $this->collNotificationOptions || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collNotificationOptions) {
+                // return empty collection
+                $this->initNotificationOptions();
+            } else {
+                $collNotificationOptions = ChildNotificationOptionQuery::create(null, $criteria)
+                    ->filterByRole($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collNotificationOptionsPartial && count($collNotificationOptions)) {
+                        $this->initNotificationOptions(false);
+
+                        foreach ($collNotificationOptions as $obj) {
+                            if (false == $this->collNotificationOptions->contains($obj)) {
+                                $this->collNotificationOptions->append($obj);
+                            }
+                        }
+
+                        $this->collNotificationOptionsPartial = true;
+                    }
+
+                    return $collNotificationOptions;
+                }
+
+                if ($partial && $this->collNotificationOptions) {
+                    foreach ($this->collNotificationOptions as $obj) {
+                        if ($obj->isNew()) {
+                            $collNotificationOptions[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collNotificationOptions = $collNotificationOptions;
+                $this->collNotificationOptionsPartial = false;
+            }
+        }
+
+        return $this->collNotificationOptions;
+    }
+
+    /**
+     * Sets a collection of ChildNotificationOption objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $notificationOptions A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildRole The current object (for fluent API support)
+     */
+    public function setNotificationOptions(Collection $notificationOptions, ConnectionInterface $con = null)
+    {
+        /** @var ChildNotificationOption[] $notificationOptionsToDelete */
+        $notificationOptionsToDelete = $this->getNotificationOptions(new Criteria(), $con)->diff($notificationOptions);
+
+
+        $this->notificationOptionsScheduledForDeletion = $notificationOptionsToDelete;
+
+        foreach ($notificationOptionsToDelete as $notificationOptionRemoved) {
+            $notificationOptionRemoved->setRole(null);
+        }
+
+        $this->collNotificationOptions = null;
+        foreach ($notificationOptions as $notificationOption) {
+            $this->addNotificationOption($notificationOption);
+        }
+
+        $this->collNotificationOptions = $notificationOptions;
+        $this->collNotificationOptionsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related NotificationOption objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related NotificationOption objects.
+     * @throws PropelException
+     */
+    public function countNotificationOptions(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collNotificationOptionsPartial && !$this->isNew();
+        if (null === $this->collNotificationOptions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collNotificationOptions) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getNotificationOptions());
+            }
+
+            $query = ChildNotificationOptionQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByRole($this)
+                ->count($con);
+        }
+
+        return count($this->collNotificationOptions);
+    }
+
+    /**
+     * Method called to associate a ChildNotificationOption object to this object
+     * through the ChildNotificationOption foreign key attribute.
+     *
+     * @param  ChildNotificationOption $l ChildNotificationOption
+     * @return $this|\ORM\Role The current object (for fluent API support)
+     */
+    public function addNotificationOption(ChildNotificationOption $l)
+    {
+        if ($this->collNotificationOptions === null) {
+            $this->initNotificationOptions();
+            $this->collNotificationOptionsPartial = true;
+        }
+
+        if (!$this->collNotificationOptions->contains($l)) {
+            $this->doAddNotificationOption($l);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildNotificationOption $notificationOption The ChildNotificationOption object to add.
+     */
+    protected function doAddNotificationOption(ChildNotificationOption $notificationOption)
+    {
+        $this->collNotificationOptions[]= $notificationOption;
+        $notificationOption->setRole($this);
+    }
+
+    /**
+     * @param  ChildNotificationOption $notificationOption The ChildNotificationOption object to remove.
+     * @return $this|ChildRole The current object (for fluent API support)
+     */
+    public function removeNotificationOption(ChildNotificationOption $notificationOption)
+    {
+        if ($this->getNotificationOptions()->contains($notificationOption)) {
+            $pos = $this->collNotificationOptions->search($notificationOption);
+            $this->collNotificationOptions->remove($pos);
+            if (null === $this->notificationOptionsScheduledForDeletion) {
+                $this->notificationOptionsScheduledForDeletion = clone $this->collNotificationOptions;
+                $this->notificationOptionsScheduledForDeletion->clear();
+            }
+            $this->notificationOptionsScheduledForDeletion[]= $notificationOption;
+            $notificationOption->setRole(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1324,6 +1587,11 @@ abstract class Role implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collNotificationOptions) {
+                foreach ($this->collNotificationOptions as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->singlePermission) {
                 $this->singlePermission->clearAllReferences($deep);
             }
@@ -1334,6 +1602,7 @@ abstract class Role implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collNotificationOptions = null;
         $this->singlePermission = null;
         $this->collUsers = null;
     }
