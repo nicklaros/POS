@@ -11,6 +11,7 @@ Ext.define('POS.view.report.Monthly' ,{
         'Ext.ux.form.field.Month',
         'POS.custom.chart.transaction.SalesVsPurchase',
         'POS.custom.chart.transaction.Transaction',
+        'POS.custom.grid.CashierReport',
         'POS.custom.grid.PurchasedProduct',
         'POS.custom.grid.PurchaseReport',
         'POS.custom.grid.SaledProduct',
@@ -22,6 +23,7 @@ Ext.define('POS.view.report.Monthly' ,{
         'POS.store.report.MonthlyPurchasedProduct',
         'POS.store.report.MonthlySaledProduct',
         'POS.store.report.MonthlySales',
+        'POS.store.report.MonthlySalesCashier',
         'POS.view.report.MonthlyController',
         'POS.view.report.MonthlyModel'
     ],
@@ -144,6 +146,10 @@ Ext.define('POS.view.report.Monthly' ,{
                 xtype: 'grid-purchased-product',
                 title: 'Produk yang Dibeli',
                 store: 'report.MonthlyPurchasedProduct'
+            },{
+                xtype: 'grid-cashier-report',
+                title: 'Kasir',
+                store: 'report.MonthlySalesCashier'
             }]
         }];
 

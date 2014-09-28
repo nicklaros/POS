@@ -45,7 +45,7 @@ Ext.define('POS.custom.chart.transaction.SalesVsPurchase', {
             }],
 
             flex: 1,
-            height: 150
+            height: 170
         }];
         
         this.callParent(arguments);

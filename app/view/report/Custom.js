@@ -10,6 +10,7 @@ Ext.define('POS.view.report.Custom' ,{
     requires: [
         'POS.custom.chart.transaction.SalesVsPurchase',
         'POS.custom.field.Date',
+        'POS.custom.grid.CashierReport',
         'POS.custom.grid.PurchasedProduct',
         'POS.custom.grid.PurchaseReport',
         'POS.custom.grid.SaledProduct',
@@ -20,6 +21,7 @@ Ext.define('POS.view.report.Custom' ,{
         'POS.store.report.CustomPurchasedProduct',
         'POS.store.report.CustomSaledProduct',
         'POS.store.report.CustomSales',
+        'POS.store.report.CustomSalesCashier',
         'POS.view.report.CustomController',
         'POS.view.report.CustomModel'
     ],
@@ -155,6 +157,10 @@ Ext.define('POS.view.report.Custom' ,{
                 xtype: 'grid-purchased-product',
                 title: 'Produk yang Dibeli',
                 store: 'report.CustomPurchasedProduct'
+            },{
+                xtype: 'grid-cashier-report',
+                title: 'Kasir',
+                store: 'report.CustomSalesCashier'
             }]
         }];
 

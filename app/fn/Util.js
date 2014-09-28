@@ -90,10 +90,12 @@ Ext.define('Ext.fn.Util', {
             'report.CustomPurchasedProduct',
             'report.CustomSaledProduct',
             'report.CustomSales',
+            'report.CustomSalesCashier',
             'report.MonthlyPurchase',
             'report.MonthlyPurchasedProduct',
             'report.MonthlySaledProduct',
             'report.MonthlySales',
+            'report.MonthlySalesCashier',
             
             'Sales',
             

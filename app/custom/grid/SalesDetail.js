@@ -29,9 +29,9 @@ Ext.define('POS.custom.grid.SalesDetail', {
         }
         
         columns.push(
-            {header: 'Produk', dataIndex: 'product_name', width: 300},
-            {header: 'Jumlah', dataIndex: 'amount', width: 90, align: 'right'},
-            {header: 'Unit', dataIndex: 'unit_name', width: 90},
+            {header: 'Produk', dataIndex: 'product_name', width: 290},
+            {header: 'Jumlah', dataIndex: 'amount', width: 80, align: 'right'},
+            {header: 'Unit', dataIndex: 'unit_name', width: 80},
             {
                 text: 'Harga',
                 columns:[
