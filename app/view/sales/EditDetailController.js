@@ -12,14 +12,31 @@ Ext.define('POS.view.sales.EditDetailController', {
                 }, 10);
             }
         },
+        'textfield[amountOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) {
+                    this.lookupReference('amount').focus(true);
+                }
+            }
+        },
         'textfield[tabOnEnter = true]': {
             specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
+                if(e.getKey() == e.ENTER) {
+                    setTimeout(function(){
+                        field.next('field').focus();
+                    }, 10);
+                }
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
     },
@@ -103,7 +120,9 @@ Ext.define('POS.view.sales.EditDetailController', {
             values.total_price_wo_discount = values.amount * values.unit_price;
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             
-            if (!panel.isEdit) {            
+            if (!panel.isEdit) {
+                delete values.id;
+                
                 var store = POS.app.getStore('SalesDetail'),
                     rec = Ext.create('POS.model.SalesDetail', values);
                     
@@ -113,10 +132,21 @@ Ext.define('POS.view.sales.EditDetailController', {
                 
                 rec.set(values);
             }
-
-            panel.close();
             
-            Ext.ComponentQuery.query('edit-sales')[0].getController().setTotalPrice();
+            panel.isEdit = false;
+            
+            var editSales = Ext.ComponentQuery.query('edit-sales')[0];
+            
+            editSales.getController().setTotalPrice();
+            editSales.type = values.type;
+
+            form.reset();
+            
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> harga <span class="green">' + Ext.fn.Render.sellType(values.type) + '</span> sebesar <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> per ' + values.unit_name + ' telah ditambahkan.');
+            
+            this.lookupReference('type').setValue(values.type);
+            
+            this.lookupReference('stock').focus();
         }
     }
 });

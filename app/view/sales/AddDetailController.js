@@ -23,6 +23,13 @@ Ext.define('POS.view.sales.AddDetailController', {
                 }, 10);
             }
         },
+        'textfield[amountOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) {
+                    this.lookupReference('amount').focus(true);
+                }
+            }
+        },
         'textfield[tabOnEnter = true]': {
             specialkey: function(field, e){
                 if(e.getKey() == e.ENTER) {
@@ -135,6 +142,8 @@ Ext.define('POS.view.sales.AddDetailController', {
                 rec.set(values);
             }
             
+            panel.isEdit = false;
+            
             var addSales = Ext.ComponentQuery.query('add-sales')[0];
             
             addSales.getController().setTotalPrice();
@@ -142,7 +151,7 @@ Ext.define('POS.view.sales.AddDetailController', {
 
             form.reset();
             
-            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> harga <span class="green">' + Ext.fn.Render.sellType(values.type) + '</span> telah ditambahkan.');
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> harga <span class="green">' + Ext.fn.Render.sellType(values.type) + '</span> sebesar <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> per ' + values.unit_name + ' telah ditambahkan.');
             
             this.lookupReference('type').setValue(values.type);
             

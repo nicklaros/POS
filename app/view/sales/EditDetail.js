@@ -64,6 +64,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     reference: 'stock',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
+                    msgTarget: 'side',
                     width: 350,
                     listeners: {
                         'select': 'productSelect'
@@ -90,29 +91,47 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     xtype: 'combo-sell-type',
                     fieldLabel: 'Tipe',
                     name: 'type',
+                    reference: 'type',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
                     saveOnEnter: true,
                     value: 'Public',
                     margin: '0 0 0 50',
-                    width: 150
+                    width: 150,
+                    listeners: {
+                        select: 'save'
+                    }
                 }]
             },{
                 xtype: 'toolbar',
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10',
+                    width: 550
+                },
+                    '->',
                 {
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',
                     handler: 'close'
+                },{
+                    text: '<i class="fa fa-reorder glyph"></i> Lihat Total',
+                    handler: 'close'
                 }]
             },{
                 xtype: 'container',
                 cls: 'panel',
+                hidden: true,
+                bind: {
+                    hidden: '{!stock.selection}'
+                },
                 width: 900,
                 items: [{
                     xtype: 'container',
@@ -127,20 +146,20 @@ Ext.define('POS.view.sales.EditDetail' ,{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Biasa',
                         name: 'sell_public',
-                        saveOnEnter: true,
+                        amountOnEnter: true,
                         width: 150
                     },{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Grosir',
                         name: 'sell_distributor',
-                        saveOnEnter: true,
+                        amountOnEnter: true,
                         margin: '0 0 0 50',
                         width: 150
                     },{
                         xtype: 'field-price',
                         fieldLabel: 'Jual Lain',
                         name: 'sell_misc',
-                        saveOnEnter: true,
+                        amountOnEnter: true,
                         margin: '0 0 0 50',
                         width: 150
                     }]
@@ -153,13 +172,13 @@ Ext.define('POS.view.sales.EditDetail' ,{
                         xtype: 'field-price',
                         fieldLabel: 'Harga Beli',
                         name: 'buy',
-                        saveOnEnter: true,
+                        amountOnEnter: true,
                         width: 150
                     },{
                         xtype: 'field-discount',
                         fieldLabel: 'Diskon (%)',
                         name: 'discount',
-                        saveOnEnter: true,
+                        amountOnEnter: true,
                         margin: '0 0 0 50',
                         width:150
                     }]

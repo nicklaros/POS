@@ -70,6 +70,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         reference: 'product',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
+                        msgTarget: 'side',
                         width: 300,
                         listeners: {
                             'change': 'onChangeProduct',
@@ -168,6 +169,9 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> Batal',
+                    handler: 'close'
+                },{
+                    text: '<i class="fa fa-reorder glyph"></i> Lihat Total',
                     handler: 'close'
                 }]
             },{
