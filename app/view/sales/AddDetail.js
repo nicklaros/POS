@@ -61,7 +61,7 @@ Ext.define('POS.view.sales.AddDetail' ,{
                     reference: 'stock',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
-                    msgTarget: 'side',
+                    msgTarget: 'qtip',
                     width: 350,
                     listeners: {
                         'select': 'productSelect'

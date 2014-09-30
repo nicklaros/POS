@@ -222,10 +222,18 @@ Ext.define('POS.view.purchase.EditDetailController', {
                 var rec = Ext.ComponentQuery.query('edit-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
                 rec.set(values);
             }
-
-            panel.close();
+            
+            panel.isEdit = false;
             
             Ext.ComponentQuery.query('edit-purchase')[0].getController().setTotalPrice();
+
+            form.reset();
+            
+            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> dengan harga satuan <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> telah ditambahkan.');
+            
+            this.lookupReference('price_status').update({});
+            
+            this.lookupReference('product').focus();
         }
     },
     

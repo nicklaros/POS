@@ -2,7 +2,7 @@ Ext.define('POS.tpl.hint.Sales', {
     extend: 'Ext.XTemplate',
 
     html: [
-        '<div class="hint-container">',
+        '<div class="hint-container white">',
             '<div class="block">[<strong>{sales_add_key}</strong>] Tambah Produk</div>',
             '<div class="block">[<strong>{sales_pay_key}</strong>] Bayar</div>',
             '<div class="block">[<strong>{sales_save_key}</strong>] Simpan</div>',

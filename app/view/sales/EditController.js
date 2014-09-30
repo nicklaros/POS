@@ -29,8 +29,11 @@ Ext.define('POS.view.sales.EditController', {
                 btnEdit.setDisabled(selected.length !== 1);
                 btnDelete.setDisabled(selected.length === 0);
             },
-            celldblclick: function(){
-                this.edit();
+            celldblclick: 'edit',
+            itemkeydown : function(view, record, item, index, key) {
+                if (key.getKey() == 46) { //the delete button
+                    this.remove();
+                }  
             }
         }
     },
@@ -56,20 +59,15 @@ Ext.define('POS.view.sales.EditController', {
             sm      = grid.getSelectionModel(),
             sel     = sm.getSelection(),
             smCount = sm.getCount();
+            
+        // remove selected record
+        store.remove(sel[0]);
 
-        Ext.Msg.confirm(
-            '<i class="fa fa-exclamation-triangle glyph"></i> Hapus Data',
-            '<b>Apakah Anda yakin akan menghapus data (<span style="color:red">' + smCount + ' data</span>)?</b><br>',
-            function(btn){
-                if (btn == 'yes'){
-                    var id = [];
-                    for(i=0;i<smCount;i++){
-                        store.remove(sel[i]);
-                    }
-                    me.setTotalPrice();
-                }
-            }
-        );
+        // update total price
+        me.setTotalPrice();
+        
+        // refresh grid
+        grid.getView().refresh();
     },
 
     edit: function(){

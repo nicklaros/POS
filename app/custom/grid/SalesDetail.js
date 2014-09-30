@@ -7,7 +7,7 @@ Ext.define('POS.custom.grid.SalesDetail', {
     ],
     
     columnLines: true,
-    selType: 'checkboxmodel',
+    selType: 'rowmodel',
     
     withRowNumber: false,
     
@@ -32,14 +32,9 @@ Ext.define('POS.custom.grid.SalesDetail', {
             {header: 'Produk', dataIndex: 'product_name', width: 290},
             {header: 'Jumlah', dataIndex: 'amount', width: 80, align: 'right'},
             {header: 'Unit', dataIndex: 'unit_name', width: 80},
-            {
-                text: 'Harga',
-                columns:[
-                    {header: 'Satuan', dataIndex: 'unit_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'},
-                    {header: 'Total', dataIndex: 'total_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'}
-                ]
-            },
+            {header: 'Satuan', dataIndex: 'unit_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'},
+            {header: 'Total', dataIndex: 'total_price', width: 105, renderer: Ext.fn.Render.currency, align: 'right'},
             {header: 'Tipe', dataIndex: 'type', width: 90, renderer: Ext.fn.Render.sellType}
         );
         

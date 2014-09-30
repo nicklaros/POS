@@ -10,7 +10,7 @@ Ext.define('POS.view.sales.Edit' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
-        'POS.custom.panel.hint.Sales',
+        'POS.tpl.hint.Sales',
         'POS.view.sales.EditController',
         'POS.view.sales.EditDetail',
         'POS.view.secondparty.Add'
@@ -41,13 +41,6 @@ Ext.define('POS.view.sales.Edit' ,{
             },
             width: 900,
             items: [{
-                xtype: 'sales-hint',
-                bind: {
-                    data: '{shortcutKeys}'
-                },
-                margin: '0 0 20 0',
-                width: 900
-            },{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 10 0',
@@ -113,6 +106,7 @@ Ext.define('POS.view.sales.Edit' ,{
                             fieldLabel: 'Harga Total',
                             name: 'total_price',
                             reference: 'total_price',
+                            fieldCls: 'field-highlight',
                             readOnly: true,
                             saveOnEnter: true,
                             width: 150
@@ -144,7 +138,7 @@ Ext.define('POS.view.sales.Edit' ,{
             },{
                 xtype: 'toolbar',
                 ui: 'footer',
-                margin: '0 0 30 0',
+                margin: '0 0 10 0',
                 width: 900,
                 items: ['->',
                 {
@@ -159,12 +153,9 @@ Ext.define('POS.view.sales.Edit' ,{
                 cls: 'panel',
                 width: 900,
                 items: [{
-                    xtype: 'container',
-                    html: 'Produk yang Dijual',
-                    cls: 'panel-header'
-                },{
                     xtype: 'grid-sales-detail',
                     reference: 'grid-sales-detail',
+                    withRowNumber: true,
                     dockedItems: [{
                         xtype: 'toolbar',
                         dock: 'top',
@@ -186,6 +177,18 @@ Ext.define('POS.view.sales.Edit' ,{
                     }]
                 }]
             }]
+        }];
+        
+        this.dockedItems = [{
+            xtype: 'panel',
+            dock: 'bottom',
+            bodyStyle: {
+                'background-color': '#789'
+            },
+            tpl: Ext.create('POS.tpl.hint.Sales'),
+            bind: {
+                data: '{shortcutKeys}'
+            }
         }];
 
         this.callParent(arguments);

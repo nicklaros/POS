@@ -52,22 +52,16 @@ html{
 
 /* field */
 .field-highlight{
-    background-color: antiquewhite;
-    font-size: 20px;
-    font-weight: bold;
-    color: #1e1e1e;
+    background-color: #D0FFBA !important;
+    font-weight: bold !important;
 }
 .field-minus{
     background-color: #d60000;
-    font-size: 20px;
     font-weight: bold;
-    color: #f5f5f5;
 }
 .field-plus{
     background-color: #02a6e8;
-    font-size: 20px;
     font-weight: bold;
-    color: #1e1e1e;
 }
 
 
@@ -118,7 +112,13 @@ html{
 }
 .hint-container .block{
     float: left;
-    width: 200px;
+    margin-right: 50px;
+}
+.hint-container .block:first-child{
+    margin-left: 10px;
+}
+.hint-container .block:last-child{
+    margin-right: 10px;
 }
 .hint-text{
     font-size: 12px;
@@ -189,9 +189,6 @@ html{
 .bg-out{
     background-color: #e9eaed;
 }
-.grey{
-     color: #D5D5D5 !important;
- }
 .black{
      color: #000000 !important;
  }
@@ -201,8 +198,14 @@ html{
 .green{
     color: #0DB900 !important;
 }
+.grey{
+     color: #D5D5D5 !important;
+ }
 .red{
     color: #F31200 !important;
+}
+.white{
+    color: #FFFFFF !important;
 }
 .yellow{
     color: #FFCC00 !important;

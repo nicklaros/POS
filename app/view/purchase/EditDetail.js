@@ -70,7 +70,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         reference: 'product',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
-                        msgTarget: 'side',
+                        msgTarget: 'qtip',
                         width: 300,
                         listeners: {
                             'change': 'onChangeProduct',
@@ -163,7 +163,13 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                 ui: 'footer',
                 margin: '0 0 30 0',
                 width: 900,
-                items: ['->',
+                items: [{
+                    xtype: 'label',
+                    reference: 'status',
+                    html: '',
+                    margin: '30 0 0 10'
+                },
+                    '->',
                 {
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'

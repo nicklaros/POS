@@ -67,7 +67,7 @@ Ext.define('POS.view.purchase.AddDetail' ,{
                         reference: 'product',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
-                        msgTarget: 'side',
+                        msgTarget: 'qtip',
                         width: 300,
                         listeners: {
                             'change': 'onChangeProduct',

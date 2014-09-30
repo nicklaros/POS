@@ -239,6 +239,8 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 rec.set(values);
             }
             
+            panel.isEdit = false;
+            
             Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
 
             form.reset();
