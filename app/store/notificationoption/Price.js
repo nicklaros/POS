@@ -1,6 +1,6 @@
-Ext.define('POS.store.combo.Role', {
+Ext.define('POS.store.notificationoption.Price', {
     extend: 'Ext.data.Store',
-    model: 'POS.model.Role',
+    model: 'POS.model.NotificationOption',
     
     init: function(){
         this.setProxy({
@@ -8,7 +8,7 @@ Ext.define('POS.store.combo.Role', {
             storeId: this.getStoreId(),
             websocket: Ext.ws.Main,
             api: {
-                read: 'combo/role'
+                read: 'notification/loadOptionPrice'
             },
             reader: {
                 type: 'json',

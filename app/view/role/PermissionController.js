@@ -1,40 +1,25 @@
-Ext.define('POS.view.user.EditController', {
+Ext.define('POS.view.role.PermissionController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edit-user',
-
-    requires: [
-        'Ext.fn.Util'
-    ],
-
-    control: {
-        'textfield': {
-            specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
-            }
-        }
-    },
+    alias: 'controller.role-permission',
 
     close: function(){
         this.getView().close();
     },
 
     load: function(id){
-        var panel = this.getView(),
-            form = this.lookupReference('form');
+        var panel   = this.getView(),
+            form    = panel.down('form'),
+            params  = {
+                id: id
+            };
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('user/loadFormEdit', {id: id});
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('user/loadFormEdit', function(websocket, result){
+            Ext.ws.Main.on('role/loadPermission', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
-                    var role = Ext.create('POS.model.Role', {
-                        id  : result.data.role_id,
-                        name: result.data.role_name
-                    });
-
-                    result.data.role = role;
+                    panel.show();
                     
                     form.getForm().setValues(result.data);
                 }else{
@@ -45,8 +30,10 @@ Ext.define('POS.view.user.EditController', {
                 single: true,
                 destroyable: true
             }),
-            panel
+            panel,
+            true
         );
+        Ext.ws.Main.send('role/loadPermission', params);
     },
 
     save: function(){
@@ -55,26 +42,25 @@ Ext.define('POS.view.user.EditController', {
 
         if(form.getForm().isValid()){
             var values = form.getValues();
-                
-            values.role_id = values.role;
 
-            Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('user/update', values);
+            panel.setLoading(true);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('user/update', function(websocket, data){
+                Ext.ws.Main.on('role/savePermission', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    panel.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('User').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,
                     destroyable: true
-                })
+                }),
+                panel,
+                false
             );
+            Ext.ws.Main.send('role/savePermission', values);
         }
     }
 });

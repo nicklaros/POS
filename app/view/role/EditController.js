@@ -1,14 +1,12 @@
-Ext.define('POS.view.user.EditController', {
+Ext.define('POS.view.role.EditController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.edit-user',
-
-    requires: [
-        'Ext.fn.Util'
-    ],
+    alias: 'controller.edit-role',
 
     control: {
-        'textfield': {
-            specialkey: function(f, e){
+        'textfield[saveOnEnter = true]': {
+            specialkey: function(field, e){
+                field.fireEvent('blur', field);
+                
                 if(e.getKey() == e.ENTER) this.save();
             }
         }
@@ -19,24 +17,23 @@ Ext.define('POS.view.user.EditController', {
     },
 
     load: function(id){
-        var panel = this.getView(),
-            form = this.lookupReference('form');
+        var panel   = this.getView(),
+            form    = panel.down('form'),
+            params  = {
+                id: id
+            };
 
         Ext.fn.App.setLoading(true);
-        Ext.ws.Main.send('user/loadFormEdit', {id: id});
         var monitor = Ext.fn.WebSocket.monitor(
-            Ext.ws.Main.on('user/loadFormEdit', function(websocket, result){
+            Ext.ws.Main.on('role/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
                 Ext.fn.App.setLoading(false);
                 if (result.success){
-                    var role = Ext.create('POS.model.Role', {
-                        id  : result.data.role_id,
-                        name: result.data.role_name
-                    });
-
-                    result.data.role = role;
+                    panel.show();
                     
                     form.getForm().setValues(result.data);
+                    
+                    this.lookupReference('name').focus();
                 }else{
                     panel.close();
                     Ext.fn.App.notification('Ups', result.errmsg);
@@ -45,8 +42,10 @@ Ext.define('POS.view.user.EditController', {
                 single: true,
                 destroyable: true
             }),
-            panel
+            panel,
+            true
         );
+        Ext.ws.Main.send('role/loadFormEdit', params);
     },
 
     save: function(){
@@ -55,26 +54,32 @@ Ext.define('POS.view.user.EditController', {
 
         if(form.getForm().isValid()){
             var values = form.getValues();
-                
-            values.role_id = values.role;
 
-            Ext.fn.App.setLoading(true);
-            Ext.ws.Main.send('user/update', values);
+            panel.setLoading(true);
             var monitor = Ext.fn.WebSocket.monitor(
-                Ext.ws.Main.on('user/update', function(websocket, data){
+                Ext.ws.Main.on('role/update', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    panel.setLoading(false);
                     if (data.success){
                         panel.close();
-                        POS.app.getStore('User').load();
+                        
+                        POS.app.getStore('Role').load();
                     }else{
                         Ext.fn.App.notification('Ups', data.errmsg);
+                        
+                        var name = this.lookupReference('name');
+                        setTimeout(function(){
+                            name.focus();
+                        }, 10);
                     }
                 }, this, {
                     single: true,
                     destroyable: true
-                })
+                }),
+                panel,
+                false
             );
+            Ext.ws.Main.send('role/update', values);
         }
     }
 });

@@ -46,7 +46,7 @@ Ext.define('POS.view.sales.AddController', {
             },
             celldblclick: 'edit',
             itemkeydown : function(view, record, item, index, key) {
-                if (key.getKey() == 46) { //the delete button
+                if (key.getKey() == 46) { //the delete key
                     this.remove();
                 }  
             }

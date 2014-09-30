@@ -8,9 +8,6 @@ Ext.define('POS.view.user.ListController', {
 
     control: {
         '#': {
-            boxready: function(panel){
-                
-            },
             selectionchange: function(sm, selected){
                 var btnEdit = this.lookupReference('edit'),
                     btnResetPassword = this.lookupReference('resetPassword'),
@@ -26,7 +23,7 @@ Ext.define('POS.view.user.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-user')
+        Ext.fn.App.window('add-user');
     },
 
     edit: function(){

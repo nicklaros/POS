@@ -36,6 +36,8 @@ class Mains {
 
             if(!$user) throw new Exception('Password tidak sesuai dengan User ID yang Anda masukkan');
 
+            if(!$user['role_id']) throw new Exception('Anda belum mempunyai Jabatan. Mohon hubungi petugas berwenang dan mintalah Jabatan terlebih dahulu.');
+
             $menu = $this->getMenu(1, $con);
 
             $results['success'] = true;

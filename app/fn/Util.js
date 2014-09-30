@@ -60,6 +60,7 @@ Ext.define('Ext.fn.Util', {
         var stores = [
             'combo.Cashier',
             'combo.Product',
+            'combo.Role',
             'combo.SecondParty',
             'combo.Stock',
             'combo.Unit',
@@ -75,12 +76,15 @@ Ext.define('Ext.fn.Util', {
             'CreditPayment',
             
             'Customer',
+            
             'customer.MonthlySales',
             
             'Debit',
             'DebitPayment',
             
             'Notification',
+            
+            'notificationoption.Price',
             
             'Product',
             
@@ -96,6 +100,8 @@ Ext.define('Ext.fn.Util', {
             'report.MonthlySaledProduct',
             'report.MonthlySales',
             'report.MonthlySalesCashier',
+            
+            'Role',
             
             'Sales',
             
