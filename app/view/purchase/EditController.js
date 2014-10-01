@@ -88,6 +88,13 @@ Ext.define('POS.view.purchase.EditController', {
                     me.add();
                 }
             },{
+                key: 66, // Alt + B
+                alt: true,
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    me.lookupReference('paid').focus(true);
+                }
+            },{
                 key: 83, // Alt + S
                 alt: true,
                 defaultEventAction: 'preventDefault',

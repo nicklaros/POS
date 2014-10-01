@@ -25,7 +25,9 @@ Ext.define('POS.view.purchase.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-purchase');
+        var addPurchase = Ext.fn.App.window('add-purchase');
+
+        addPurchase.getController().add();
     },
 
     detail: function(){

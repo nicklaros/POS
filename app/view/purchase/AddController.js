@@ -15,10 +15,6 @@ Ext.define('POS.view.purchase.AddController', {
                 me.lookupReference('second_party').setValue(secondParty);
 
                 me.keyMap(panel);
-            
-                setTimeout(function(){
-                    me.add();
-                }, 10);
             },
             close: function(){
                 POS.app.getStore('PurchaseDetail').removeAll();
@@ -99,6 +95,13 @@ Ext.define('POS.view.purchase.AddController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     me.add();
+                }
+            },{
+                key: 66, // Alt + B
+                alt: true,
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    me.lookupReference('paid').focus(true);
                 }
             },{
                 key: 83, // Alt + S

@@ -66,7 +66,9 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        Ext.fn.App.window('add-sales');
+                        var addSales = Ext.fn.App.window('add-sales');
+                        
+                        addSales.getController().add();
                     }
                 }
             },{
@@ -74,7 +76,9 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        Ext.fn.App.window('add-purchase');
+                        var addPurchase = Ext.fn.App.window('add-purchase');
+
+                        addPurchase.getController().add();
                     }
                 }
             }]

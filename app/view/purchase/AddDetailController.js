@@ -5,8 +5,10 @@ Ext.define('POS.view.purchase.AddDetailController', {
     control: {
         '#': {
             boxready: function(){
-                var product = this.lookupReference('product');
+                var addPurchase = Ext.ComponentQuery.query('add-purchase')[0],
+                    product = this.lookupReference('product');
                 
+                addPurchase.show().toBack();
                 setTimeout(function(){
                     product.focus();
                 }, 10);

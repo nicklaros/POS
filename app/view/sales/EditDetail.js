@@ -64,10 +64,10 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     reference: 'stock',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
-                    msgTarget: 'qtip',
                     width: 350,
                     listeners: {
-                        'select': 'productSelect'
+                        select: 'onProductSelect',
+                        blur: 'onProductBlur'
                     }
                 },{
                     xtype: 'field-stock-amount',
@@ -119,10 +119,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
-                    text: '<i class="fa fa-undo glyph"></i> Batal',
-                    handler: 'close'
-                },{
-                    text: '<i class="fa fa-reorder glyph"></i> Lihat Total',
+                    text: '<i class="fa fa-reorder glyph"></i> [Esc] Lihat Total',
                     handler: 'close'
                 }]
             },{

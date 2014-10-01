@@ -27,7 +27,9 @@ Ext.define('POS.view.sales.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-sales');
+        var addSales = Ext.fn.App.window('add-sales');
+
+        addSales.getController().add();
     },
 
     detail: function(){

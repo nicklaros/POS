@@ -17,7 +17,7 @@ Ext.define('POS.view.sales.Add' ,{
     ],
 
 	autoScroll: true,
-    autoShow: true,
+    autoShow: false,
     bodyStyle: {
         'background-color': '#e9eaed',
         border: '0 !important',
@@ -144,10 +144,10 @@ Ext.define('POS.view.sales.Add' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Bayar',
+                    text: '<i class="fa fa-save glyph"></i> [Alt + S] Bayar',
                     handler: 'save'
                 },{
-                    text: '<i class="fa fa-undo glyph"></i> Batal',
+                    text: '<i class="fa fa-undo glyph"></i> [Esc] Batal',
                     handler: 'close'
                 }]
             },{
@@ -162,7 +162,7 @@ Ext.define('POS.view.sales.Add' ,{
                         xtype: 'toolbar',
                         dock: 'top',
                         items: [{
-                            text: '<i class="fa fa-plus-square glyph"></i> Tambah',
+                            text: '<i class="fa fa-plus-square glyph"></i> [Alt + T] Tambah',
                             reference: 'add',
                             handler: 'add'
                         },{
@@ -171,7 +171,7 @@ Ext.define('POS.view.sales.Add' ,{
                             handler: 'edit',
                             disabled: true
                         },{
-                            text: '<i class="fa fa-trash-o glyph"></i> Hapus',
+                            text: '<i class="fa fa-trash-o glyph"></i> [Del] Hapus',
                             reference: 'delete',
                             handler: 'remove',
                             disabled: true

@@ -124,10 +124,10 @@ Ext.define('POS.view.purchase.Add' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Bayar',
+                    text: '<i class="fa fa-save glyph"></i> [Alt + S] Simpan',
                     handler: 'save'
                 },{
-                    text: '<i class="fa fa-undo glyph"></i> Batal',
+                    text: '<i class="fa fa-undo glyph"></i> [Esc] Batal',
                     handler: 'close'
                 }]
             },{

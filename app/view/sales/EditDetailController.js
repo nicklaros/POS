@@ -78,7 +78,7 @@ Ext.define('POS.view.sales.EditDetailController', {
         }, 10);
     },
     
-    productSelect: function(combo, record){
+    onProductSelect: function(combo, record){
         // get selected record data
         var record = (Ext.isArray(record) ? record[0].getData() : record.getData());
         
@@ -92,6 +92,10 @@ Ext.define('POS.view.sales.EditDetailController', {
         
         this.lookupReference('amount').setValue(1);
         this.lookupReference('amount').focus(true);
+    },
+    
+    onProductBlur: function(combo){
+        if (Ext.isEmpty(combo.getSelectedRecord())) combo.reset();
     },
 
     save: function(){

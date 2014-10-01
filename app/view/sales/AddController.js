@@ -22,10 +22,6 @@ Ext.define('POS.view.sales.AddController', {
                 me.lookupReference('cashier').setValue(cashier);   
 
                 me.keyMap(panel);
-            
-                setTimeout(function(){
-                    me.add();
-                }, 10);
             },
             close: function(){
                 POS.app.getStore('SalesDetail').removeAll(true);

@@ -142,10 +142,10 @@ Ext.define('POS.view.sales.Edit' ,{
                 width: 900,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Bayar',
+                    text: '<i class="fa fa-save glyph"></i> [Alt + S] Simpan',
                     handler: 'save'
                 },{
-                    text: '<i class="fa fa-undo glyph"></i> Batal',
+                    text: '<i class="fa fa-undo glyph"></i> [Esc] Batal',
                     handler: 'close'
                 }]
             },{
@@ -160,7 +160,7 @@ Ext.define('POS.view.sales.Edit' ,{
                         xtype: 'toolbar',
                         dock: 'top',
                         items: [{
-                            text: '<i class="fa fa-plus-square glyph"></i> Tambah',
+                            text: '<i class="fa fa-plus-square glyph"></i> [Alt + T] Tambah',
                             reference: 'add',
                             handler: 'add'
                         },{
@@ -169,7 +169,7 @@ Ext.define('POS.view.sales.Edit' ,{
                             handler: 'edit',
                             disabled: true
                         },{
-                            text: '<i class="fa fa-trash-o glyph"></i> Hapus',
+                            text: '<i class="fa fa-trash-o glyph"></i> [Del] Hapus',
                             reference: 'delete',
                             handler: 'remove',
                             disabled: true

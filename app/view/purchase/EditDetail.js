@@ -70,7 +70,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         reference: 'product',
                         afterLabelTextTpl: REQUIRED,
                         allowBlank: false,
-                        msgTarget: 'qtip',
+                        msgTarget: 'title',
                         width: 300,
                         listeners: {
                             'change': 'onChangeProduct',
@@ -174,10 +174,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                     text: '<i class="fa fa-save glyph"></i> Tambahkan',
                     handler: 'save'
                 },{
-                    text: '<i class="fa fa-undo glyph"></i> Batal',
-                    handler: 'close'
-                },{
-                    text: '<i class="fa fa-reorder glyph"></i> Lihat Total',
+                    text: '<i class="fa fa-reorder glyph"></i> [Esc] Lihat Total',
                     handler: 'close'
                 }]
             },{

@@ -5,13 +5,15 @@ Ext.define('POS.view.sales.AddDetailController', {
     control: {
         '#': {
             boxready: function(){
-                var stock = this.lookupReference('stock');
+                var addSales = Ext.ComponentQuery.query('add-sales')[0],
+                    stock = this.lookupReference('stock');
                 
+                addSales.show().toBack();
                 setTimeout(function(){
                     stock.focus();
                 }, 10);
             
-                var type = Ext.ComponentQuery.query('add-sales')[0].type;
+                var type = addSales.type;
                 
                 this.lookupReference('type').setValue(type);
             },
@@ -89,7 +91,7 @@ Ext.define('POS.view.sales.AddDetailController', {
         }, 10);
     },
     
-    productSelect: function(combo, record){
+    onProductSelect: function(combo, record){
         // get selected record data
         var record = (Ext.isArray(record) ? record[0].getData() : record.getData());
         
@@ -103,6 +105,10 @@ Ext.define('POS.view.sales.AddDetailController', {
         
         this.lookupReference('amount').setValue(1);
         this.lookupReference('amount').focus(true);
+    },
+    
+    onProductBlur: function(combo){
+        if (Ext.isEmpty(combo.getSelectedRecord())) combo.reset();
     },
 
     save: function(){
