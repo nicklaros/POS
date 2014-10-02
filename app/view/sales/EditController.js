@@ -7,8 +7,29 @@ Ext.define('POS.view.sales.EditController', {
             boxready: function(panel){
                 this.keyMap(panel);
             },
-            close: function(){
-                POS.app.getStore('SalesDetail').removeAll(true);
+            show: function(){
+                var stock = this.lookupReference('stock');
+                
+                setTimeout(function(){
+                    stock.focus();
+                }, 10);
+            },
+            hide: function(panel){
+                var me = this;
+                
+                setTimeout(function(){
+                    if ( Ext.isEmpty(Ext.main.AppTab.down('edit-sales')) ) {
+                        // reset form
+                        me.lookupReference('formPayment').reset();
+                        me.lookupReference('formAddDetail').reset();
+                        
+                        // set default value
+                        me.setDefaultValue(panel);
+
+                        // clear sales detail store
+                        POS.app.getStore('sales.EditDetail').removeAll();
+                    }
+                }, 10);
             }
         },
         'textfield[name = paid]': {
@@ -35,11 +56,31 @@ Ext.define('POS.view.sales.EditController', {
                     this.remove();
                 }  
             }
+        },
+        'textfield[tabOnEnter = true]': {
+            specialkey: function(field, e){
+                if(e.getKey() == e.ENTER) {
+                    setTimeout(function(){
+                        field.next('field').focus();
+                    }, 10);
+                }
+            }
+        },
+        'textfield[saveOnEnter = true]': {
+            specialkey: function(f, e){
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
+            }
         }
     },
 
     add: function(){
-        Ext.fn.App.window('edit-sales-detail');
+        this.lookupReference('stock').focus(true);
     },
 
     addSecondParty: function(){
@@ -49,7 +90,7 @@ Ext.define('POS.view.sales.EditController', {
     },
 
     close: function(){
-        this.getView().close();
+        Ext.main.AppTab.remove('edit-sales');
     },
 
     remove: function(){
@@ -74,7 +115,6 @@ Ext.define('POS.view.sales.EditController', {
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
 
         var edit = Ext.fn.App.window('edit-sales-detail');
-        edit.isEdit = true;
         edit.getController().load(rec);
     },
 
@@ -84,6 +124,12 @@ Ext.define('POS.view.sales.EditController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
+                key: 27, // Esc
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    me.close();
+                }
+            },{
                 key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
@@ -135,12 +181,7 @@ Ext.define('POS.view.sales.EditController', {
 
                     form.getForm().setValues(result.data);
 
-                    POS.app.getStore('SalesDetail').loadData(result.detail);
-
-                    var add = this.lookupReference('add');
-                    setTimeout(function(){
-                        add.focus();
-                    }, 10);
+                    POS.app.getStore('sales.EditDetail').loadData(result.detail);
                 }else{
                     panel.close();
                     Ext.fn.App.notification('Ups', result.errmsg);
@@ -152,13 +193,39 @@ Ext.define('POS.view.sales.EditController', {
             panel
         );
     },
+    
+    onAmountSpecialKey: function(field, e){
+        if(e.getKey() == e.ENTER) {
+            this.saveAddDetail();
+        }
+    },
+    
+    onStockSelect: function(combo, record){
+        // get selected record data
+        var record = (Ext.isArray(record) ? record[0].getData() : record.getData());
+        
+        // delete selected record id so it will not conflict with id of currently edited sales record
+        // when we spit it out to form
+        delete record.id;
+        
+        this.lookupReference('amount').focus(true);
+    },
+    
+    onStockBlur: function(combo){
+        if ( Ext.isEmpty(combo.getSelectedRecord()) ) combo.reset();
+    },
+    
+    onTypeSelect: function(){
+        this.lookupReference('stock').focus();
+    },
 
     save: function(){
-        var panel   = this.getView(),
+        var me      = this,
+            panel   = me.getView(),
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('SalesDetail');
+            var storeDetail = POS.app.getStore('sales.EditDetail');
 
             var products = [];
             storeDetail.each(function(rec){
@@ -187,18 +254,20 @@ Ext.define('POS.view.sales.EditController', {
                         clearTimeout(monitor);
                         Ext.fn.App.setLoading(false);
                         if (data.success){
-                            panel.close();
+                            me.close();
                             POS.app.getStore('Sales').load();
 
-                            Ext.Msg.confirm(
-                                '<i class="fa fa-exclamation-triangle glyph"></i> Print',
-                                'Print Nota Penjualan?',
-                                function(btn){
-                                    if (btn == 'yes'){
-                                        Ext.fn.App.printNotaSales(data.id);
+                            setTimeout(function(){
+                                Ext.Msg.confirm(
+                                    '<i class="fa fa-exclamation-triangle glyph"></i> Print',
+                                    'Print Nota Penjualan?',
+                                    function(btn){
+                                        if (btn == 'yes'){
+                                            Ext.fn.App.printNotaSales(data.id);
+                                        }
                                     }
-                                }
-                            );
+                                );
+                            }, 10);
                         }else{
                             Ext.fn.App.notification('Ups', data.errmsg);
                         }
@@ -213,6 +282,51 @@ Ext.define('POS.view.sales.EditController', {
         }
     },
 
+    saveAddDetail: function(stock){
+        var panel   = this.getView(),
+            form    = this.lookupReference('formAddDetail');
+
+        if(form.getForm().isValid()){
+            var type    = this.lookupReference('type'),
+                stock   = this.lookupReference('stock'),
+                amount  = this.lookupReference('amount'),
+                values  = stock.getSelectedRecord().getData();
+            
+            values.type = type.getValue();
+            values.amount = amount.getValue();
+                            
+            switch(values.type){
+                case 'Public':
+                    values.unit_price = values.sell_public;
+                    break;
+                case 'Distributor':
+                    values.unit_price = values.sell_distributor;
+                    break;
+                case 'Misc':
+                    values.unit_price = values.sell_misc;
+                    break;
+            }
+            
+            values.unit_name = values.unit_name;
+            values.total_buy_price = values.amount * values.buy;
+            values.total_price_wo_discount = values.amount * values.unit_price;
+            values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
+            
+            var store = POS.app.getStore('sales.EditDetail'),
+                rec = Ext.create('POS.model.SalesDetail', values);
+
+            store.add(rec);
+            
+            this.setTotalPrice();
+
+            form.reset();
+            
+            type.setValue(values.type);
+            
+            stock.focus(true);
+        }
+    },
+
     setBalance: function(){
         var totalPrice  = this.lookupReference('total_price'),
             paid        = this.lookupReference('paid'),
@@ -222,6 +336,25 @@ Ext.define('POS.view.sales.EditController', {
         balance.setValue(result);
 
         balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
+    },
+    
+    setDefaultValue: function(panel){
+        var customer = Ext.create('POS.model.Customer', {
+            id: 0,
+            name: '-'
+        });
+
+        panel.lookupReference('second_party').setValue(customer);
+
+        var cashier = Ext.create('POS.model.Cashier', {
+            id: Ext.main.ViewModel.data.current_user.id,
+            name: Ext.main.ViewModel.data.current_user.name
+        });
+
+        panel.lookupReference('cashier').setValue(cashier); 
+        
+        this.lookupReference('total_price').setValue(0);
+        this.lookupReference('paid').setValue(0);
     },
 
     setTotalPrice: function(){
@@ -235,10 +368,10 @@ Ext.define('POS.view.sales.EditController', {
     },
 
     sumBuyPrice: function(){
-        return POS.app.getStore('SalesDetail').sum('total_buy_price');
+        return POS.app.getStore('sales.EditDetail').sum('total_buy_price');
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('SalesDetail').sum('total_price');
+        return POS.app.getStore('sales.EditDetail').sum('total_price');
     }
 });

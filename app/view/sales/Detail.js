@@ -6,6 +6,7 @@ Ext.define('POS.view.sales.Detail' ,{
 
     requires: [
         'POS.custom.grid.SalesDetail',
+        'POS.store.SalesDetail',
         'POS.tpl.SalesDetail',
         'POS.view.sales.DetailController'
     ],
@@ -77,6 +78,7 @@ Ext.define('POS.view.sales.Detail' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-sales-detail',
+                    store: POS.app.getStore('SalesDetail'),
                     selType: 'rowmodel',
                     withRowNumber: true
                 }]

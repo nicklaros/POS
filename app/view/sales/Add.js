@@ -1,5 +1,5 @@
 Ext.define('POS.view.sales.Add' ,{
-    extend: 'Ext.window.Window',
+    extend: 'Ext.panel.Panel',
     alias : 'widget.add-sales',
     id: 'add-sales',
     controller: 'add-sales',
@@ -10,27 +10,24 @@ Ext.define('POS.view.sales.Add' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.SalesDetail',
+        'POS.store.sales.AddDetail',
         'POS.tpl.hint.Sales',
         'POS.view.sales.AddController',
         'POS.view.sales.AddDetail',
         'POS.view.secondparty.Add'
     ],
 
-	autoScroll: true,
-    autoShow: false,
+    layout: 'anchor',
+    
+    autoScroll: true,
+    autoShow: true,
     bodyStyle: {
         'background-color': '#e9eaed',
-        border: '0 !important',
-        padding: '25px'
+        border: '0 !important'
     },
-    cls: 'window',
-    constrain: true,
-    layout: 'anchor',
-    maximized: true,
-    modal: true,
-    resizable: false,
-    
-    type: 'Public',
+    columnLines: true,
+    closable: true,
+    closeAction: 'hide',
 
     initComponent: function(){
         this.title = '<i class="fa fa-shopping-cart glyph"></i> Penjualan Baru';
@@ -39,16 +36,17 @@ Ext.define('POS.view.sales.Add' ,{
             xtype: 'container',
             layout: 'vbox',
             style: {
-                margin: '0 auto'
+                margin: '25px auto'
             },
-            width: 900,
+            width: 800,
             items: [{
                 xtype: 'container',
                 cls: 'panel',
                 margin: '0 0 10 0',
-                width: 900,
+                width: 800,
                 items: [{
                     xtype: 'form',
+                    reference: 'formPayment',
                     monitorValid: true,
                     bodyPadding: 10,
                     items: [{
@@ -83,7 +81,7 @@ Ext.define('POS.view.sales.Add' ,{
                             fieldLabel: 'Catatan',
                             name: 'note',
                             margin: '0 0 0 20',
-                            width: 200
+                            width: 150
                         },{
                             xtype: 'combo-cashier',
                             fieldLabel: 'Kasir',
@@ -93,7 +91,7 @@ Ext.define('POS.view.sales.Add' ,{
                             allowBlank: false,
                             readOnly: true,
                             margin: '0 0 0 20',
-                            width: 200
+                            width: 150
                         }]
                     },{
                         xtype: 'container',
@@ -141,31 +139,80 @@ Ext.define('POS.view.sales.Add' ,{
                 xtype: 'toolbar',
                 ui: 'footer',
                 margin: '0 0 10 0',
-                width: 900,
+                width: 800,
                 items: ['->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> [Alt + S] Bayar',
+                    text: '<i class="fa fa-save glyph"></i> [Alt + S] Simpan',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-undo glyph"></i> [Esc] Batal',
                     handler: 'close'
                 }]
             },{
+                xtype: 'form',
+                reference: 'formAddDetail',
+                bodyStyle: {
+                    'background-color': '#e9eaed'
+                },
+                layout: 'hbox',
+                monitorValid: true,
+                margin: '5 0 5 0',
+                width: '100%',
+                items: [{
+                    xtype: 'combo-sell-type',
+                    name: 'type',
+                    reference: 'type',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Tipe',
+                    tabOnEnter: true,
+                    value: 'Public',
+                    width: 150,
+                    listeners: {
+                        select: 'onTypeSelect'
+                    }
+                },{
+                    xtype: 'combo-stock',
+                    name: 'stock',
+                    reference: 'stock',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Scan Barcode atau ketikkan Produk',
+                    margin: '0 0 0 5',
+                    flex: 1,
+                    listeners: {
+                        select: 'onStockSelect',
+                        blur: 'onStockBlur'
+                    }
+                },{
+                    xtype: 'field-stock-amount',
+                    name: 'amount',
+                    reference: 'amount',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Jumlah',
+                    step: 1,
+                    minValue: 0,
+                    value: 1,
+                    margin: '0 0 0 5',
+                    width: 100,
+                    listeners: {
+                        specialkey: 'onAmountSpecialKey'
+                    }
+                }]
+            },{
                 xtype: 'container',
                 cls: 'panel',
-                width: 900,
+                width: 800,
                 items: [{
                     xtype: 'grid-sales-detail',
                     reference: 'grid-sales-detail',
+                    store: POS.app.getStore('sales.AddDetail'),
                     withRowNumber: true,
                     dockedItems: [{
                         xtype: 'toolbar',
                         dock: 'top',
                         items: [{
-                            text: '<i class="fa fa-plus-square glyph"></i> [Alt + T] Tambah',
-                            reference: 'add',
-                            handler: 'add'
-                        },{
                             text: '<i class="fa fa-edit glyph"></i> Ubah',
                             reference: 'edit',
                             handler: 'edit',
@@ -185,7 +232,7 @@ Ext.define('POS.view.sales.Add' ,{
             xtype: 'panel',
             dock: 'bottom',
             bodyStyle: {
-                'background-color': '#789'
+                'background-color': '#FF4141'
             },
             tpl: Ext.create('POS.tpl.hint.Sales'),
             bind: {

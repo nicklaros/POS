@@ -4,24 +4,10 @@ Ext.define('POS.view.sales.AddDetailController', {
 
     control: {
         '#': {
-            boxready: function(){
-                var addSales = Ext.ComponentQuery.query('add-sales')[0],
-                    stock = this.lookupReference('stock');
-                
-                addSales.show().toBack();
+            hide: function(){
                 setTimeout(function(){
-                    stock.focus();
-                }, 10);
-            
-                var type = addSales.type;
-                
-                this.lookupReference('type').setValue(type);
-            },
-            close: function(){
-                var paid = Ext.ComponentQuery.query('add-sales')[0].down('[name = paid]');
-                
-                setTimeout(function(){
-                    paid.focus();
+                    // focus on combo stock
+                    Ext.ComponentQuery.query('add-sales [name = stock]')[0].focus();
                 }, 10);
             }
         },
@@ -55,12 +41,20 @@ Ext.define('POS.view.sales.AddDetailController', {
     },
 
     close: function(){
-        this.getView().close();
+        var panel = this.getView(),
+            form = panel.down('form');
+        
+        panel.hide();
+        
+        form.reset();
     },
 
     load: function(record){
         var panel = this.getView(),
             form = panel.down('form');
+        
+        // save reference to edited record
+        panel.record = record.get('id');
 
         // create stock model from edited sales detail record
         var stock = Ext.create('POS.model.Stock', record.getData());
@@ -110,6 +104,10 @@ Ext.define('POS.view.sales.AddDetailController', {
     onProductBlur: function(combo){
         if (Ext.isEmpty(combo.getSelectedRecord())) combo.reset();
     },
+    
+    onTypeSelect: function(){
+        this.lookupReference('amount').focus();
+    },
 
     save: function(){
         var panel = this.getView(),
@@ -137,31 +135,26 @@ Ext.define('POS.view.sales.AddDetailController', {
             values.total_price_wo_discount = values.amount * values.unit_price;
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             
-            if (!panel.isEdit) {            
-                var store = POS.app.getStore('SalesDetail'),
-                    rec = Ext.create('POS.model.SalesDetail', values);
-                    
-                store.add(rec);
-            }else{
-                var rec = Ext.ComponentQuery.query('grid-sales-detail')[0].getSelectionModel().getSelection()[0];
-                
-                rec.set(values);
-            }
+            // update record
+            POS.app.getStore('sales.AddDetail').getById(panel.record).set(values);
             
-            panel.isEdit = false;
+            // hide panel
+            panel.hide();
             
-            var addSales = Ext.ComponentQuery.query('add-sales')[0];
+            // get reference to add-sales panel and it's controller
+            var addSales = Ext.ComponentQuery.query('add-sales')[0],
+                addSalesController = addSales.getController();
             
-            addSales.getController().setTotalPrice();
-            addSales.type = values.type;
+            // set total price
+            addSalesController.setTotalPrice();
+            
+            // set sales type
+            addSalesController.lookupReference('type').setValue(values.type);
+            
+            // focus on combo stock
+            addSalesController.lookupReference('stock').focus();
 
             form.reset();
-            
-            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> harga <span class="green">' + Ext.fn.Render.sellType(values.type) + '</span> sebesar <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> per ' + values.unit_name + ' telah ditambahkan.');
-            
-            this.lookupReference('type').setValue(values.type);
-            
-            this.lookupReference('stock').focus();
         }
     }
 });

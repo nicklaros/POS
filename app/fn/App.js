@@ -149,9 +149,13 @@ Ext.define('Ext.fn.App', {
             ||
             ( (state == 1) && (main.get('state') == 1) )
         ){
-            if(!panel){
-                var panel = tab.add({xtype:alias});
+            if( !panel ){
+                var panel = tab.add( { xtype:alias } );
                 panel.show();
+            } else {
+                if ( Ext.isEmpty(tab.child(alias)) ) {
+                    tab.add(panel);
+                }
             }
             tab.setActiveTab(panel);
             return panel;

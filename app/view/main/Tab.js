@@ -8,6 +8,7 @@ Ext.define("POS.view.main.Tab", {
         border: '0 !important'
     },
     activeTab: 0,
+    autoDestroy: false,
     minTabWidth: 100,
     maxTabWidth: 200,
     items: [{

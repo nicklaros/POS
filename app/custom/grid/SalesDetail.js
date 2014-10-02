@@ -1,10 +1,6 @@
 Ext.define('POS.custom.grid.SalesDetail', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.grid-sales-detail',
-
-    requires: [
-        'POS.store.SalesDetail'
-    ],
     
     columnLines: true,
     selType: 'rowmodel',
@@ -14,8 +10,6 @@ Ext.define('POS.custom.grid.SalesDetail', {
     minHeight: 150,
     
     initComponent: function(){
-        this.store = POS.app.getStore('SalesDetail');
-        
         var columns = [];
         
         // check whether to add rownumberer or not

@@ -24,6 +24,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
         padding: '25px'
     },
     cls: 'window',
+    closeAction: 'hide',
     constrain: true,
     layout: 'anchor',
     maximized: true,
@@ -33,7 +34,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
     record: null,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-shopping-cart glyph"></i> Tambahkan Produk yang Dijual';
+        this.title = '<i class="fa fa-shopping-cart glyph"></i> Ubah Produk yang Dijual';
 
         this.items = [{
             xtype: 'form',
@@ -58,12 +59,26 @@ Ext.define('POS.view.sales.EditDetail' ,{
                 padding: 30,
                 width: 900,
                 items: [{
+                    xtype: 'combo-sell-type',
+                    fieldLabel: 'Tipe',
+                    name: 'type',
+                    reference: 'type',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    tabOnEnter: true,
+                    value: 'Public',
+                    width: 150,
+                    listeners: {
+                        select: 'onTypeSelect'
+                    }
+                },{
                     xtype: 'combo-stock',
                     fieldLabel: 'Produk',
                     name: 'stock',
                     reference: 'stock',
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
+                    margin: '0 0 0 50',
                     width: 350,
                     listeners: {
                         select: 'onProductSelect',
@@ -77,7 +92,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     afterLabelTextTpl: REQUIRED,
                     allowBlank: false,
                     step: 1,
-                    tabOnEnter: true,
+                    saveOnEnter: true,
                     minValue: 0,
                     value: 1,
                     margin: '0 0 0 50',
@@ -87,20 +102,6 @@ Ext.define('POS.view.sales.EditDetail' ,{
                     reference: 'unit',
                     html: 'unit',
                     margin: '30 0 0 10'
-                },{
-                    xtype: 'combo-sell-type',
-                    fieldLabel: 'Tipe',
-                    name: 'type',
-                    reference: 'type',
-                    afterLabelTextTpl: REQUIRED,
-                    allowBlank: false,
-                    saveOnEnter: true,
-                    value: 'Public',
-                    margin: '0 0 0 50',
-                    width: 150,
-                    listeners: {
-                        select: 'save'
-                    }
                 }]
             },{
                 xtype: 'toolbar',
@@ -116,7 +117,7 @@ Ext.define('POS.view.sales.EditDetail' ,{
                 },
                     '->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Tambahkan',
+                    text: '<i class="fa fa-save glyph"></i> Ubah',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-reorder glyph"></i> [Esc] Lihat Total',
