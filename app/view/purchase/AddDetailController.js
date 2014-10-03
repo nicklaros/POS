@@ -4,32 +4,14 @@ Ext.define('POS.view.purchase.AddDetailController', {
 
     control: {
         '#': {
-            boxready: function(){
-                var addPurchase = Ext.ComponentQuery.query('add-purchase')[0],
-                    product = this.lookupReference('product');
-                
-                addPurchase.show().toBack();
-                setTimeout(function(){
-                    product.focus();
-                }, 10);
-            },
-            close: function(){
-                POS.app.getStore('combo.Stock').removeAll();
-                
-                var paid = Ext.ComponentQuery.query('add-purchase')[0].down('[name = paid]');
+            hide: function(){
+                // remove combo stock's store
+                this.lookupReference('stock').getStore().removeAll();
                 
                 setTimeout(function(){
-                    paid.focus();
+                    // focus on combo product
+                    Ext.ComponentQuery.query('add-purchase [name = product]')[0].focus();
                 }, 10);
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) {
-                    setTimeout(function(){
-                        field.next('field').focus();
-                    }, 10);
-                }
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -76,12 +58,20 @@ Ext.define('POS.view.purchase.AddDetailController', {
     },
     
     close: function(){
-        this.getView().close();
+        var panel = this.getView(),
+            form = panel.down('form');
+        
+        panel.hide();
+        
+        form.reset();
     },
 
     load: function(record){
         var panel = this.getView(),
             form = panel.down('form');
+        
+        // save reference to edited record
+        panel.record = record.get('id');
 
         var product = Ext.create('POS.model.Product', {
             id: record.get('product_id'),
@@ -229,29 +219,27 @@ Ext.define('POS.view.purchase.AddDetailController', {
             values.unit_name = viewModelData.stock.unit_name;
             values.unit_price = parseInt(values.total_price / values.amount);
             
-            if (!panel.isEdit) {            
-                var store = POS.app.getStore('PurchaseDetail'),
-                    rec = Ext.create('POS.model.PurchaseDetail');
-                    
-                rec.set(values);
-                store.add(rec);
-            }else{
-                // perhaps there is a better way to select currently edited record than this clumsy code below
-                var rec = Ext.ComponentQuery.query('add-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
-                rec.set(values);
-            }
+            // update record
+            POS.app.getStore('purchase.AddDetail').getById(panel.record).set(values);
             
-            panel.isEdit = false;
-            
-            Ext.ComponentQuery.query('add-purchase')[0].getController().setTotalPrice();
+            // hide panel
+            panel.hide();
 
+            // reset form
             form.reset();
             
-            this.lookupReference('status').setHtml(values.amount + ' ' + values.unit_name + ' <span class="green">' + values.product_name + '</span> dengan harga satuan <span class="green">' + Ext.fn.Render.plainCurrency(values.unit_price) + '</span> telah ditambahkan.');
-            
+            // reset price status
             this.lookupReference('price_status').update({});
             
-            this.lookupReference('product').focus();
+            // get reference to add-sales panel and it's controller
+            var addPurchase = Ext.ComponentQuery.query('add-purchase')[0],
+                addPurchaseController = addPurchase.getController();
+            
+            // set total price
+            addPurchaseController.setTotalPrice();
+            
+            // focus on combo product
+            addPurchaseController.lookupReference('product').focus();
         }
     },
     

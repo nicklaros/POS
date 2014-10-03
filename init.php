@@ -50,6 +50,7 @@ try{
             'sales_cancel_key',
             'purchase_key',
             'purchase_add_key',
+            'purchase_pay_key',
             'purchase_save_key',
             'purchase_cancel_key'
         ])

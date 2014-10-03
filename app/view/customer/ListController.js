@@ -28,16 +28,15 @@ Ext.define('POS.view.customer.ListController', {
     },
     
     addSales: function(){
-        var sales = Ext.fn.App.window('add-sales'),
+        var sales = Ext.fn.App.newTab('add-sales'),
             customer = this.getView().getSelectionModel().getSelection()[0],
-            comboCustomer = sales.down('combo-customer');
+            secondParty = sales.down('combo-second-party');
         
-
         // add selected record to combo's store
-        comboCustomer.getStore().add(customer);
+        secondParty.getStore().add(customer);
         
         // make sure newly added record is selected 
-        comboCustomer.select(customer);
+        secondParty.select(customer);
     },
     
     detail: function(){

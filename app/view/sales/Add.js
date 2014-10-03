@@ -199,6 +199,11 @@ Ext.define('POS.view.sales.Add' ,{
                     listeners: {
                         specialkey: 'onAmountSpecialKey'
                     }
+                },{
+                    xtype: 'label',
+                    reference: 'unit',
+                    html: 'Unit',
+                    margin: '5 0 0 5'
                 }]
             },{
                 xtype: 'container',
@@ -229,9 +234,9 @@ Ext.define('POS.view.sales.Add' ,{
         }];
         
         this.dockedItems = [{
-            xtype: 'panel',
-            dock: 'bottom',
-            bodyStyle: {
+            xtype: 'container',
+            dock: 'top',
+            style: {
                 'background-color': '#FF4141'
             },
             tpl: Ext.create('POS.tpl.hint.Sales'),

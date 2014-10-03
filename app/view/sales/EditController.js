@@ -2,17 +2,29 @@ Ext.define('POS.view.sales.EditController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.edit-sales',
 
+    init: function() {
+        this.listen({
+            store: {
+                '#sales.EditDetail': {
+                    add: 'refreshGrid',
+                    remove: 'refreshGrid'
+                }
+            }
+        });
+    },
+
     control: {
         '#': {
             boxready: function(panel){
                 this.keyMap(panel);
             },
             show: function(){
-                var stock = this.lookupReference('stock');
+                var stock = this.focusStock();
                 
-                setTimeout(function(){
-                    stock.focus();
-                }, 10);
+                // if record on combo stock is gone then reset form add detail
+                if ( Ext.isEmpty(stock.getSelectedRecord()) ) {
+                    this.lookupReference('formAddDetail').reset();
+                }
             },
             hide: function(panel){
                 var me = this;
@@ -32,16 +44,6 @@ Ext.define('POS.view.sales.EditController', {
                 }, 10);
             }
         },
-        'textfield[name = paid]': {
-            change: function(){
-                this.setBalance();
-            }
-        },
-        'textfield[saveOnEnter = true]': {
-            specialkey: function(field, e){
-                if (e.getKey() == e.ENTER) this.save();
-            }
-        },
         'grid-sales-detail': {
             selectionchange: function(sm, selected){
                 var btnEdit     = this.lookupReference('edit'),
@@ -55,15 +57,6 @@ Ext.define('POS.view.sales.EditController', {
                 if (key.getKey() == 46) { //the delete button
                     this.remove();
                 }  
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) {
-                    setTimeout(function(){
-                        field.next('field').focus();
-                    }, 10);
-                }
             }
         },
         'textfield[saveOnEnter = true]': {
@@ -80,7 +73,7 @@ Ext.define('POS.view.sales.EditController', {
     },
 
     add: function(){
-        this.lookupReference('stock').focus(true);
+        this.focusStock();
     },
 
     addSecondParty: function(){
@@ -93,29 +86,21 @@ Ext.define('POS.view.sales.EditController', {
         Ext.main.AppTab.remove('edit-sales');
     },
 
-    remove: function(){
-        var me      = this,
-            grid    = me.lookupReference('grid-sales-detail'),
-            store   = grid.getStore(),
-            sm      = grid.getSelectionModel(),
-            sel     = sm.getSelection(),
-            smCount = sm.getCount();
-            
-        // remove selected record
-        store.remove(sel[0]);
-
-        // update total price
-        me.setTotalPrice();
-        
-        // refresh grid
-        grid.getView().refresh();
-    },
-
     edit: function(){
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
 
         var edit = Ext.fn.App.window('edit-sales-detail');
         edit.getController().load(rec);
+    },
+    
+    focusStock: function(){
+        var stock = this.lookupReference('stock');
+                
+        setTimeout(function(){
+            stock.focus(true);
+        }, 10);
+        
+        return stock;
     },
 
     keyMap: function(panel){
@@ -217,6 +202,30 @@ Ext.define('POS.view.sales.EditController', {
     
     onTypeSelect: function(){
         this.lookupReference('stock').focus();
+    },
+    
+    refreshGrid: function(){
+        var grid = this.lookupReference('grid-sales-detail');
+        
+        grid.getView().refresh();
+    },
+
+    remove: function(){
+        var me      = this,
+            grid    = me.lookupReference('grid-sales-detail'),
+            store   = grid.getStore(),
+            sm      = grid.getSelectionModel(),
+            sel     = sm.getSelection(),
+            smCount = sm.getCount();
+            
+        // remove selected record
+        store.remove(sel[0]);
+
+        // update total price
+        me.setTotalPrice();
+        
+        // focus on combo stock
+        me.focusStock();
     },
 
     save: function(){

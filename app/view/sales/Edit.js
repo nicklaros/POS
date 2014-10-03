@@ -118,7 +118,10 @@ Ext.define('POS.view.sales.Edit' ,{
                             saveOnEnter: true,
                             selectOnFocus: true,
                             margin: '0 0 0 20',
-                            width: 150
+                            width: 150,
+                            listeners: {
+                                change: 'setBalance'
+                            }
                         },{
                             xtype: 'field-price',
                             fieldLabel: 'Sisa',
@@ -229,9 +232,9 @@ Ext.define('POS.view.sales.Edit' ,{
         }];
         
         this.dockedItems = [{
-            xtype: 'panel',
-            dock: 'bottom',
-            bodyStyle: {
+            xtype: 'container',
+            dock: 'top',
+            style: {
                 'background-color': '#FF4141'
             },
             tpl: Ext.create('POS.tpl.hint.Sales'),

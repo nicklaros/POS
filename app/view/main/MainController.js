@@ -60,9 +60,7 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        var addPurchase = Ext.fn.App.window('add-purchase');
-
-                        addPurchase.getController().add();
+                        var addPurchase = Ext.fn.App.newTab('add-purchase');
                     }
                 }
             }]

@@ -54,6 +54,10 @@ Ext.define('POS.Application', {
         'user.List'
     ],
     
+    controllers: [
+        'Global'
+    ],
+    
     launch: function () {
         // Destroy init loader
         Ext.get('initLoader').destroy();

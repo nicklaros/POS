@@ -2,18 +2,48 @@ Ext.define('POS.view.purchase.EditController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.edit-purchase',
 
+    init: function() {
+        this.listen({
+            store: {
+                '#purchase.EditDetail': {
+                    add: 'refreshGrid',
+                    remove: 'refreshGrid'
+                }
+            }
+        });
+    },
+
     control: {
         '#': {
             boxready: function(panel){
                 this.keyMap(panel);
             },
-            close: function(){
-                POS.app.getStore('PurchaseDetail').removeAll(true);
-            }
-        },
-        'textfield[saveOnEnter = true]': {
-            specialkey: function(field, e){
-                if (e.getKey() == e.ENTER) this.save();
+            show: function(){
+                var product = this.focusProduct();
+                
+                // if record on combo product is gone then reset form add detail
+                if ( Ext.isEmpty(product.getSelectedRecord()) ) {
+                    this.lookupReference('formAddDetail').reset();
+                    
+                    this.lookupReference('sub_total_price').setValue(0);
+                }
+            },
+            hide: function(panel){
+                var me = this;
+                
+                setTimeout(function(){
+                    if ( Ext.isEmpty(Ext.main.AppTab.down('edit-purchase')) ) {
+                        // reset form
+                        me.lookupReference('formPayment').reset();
+                        me.lookupReference('formAddDetail').reset();
+                        
+                        // set default value
+                        me.setDefaultValue(panel);
+
+                        // clear purchase detail store
+                        POS.app.getStore('purchase.EditDetail').removeAll();
+                    }
+                }, 10);
             }
         },
         'grid-purchase-detail': {
@@ -30,11 +60,22 @@ Ext.define('POS.view.purchase.EditController', {
                     this.remove();
                 }  
             }
+        },
+        'textfield[saveOnEnter = true]': {
+            specialkey: function(f, e){
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
+            }
         }
     },
 
     add: function(){
-        Ext.fn.App.window('edit-purchase-detail');
+        this.focusProduct();
     },
 
     addSecondParty: function(){
@@ -46,33 +87,24 @@ Ext.define('POS.view.purchase.EditController', {
     },
 
     close: function(){
-        this.getView().close();
-    },
-    
-    remove: function(){
-        var grid    = this.lookupReference('grid-purchase-detail'),
-            store   = grid.getStore(),
-            sm      = grid.getSelectionModel(),
-            sel     = sm.getSelection(),
-            smCount = sm.getCount(),
-            me      = this;
-            
-        // remove selected record
-        store.remove(sel[0]);
-
-        // update total price
-        me.setTotalPrice();
-        
-        // refresh grid
-        grid.getView().refresh();
+        Ext.main.AppTab.remove('edit-purchase');
     },
 
     edit: function(){
         var rec = this.lookupReference('grid-purchase-detail').getSelectionModel().getSelection()[0];
 
         var edit = Ext.fn.App.window('edit-purchase-detail');
-        edit.isEdit = true;
         edit.getController().load(rec);
+    },
+    
+    focusProduct: function(){
+        var product = this.lookupReference('product');
+                
+        setTimeout(function(){
+            product.focus(true);
+        }, 10);
+        
+        return product;
     },
 
     keyMap: function(panel){
@@ -81,6 +113,12 @@ Ext.define('POS.view.purchase.EditController', {
         new Ext.util.KeyMap({
             target: panel.getEl(),
             binding: [{
+                key: 27, // Esc
+                defaultEventAction: 'preventDefault',
+                fn: function(){ 
+                    me.close();
+                }
+            },{
                 key: 84, // Alt + T
                 alt: true,
                 defaultEventAction: 'preventDefault',
@@ -124,12 +162,7 @@ Ext.define('POS.view.purchase.EditController', {
 
                     form.getForm().setValues(result.data);
 
-                    POS.app.getStore('PurchaseDetail').loadData(result.detail);
-
-                    var add = this.lookupReference('add');
-                    setTimeout(function(){
-                        add.focus();
-                    }, 10);
+                    POS.app.getStore('purchase.EditDetail').loadData(result.detail);
                 }else{
                     panel.close();
                     Ext.fn.App.notification('Ups', result.errmsg);
@@ -142,13 +175,105 @@ Ext.define('POS.view.purchase.EditController', {
         );
         Ext.ws.Main.send('purchase/loadFormEdit', params);
     },
+    
+    onProductClear: function(){
+        var stock = this.lookupReference('stock');
+        
+        stock.clear();
+        stock.getStore().removeAll();
+    },
+    
+    onProductSelect: function(combo, record){
+        var params = {
+            product_id: record[0].getData().id
+        }
+        
+        // populate stock and add it to combo stock variant
+        var monitor = Ext.fn.WebSocket.monitor(
+            Ext.ws.Main.on('populate/stock', function(websocket, result){
+                clearTimeout(monitor);
+                if (result.success){
+                    this.onProductClear();
+                    
+                    // add result to combo stock variant
+                    POS.app.getStore('combo.Stock').loadData(result.data);
+                    
+                    var resultLength = result.data.length;
+                    
+                    if (resultLength == 0) {
+                        // if empty result returned then add stock variant immediately
+                        this.addVariant();
+                        
+                    } else if (resultLength == 1) {
+                        // if only one result returned then automatically select it
+                        var stock = Ext.create('POS.model.Stock', result.data[0]);
+                        
+                        var comboStock = this.lookupReference('stock');
+                        
+                        comboStock.select(stock);
+                        
+                        comboStock.fireEvent('select', comboStock, [stock]);
+                        
+                    } else {
+                        // if two or more result returned then focus on combo stock variant
+                        this.lookupReference('stock').focus(true);
+                    }
+                }else{
+                    Ext.fn.App.notification('Ups', result.errmsg);
+                }
+            }, this, {
+                single: true,
+                destroyable: true
+            })
+        );
+        Ext.ws.Main.send('populate/stock', params);
+    },
+    
+    onProductBlur: function(combo){
+        if ( Ext.isEmpty(combo.getSelectedRecord()) ) combo.reset();
+    },
+    
+    onStockSelect: function(combo, record){
+        this.lookupReference('amount').focus(true);
+    },
+    
+    onTotalPriceKey: function(f, e){
+        if(e.getKey() == e.ENTER) {
+            this.saveAddDetail();
+        }
+    },
+    
+    refreshGrid: function(){
+        var grid = this.lookupReference('grid-purchase-detail');
+        
+        grid.getView().refresh();
+    },
+    
+    remove: function(){
+        var grid    = this.lookupReference('grid-purchase-detail'),
+            store   = grid.getStore(),
+            sm      = grid.getSelectionModel(),
+            sel     = sm.getSelection(),
+            smCount = sm.getCount(),
+            me      = this;
+            
+        // remove selected record
+        store.remove(sel[0]);
+
+        // update total price
+        me.setTotalPrice();
+        
+        // focus on combo product
+        me.focusProduct();
+    },
 
     save: function(){
-        var panel   = this.getView(),
+        var me      = this,
+            panel   = me.getView(),
             form    = panel.down('form');
 
         if(form.getForm().isValid()){
-            var storeDetail = POS.app.getStore('PurchaseDetail');
+            var storeDetail = POS.app.getStore('purchase.EditDetail');
 
             var products = [];
             storeDetail.each(function(rec){
@@ -179,7 +304,8 @@ Ext.define('POS.view.purchase.EditController', {
                         clearTimeout(monitor);
                         Ext.fn.App.setLoading(false);
                         if (result.success){
-                            panel.close();
+                            me.close();
+                            
                             POS.app.getStore('Purchase').load();
                         }else{
                             Ext.fn.App.notification('Ups', result.errmsg);
@@ -195,6 +321,39 @@ Ext.define('POS.view.purchase.EditController', {
             }
         }
     },
+
+    saveAddDetail: function(){
+        var panel = this.getView(),
+            form = this.lookupReference('formAddDetail');
+
+        if(
+            form.getForm().isValid()
+            &&
+            this.lookupReference('sub_total_price').getSubmitValue() != 0
+        ){
+            var values  = form.getValues(),
+                stock   = this.lookupReference('stock').getSelectedRecord();
+            
+            values.stock_id = values.stock;
+            values.product_id = values.product;
+            values.product_name = stock.get('product_name');
+            values.unit_name = stock.get('unit_name');
+            values.total_price = values.sub_total_price;
+            values.unit_price = parseInt(values.total_price / values.amount);
+            
+            var store = POS.app.getStore('purchase.EditDetail'),
+                rec = Ext.create('POS.model.PurchaseDetail');
+
+            rec.set(values);
+            store.add(rec);
+            
+            this.setTotalPrice();
+
+            form.reset();
+            
+            this.focusProduct();
+        }
+    },
     
     setBalance: function(){
         var totalPrice  = this.lookupReference('total_price'),
@@ -207,6 +366,19 @@ Ext.define('POS.view.purchase.EditController', {
         balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
     },
     
+    setDefaultValue: function(){
+        var secondParty = Ext.create('POS.model.Supplier', {
+            id: 0,
+            name: '-'
+        });
+
+        this.lookupReference('second_party').setValue(secondParty);
+        
+        this.lookupReference('total_price').setValue(0);
+        this.lookupReference('paid').setValue(0);
+        this.lookupReference('sub_total_price').setValue(0);
+    },
+    
     setTotalPrice: function(){
         var totalPrice = this.lookupReference('total_price');
         
@@ -216,7 +388,7 @@ Ext.define('POS.view.purchase.EditController', {
     },
 
     sumTotalPrice: function(){
-        return POS.app.getStore('PurchaseDetail').sum('total_price');
+        return POS.app.getStore('purchase.EditDetail').sum('total_price');
     }
     
 });

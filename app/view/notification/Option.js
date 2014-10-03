@@ -16,9 +16,9 @@ Ext.define('POS.view.notification.Option' ,{
     autoShow: true,
     constrain: true,
     resizable: false,
-    width: 350,
     
-    bindCombo: null,
+    bodyPadding: 0,
+    width: 350,
 
     initComponent: function(){
         this.title = '<i class="fa fa-bell-o glyph"></i> Pengaturan Pemberitahuan';

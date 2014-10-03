@@ -46,7 +46,7 @@ Ext.define('POS.view.stock.AddVariantController', {
                             
                             bindCombo.select(stock);
                             
-                            bindCombo.fireEvent('setvalue', result.data);
+                            bindCombo.fireEvent('select', bindCombo, [stock]);
                         }
                     }else{
                         Ext.fn.App.notification('Ups', result.errmsg);

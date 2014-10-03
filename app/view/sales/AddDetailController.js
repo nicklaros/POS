@@ -5,6 +5,9 @@ Ext.define('POS.view.sales.AddDetailController', {
     control: {
         '#': {
             hide: function(){
+                // remove combo stock's store
+                this.lookupReference('stock').getStore().removeAll();
+
                 setTimeout(function(){
                     // focus on combo stock
                     Ext.ComponentQuery.query('add-sales [name = stock]')[0].focus();
@@ -15,15 +18,6 @@ Ext.define('POS.view.sales.AddDetailController', {
             specialkey: function(field, e){
                 if(e.getKey() == e.ENTER) {
                     this.lookupReference('amount').focus(true);
-                }
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) {
-                    setTimeout(function(){
-                        field.next('field').focus();
-                    }, 10);
                 }
             }
         },
@@ -140,6 +134,9 @@ Ext.define('POS.view.sales.AddDetailController', {
             
             // hide panel
             panel.hide();
+
+            // reset form
+            form.reset();
             
             // get reference to add-sales panel and it's controller
             var addSales = Ext.ComponentQuery.query('add-sales')[0],
@@ -153,8 +150,6 @@ Ext.define('POS.view.sales.AddDetailController', {
             
             // focus on combo stock
             addSalesController.lookupReference('stock').focus();
-
-            form.reset();
         }
     }
 });

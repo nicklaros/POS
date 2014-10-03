@@ -5,6 +5,9 @@ Ext.define('POS.view.sales.EditDetailController', {
     control: {
         '#': {
             hide: function(){
+                // remove combo stock's store
+                this.lookupReference('stock').getStore().removeAll();
+
                 setTimeout(function(){
                     // focus on combo stock
                     Ext.ComponentQuery.query('edit-sales [name = stock]')[0].focus();
@@ -15,15 +18,6 @@ Ext.define('POS.view.sales.EditDetailController', {
             specialkey: function(field, e){
                 if(e.getKey() == e.ENTER) {
                     this.lookupReference('amount').focus(true);
-                }
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) {
-                    setTimeout(function(){
-                        field.next('field').focus();
-                    }, 10);
                 }
             }
         },

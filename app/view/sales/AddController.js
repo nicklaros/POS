@@ -2,27 +2,33 @@ Ext.define('POS.view.sales.AddController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.add-sales',
 
+    init: function() {
+        this.listen({
+            store: {
+                '#sales.AddDetail': {
+                    add: 'refreshGrid',
+                    remove: 'refreshGrid'
+                }
+            }
+        });
+    },
+
     control: {
         '#': {
             boxready: function(panel){
-                var me = this;
-                
-                me.setDefaultValue(panel);
+                this.setDefaultValue();
 
-                me.keyMap(panel);
+                this.keyMap(panel);
                 
-                var stock = this.lookupReference('stock');
-                
-                setTimeout(function(){
-                    stock.focus();
-                }, 10);
+                this.focusStock();
             },
             show: function(){
-                var stock = this.lookupReference('stock');
+                var stock = this.focusStock();
                 
-                setTimeout(function(){
-                    stock.focus();
-                }, 10);
+                // if record on combo stock is gone then reset form add detail
+                if ( Ext.isEmpty(stock.getSelectedRecord()) ) {
+                    this.lookupReference('formAddDetail').reset();
+                }
             },
             hide: function(panel){
                 var me = this;
@@ -34,17 +40,12 @@ Ext.define('POS.view.sales.AddController', {
                         me.lookupReference('formAddDetail').reset();
                         
                         // set default value
-                        me.setDefaultValue(panel);
+                        me.setDefaultValue();
 
                         // clear sales detail store
                         POS.app.getStore('sales.AddDetail').removeAll();
                     }
                 }, 10);
-            }
-        },
-        'textfield[saveOnEnter = true]': {
-            specialkey: function(field, e){
-                if (e.getKey() == e.ENTER) this.save();
             }
         },
         'grid-sales-detail': {
@@ -59,15 +60,6 @@ Ext.define('POS.view.sales.AddController', {
             itemkeydown : function(view, record, item, index, key) {
                 if (key.getKey() == 46) { //the delete key
                     this.remove();
-                }
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) {
-                    setTimeout(function(){
-                        field.next('field').focus();
-                    }, 10);
                 }
             }
         },
@@ -98,24 +90,14 @@ Ext.define('POS.view.sales.AddController', {
         Ext.main.AppTab.remove('add-sales');
     },
     
-    remove: function(){
-        var me      = this,
-            grid    = me.lookupReference('grid-sales-detail'),
-            store   = grid.getStore(),
-            sm      = grid.getSelectionModel(),
-            sel     = sm.getSelection(),
-            smCount = sm.getCount();
-            
-        // remove selected record
-        store.remove(sel[0]);
+    focusStock: function(){
+        var stock = this.lookupReference('stock');
 
-        // update total price
-        me.setTotalPrice();
+        setTimeout(function(){
+            stock.focus();
+        }, 10);
         
-        // refresh grid
-        grid.getView().refresh();
-        
-        me.lookupReference('stock').focus(true);
+        return stock;
     },
 
     edit: function(){
@@ -175,7 +157,11 @@ Ext.define('POS.view.sales.AddController', {
         // when we spit it out to form
         delete record.id;
         
+        // focus on amount
         this.lookupReference('amount').focus(true);
+        
+        // set unit name based on selected record
+        this.lookupReference('unit').setHtml(record.unit_name);
     },
     
     onStockBlur: function(combo){
@@ -184,6 +170,30 @@ Ext.define('POS.view.sales.AddController', {
     
     onTypeSelect: function(){
         this.lookupReference('stock').focus();
+    },
+    
+    refreshGrid: function(){
+        var grid = this.lookupReference('grid-sales-detail');
+        
+        grid.getView().refresh();
+    },
+    
+    remove: function(){
+        var me      = this,
+            grid    = me.lookupReference('grid-sales-detail'),
+            store   = grid.getStore(),
+            sm      = grid.getSelectionModel(),
+            sel     = sm.getSelection(),
+            smCount = sm.getCount();
+            
+        // remove selected record
+        store.remove(sel[0]);
+
+        // update total price
+        me.setTotalPrice();
+        
+        // focus on combo stock
+        me.lookupReference('stock').focus(true);
     },
 
     save: function(){
@@ -280,6 +290,9 @@ Ext.define('POS.view.sales.AddController', {
             this.setTotalPrice();
 
             form.reset();
+        
+            // reset unit name
+            this.lookupReference('unit').setHtml('Unit');
             
             type.setValue(values.type);
             
@@ -298,20 +311,20 @@ Ext.define('POS.view.sales.AddController', {
         balance.setFieldStyle(result < 0 ? FIELD_MINUS : FIELD_PLUS);
     },
     
-    setDefaultValue: function(panel){
+    setDefaultValue: function(){
         var customer = Ext.create('POS.model.Customer', {
             id: 0,
             name: '-'
         });
 
-        panel.lookupReference('second_party').setValue(customer);
+        this.lookupReference('second_party').setValue(customer);
 
         var cashier = Ext.create('POS.model.Cashier', {
             id: Ext.main.ViewModel.data.current_user.id,
             name: Ext.main.ViewModel.data.current_user.name
         });
 
-        panel.lookupReference('cashier').setValue(cashier); 
+        this.lookupReference('cashier').setValue(cashier); 
         
         this.lookupReference('total_price').setValue(0);
         this.lookupReference('paid').setValue(0);

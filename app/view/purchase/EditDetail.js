@@ -27,6 +27,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
         padding: '25px'
     },
     cls: 'window',
+    closeAction: 'hide',
     constrain: true,
     layout: 'anchor',
     maximized: true,
@@ -34,7 +35,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
     resizable: false,
 
     initComponent: function(){
-        this.title = '<i class="fa fa-truck glyph"></i> Tambahkan Produk yang Dibeli';
+        this.title = '<i class="fa fa-truck glyph"></i> Ubah Produk yang Dibeli';
 
         this.items = [{
             xtype: 'form',
@@ -171,7 +172,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                 },
                     '->',
                 {
-                    text: '<i class="fa fa-save glyph"></i> Tambahkan',
+                    text: '<i class="fa fa-save glyph"></i> Ubah',
                     handler: 'save'
                 },{
                     text: '<i class="fa fa-reorder glyph"></i> [Esc] Lihat Total',

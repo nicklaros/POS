@@ -17,7 +17,7 @@ Ext.define('POS.custom.field.ComboStock', {
     hideTrigger: true,
     matchFieldWidth: true,
     minChars: 1,
-    queryDelay: 10,
+    queryDelay: 100,
     queryMode: 'remote',
     selectOnFocus: true,
     triggerAction: 'query',

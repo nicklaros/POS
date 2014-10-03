@@ -1,5 +1,5 @@
-Ext.define('POS.view.purchase.Edit' ,{
-    extend: 'Ext.window.Window',
+Ext.define('POS.view.purchase.Edit', {
+    extend: 'Ext.panel.Panel',
     alias : 'widget.edit-purchase',
     id: 'edit-purchase',
     controller: 'edit-purchase',
@@ -9,25 +9,24 @@ Ext.define('POS.view.purchase.Edit' ,{
         'POS.custom.field.Date',
         'POS.custom.field.Price',
         'POS.custom.grid.PurchaseDetail',
+        'POS.store.purchase.EditDetail',
         'POS.tpl.hint.Purchase',
         'POS.view.purchase.EditController',
         'POS.view.purchase.EditDetail',
         'POS.view.secondparty.Add'
     ],
 
-	autoScroll: true,
+    layout: 'anchor',
+    
+    autoScroll: true,
     autoShow: true,
     bodyStyle: {
         'background-color': '#e9eaed',
-        border: '0 !important',
-        padding: '25px'
+        border: '0 !important'
     },
-    cls: 'window',
-    constrain: true,
-    layout: 'anchor',
-    maximized: true,
-    modal: true,
-    resizable: false,
+    columnLines: true,
+    closable: true,
+    closeAction: 'hide',
 
     initComponent: function(){
         this.title = '<i class="fa fa-truck glyph"></i> Ubah Data Pembelian';
@@ -41,6 +40,7 @@ Ext.define('POS.view.purchase.Edit' ,{
             width: 900,
             items: [{
                 xtype: 'form',
+                reference: 'formPayment',
                 bodyPadding: 10,
                 cls: 'panel',
                 monitorValid: true,
@@ -134,27 +134,97 @@ Ext.define('POS.view.purchase.Edit' ,{
                     handler: 'close'
                 }]
             },{
+                xtype: 'form',
+                reference: 'formAddDetail',
+                bodyStyle: {
+                    'background-color': '#e9eaed'
+                },
+                layout: 'hbox',
+                monitorValid: true,
+                margin: '5 0 5 0',
+                width: '100%',
+                items: [{
+                    xtype: 'combo-product',
+                    name: 'product',
+                    reference: 'product',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Scan Barcode atau ketikkan Produk',
+                    flex: 1,
+                    listeners: {
+                        clear: 'onProductClear',
+                        select: 'onProductSelect',
+                        blur: 'onProductBlur'
+                    }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    handler: 'addProduct',
+                    height: 24
+                },{
+                    xtype: 'combo-stock-variant',
+                    name: 'stock',
+                    reference: 'stock',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Variant',
+                    margin: '0 0 0 5',
+                    width: 125,
+                    listeners: {
+                        select: 'onStockSelect'
+                    }
+                },{
+                    xtype: 'button',
+                    text: '<i class="fa fa-plus"></i>',
+                    reference: 'add_variant',
+                    handler: 'addVariant',
+                    height: 24
+                },{
+                    xtype: 'field-stock-amount',
+                    name: 'amount',
+                    reference: 'amount',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Jumlah',
+                    step: 1,
+                    tabOnEnter: true,
+                    minValue: 1,
+                    value: 1,
+                    margin: '0 0 0 5',
+                    width: 85
+                },{
+                    xtype: 'field-price',
+                    name: 'sub_total_price',
+                    reference: 'sub_total_price',
+                    afterLabelTextTpl: REQUIRED,
+                    allowBlank: false,
+                    emptyText: 'Sub Total',
+                    selectOnFocus: true,
+                    margin: '0 0 0 5',
+                    width: 150,
+                    listeners: {
+                        specialkey: 'onTotalPriceKey'
+                    }
+                }]
+            },{
                 xtype: 'container',
                 cls: 'panel',
                 width: 900,
                 items: [{
                     xtype: 'grid-purchase-detail',
                     reference: 'grid-purchase-detail',
+                    store: POS.app.getStore('purchase.EditDetail'),
                     withRowNumber: true,
                     dockedItems: [{
                         xtype: 'toolbar',
                         dock: 'top',
                         items: [{
-                            text: '<i class="fa fa-plus-square glyph"></i> Tambah',
-                            reference: 'add',
-                            handler: 'add'
-                        },{
                             text: '<i class="fa fa-edit glyph"></i> Ubah',
                             reference: 'edit',
                             handler: 'edit',
                             disabled: true
                         },{
-                            text: '<i class="fa fa-trash-o glyph"></i> Hapus',
+                            text: '<i class="fa fa-trash-o glyph"></i> [Del] Hapus',
                             reference: 'delete',
                             handler: 'remove',
                             disabled: true
