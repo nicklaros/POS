@@ -35,7 +35,7 @@ Ext.define('POS.view.purchase.Edit', {
             xtype: 'container',
             layout: 'vbox',
             style: {
-                margin: '0 auto'
+                margin: '25px auto'
             },
             width: 900,
             items: [{
@@ -235,10 +235,10 @@ Ext.define('POS.view.purchase.Edit', {
         }];
         
         this.dockedItems = [{
-            xtype: 'panel',
-            dock: 'bottom',
-            bodyStyle: {
-                'background-color': '#789'
+            xtype: 'container',
+            dock: 'top',
+            style: {
+                'background-color': '#FF4141'
             },
             tpl: Ext.create('POS.tpl.hint.Purchase'),
             bind: {
