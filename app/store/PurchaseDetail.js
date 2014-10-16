@@ -5,7 +5,7 @@ Ext.define('POS.store.PurchaseDetail', {
     remoteSort: false,
 
     sorters: [{
-        property: 'id',
+        property: 'product_name',
         direction: 'ASC'
     }]
 });

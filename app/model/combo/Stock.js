@@ -10,6 +10,6 @@ Ext.define('POS.model.combo.Stock', {
         {name: 'sell_public',       type: 'int'},
         {name: 'sell_distributor',  type: 'int'},
         {name: 'sell_misc',         type: 'int'},
-        {name: 'discount',          type: 'int'}
+        {name: 'discount',          type: 'number'}
     ]
 });

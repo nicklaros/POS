@@ -202,6 +202,11 @@ Ext.define('POS.view.sales.Edit' ,{
                     listeners: {
                         specialkey: 'onAmountSpecialKey'
                     }
+                },{
+                    xtype: 'label',
+                    reference: 'unit',
+                    html: 'Unit',
+                    margin: '5 0 0 5'
                 }]
             },{
                 xtype: 'container',

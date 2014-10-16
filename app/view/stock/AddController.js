@@ -102,5 +102,36 @@ Ext.define('POS.view.stock.AddController', {
                 })
             );
         }
+    },
+    
+    setDiscountPercentage: function(){
+        var discountPercentage  = this.lookupReference('discount'),
+            discountNumber      = this.lookupReference('discount_in_number'),
+            sellPublic          = this.lookupReference('sell_public'),
+            result              = 0;
+        
+        if (sellPublic.getSubmitValue() != 0) {
+            result = discountNumber.getSubmitValue() * 100 / sellPublic.getSubmitValue();
+        }
+        
+        discountPercentage.suspendEvents();
+        discountPercentage.setValue(result);
+        discountPercentage.resumeEvents(false);
+    },
+    
+    setDiscountNumber: function(){
+        var discountPercentage  = this.lookupReference('discount'),
+            discountNumber      = this.lookupReference('discount_in_number'),
+            sellPublic          = this.lookupReference('sell_public'),
+            result              = 0;
+        
+        if (sellPublic.getSubmitValue() != 0) {
+            result = discountPercentage.getSubmitValue() * sellPublic.getSubmitValue() / 100;
+        }
+        
+        discountNumber.suspendEvents();
+        discountNumber.setValue(Math.round(result));
+        discountNumber.resumeEvents(false);
     }
+    
 });

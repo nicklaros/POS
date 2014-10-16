@@ -102,7 +102,7 @@ Ext.define('POS.view.purchase.EditDetail' ,{
                         text: '<i class="fa fa-plus"></i>',
                         reference: 'add_variant',
                         handler: 'addVariant',
-                        margin: '25 0 0 10'
+                        margin: '25 0 0 5'
                     }]
                 },{
                     xtype: 'container',

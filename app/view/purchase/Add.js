@@ -185,7 +185,7 @@ Ext.define('POS.view.purchase.Add', {
                     emptyText: 'Jumlah',
                     step: 1,
                     tabOnEnter: true,
-                    minValue: 1,
+                    minValue: 0,
                     value: 1,
                     margin: '0 0 0 5',
                     width: 85

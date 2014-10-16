@@ -71,7 +71,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail findOneByStockId(string $stock_id) Return the first ChildSalesDetail filtered by the stock_id column
  * @method     ChildSalesDetail findOneByAmount(string $amount) Return the first ChildSalesDetail filtered by the amount column
  * @method     ChildSalesDetail findOneByUnitPrice(int $unit_price) Return the first ChildSalesDetail filtered by the unit_price column
- * @method     ChildSalesDetail findOneByDiscount(int $discount) Return the first ChildSalesDetail filtered by the discount column
+ * @method     ChildSalesDetail findOneByDiscount(string $discount) Return the first ChildSalesDetail filtered by the discount column
  * @method     ChildSalesDetail findOneByTotalPrice(int $total_price) Return the first ChildSalesDetail filtered by the total_price column
  * @method     ChildSalesDetail findOneByBuy(int $buy) Return the first ChildSalesDetail filtered by the buy column
  * @method     ChildSalesDetail findOneBySellPublic(int $sell_public) Return the first ChildSalesDetail filtered by the sell_public column
@@ -86,7 +86,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSalesDetail[]|ObjectCollection findByStockId(string $stock_id) Return ChildSalesDetail objects filtered by the stock_id column
  * @method     ChildSalesDetail[]|ObjectCollection findByAmount(string $amount) Return ChildSalesDetail objects filtered by the amount column
  * @method     ChildSalesDetail[]|ObjectCollection findByUnitPrice(int $unit_price) Return ChildSalesDetail objects filtered by the unit_price column
- * @method     ChildSalesDetail[]|ObjectCollection findByDiscount(int $discount) Return ChildSalesDetail objects filtered by the discount column
+ * @method     ChildSalesDetail[]|ObjectCollection findByDiscount(string $discount) Return ChildSalesDetail objects filtered by the discount column
  * @method     ChildSalesDetail[]|ObjectCollection findByTotalPrice(int $total_price) Return ChildSalesDetail objects filtered by the total_price column
  * @method     ChildSalesDetail[]|ObjectCollection findByBuy(int $buy) Return ChildSalesDetail objects filtered by the buy column
  * @method     ChildSalesDetail[]|ObjectCollection findBySellPublic(int $sell_public) Return ChildSalesDetail objects filtered by the sell_public column

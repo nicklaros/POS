@@ -193,7 +193,11 @@ Ext.define('POS.view.sales.EditController', {
         // when we spit it out to form
         delete record.id;
         
+        // focus on amount
         this.lookupReference('amount').focus(true);
+        
+        // set unit name based on selected record
+        this.lookupReference('unit').setHtml(record.unit_name);
     },
     
     onStockBlur: function(combo){
