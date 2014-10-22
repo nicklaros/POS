@@ -3,10 +3,12 @@
 ## Demo
 
 site = http://pos.jawait.net
+
 user = admin
+
 pass = admin
 
-# Requirement
+## Requirements
  - Sencha CMD (http://www.sencha.com/products/sencha-cmd/download)
  - ExtJS 5 (http://www.sencha.com/products/extjs/download/ext-js-5.0.1/)
  - Composer (https://getcomposer.org/)
@@ -15,6 +17,20 @@ pass = admin
  - Httpd server (nginx, apache atau lainnya)
  - MariaDB atau MySql
  - PHP 5.4 +
+ 
+## Backend Repository
+ 
+ POS-ws-server (https://github.com/nicklaros/POS-ws-server)
+ 
+# Setting Up POS Project
+ 
+ - Clone or fork POS to your computer
+ - Use the following command in POS root directory to tell composer to gather required 
+   repository for you
+   `composer update` 
+ - Import database from included sql file in `database` folder
+ - Before viewing it on Browser, you must run the following command to build POS
+   `sencha app build` 
 
 # Files and Folders
 
