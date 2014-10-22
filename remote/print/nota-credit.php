@@ -2,6 +2,7 @@
 
 use ORM\CreditQuery;
 use ORM\CreditPaymentQuery;
+use ORM\OptionQuery;
 use Propel\Runtime\Propel;
 
 require '../../vendor/autoload.php';
