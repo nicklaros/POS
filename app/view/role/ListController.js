@@ -3,7 +3,7 @@ Ext.define('POS.view.role.ListController', {
     alias: 'controller.list-role',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -23,24 +23,24 @@ Ext.define('POS.view.role.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-role');
+        POS.fn.App.window('add-role');
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-role');
+        var edit = POS.fn.App.window('edit-role');
         edit.getController().load(rec.get('id'));
     },
     
     notificationOption: function(){
-        Ext.fn.App.window('notification-option');
+        POS.fn.App.window('notification-option');
     },
     
     permission: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('role-permission');
+        var edit = POS.fn.App.window('role-permission');
         edit.getController().load(rec.get('id'));
     },
     
@@ -62,15 +62,15 @@ Ext.define('POS.view.role.ListController', {
                         id: id
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('role/destroy', function(websocket, result){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (result.success){
                                 POS.app.getStore('Role').load();
                             }else{
-                                Ext.fn.App.notification('Ups', result.errmsg);
+                                POS.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -88,7 +88,7 @@ Ext.define('POS.view.role.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-role');
+        POS.fn.App.window('search-role');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

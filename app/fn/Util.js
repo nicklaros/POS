@@ -1,4 +1,4 @@
-Ext.define('Ext.fn.Util', {
+Ext.define('POS.fn.Util', {
     singleton: true,
     
     addNativeFunction: function(){
@@ -12,19 +12,19 @@ Ext.define('Ext.fn.Util', {
 
     afterLogin: function(){
         setTimeout(function(){
-            Ext.fn.App.setLoading(true);
+            POS.fn.App.setLoading(true);
         }, 10);
         
         // Create WebSocket connection
-        Ext.ws.Main = Ext.fn.WebSocket.create('ws://pos.localhost:8080/POS/Mains');
+        Ext.ws.Main = POS.fn.WebSocket.create('ws://pos.localhost:8080/POS/Mains');
 
         // Register WebSocket
-        Ext.fn.WebSocket.register([
+        POS.fn.WebSocket.register([
             Ext.ws.Main
         ]);
 
         // Listen WebSocket
-        Ext.fn.WebSocket.listen(Ext.ws.Main);
+        POS.fn.WebSocket.listen(Ext.ws.Main);
         
         // Initialize store
         this.initStore();
@@ -175,7 +175,7 @@ Ext.define('Ext.fn.Util', {
     },
     
     removeAppMask: function(){
-        Ext.fn.App.setLoading(false);
+        POS.fn.App.setLoading(false);
     },
 
     SHA512: function(str){

@@ -4,7 +4,7 @@ Ext.define('POS.view.debit.ListPayment' ,{
     controller: 'list-debit-payment',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.DebitPayment',
         'POS.view.debit.ListPaymentController',
@@ -24,10 +24,10 @@ Ext.define('POS.view.debit.ListPayment' ,{
         this.store = store;
 
         this.columns = [
-            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
+            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: POS.fn.Render.date},
             {header: 'Kode Hutang', dataIndex:'debit_id', width: 125},
             {header: 'Nama', dataIndex: 'second_party_name', width: 200},
-            {header: 'Bayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
+            {header: 'Bayar', dataIndex: 'paid', width: 125, renderer: POS.fn.Render.currency, align: 'right'},
             {header: 'Kasir', dataIndex: 'cashier_name', width: 120}
         ];
 

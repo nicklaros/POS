@@ -13,18 +13,18 @@ Ext.define('POS.view.role.PermissionController', {
                 id: id
             };
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('role/loadPermission', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     panel.show();
                     
                     form.getForm().setValues(result.data);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -44,14 +44,14 @@ Ext.define('POS.view.role.PermissionController', {
             var values = form.getValues();
 
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('role/savePermission', function(websocket, data){
                     clearTimeout(monitor);
                     panel.setLoading(false);
                     if (data.success){
                         panel.close();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,

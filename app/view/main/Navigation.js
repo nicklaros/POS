@@ -3,7 +3,7 @@ Ext.define('POS.view.main.Navigation' ,{
     alias : 'widget.app-nav',
 
     requires: [
-        'Ext.tpl.MainNavigation'
+        'POS.tpl.MainNavigation'
     ],
 
     title: 'Next POS',
@@ -11,7 +11,7 @@ Ext.define('POS.view.main.Navigation' ,{
         title: '{current_user.name}',
         data: '{menu}'
     },
-    tpl: Ext.create('Ext.tpl.MainNavigation'),
+    tpl: Ext.create('POS.tpl.MainNavigation'),
 
     autoScroll: true,
     border: 0,

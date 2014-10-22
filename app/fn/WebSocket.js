@@ -1,4 +1,4 @@
-Ext.define('Ext.fn.WebSocket', {
+Ext.define('POS.fn.WebSocket', {
     singleton: true,
 
     create: function(url){
@@ -34,9 +34,9 @@ Ext.define('Ext.fn.WebSocket', {
         listener.close = (Ext.isEmpty(close) ? true : close);
         return Ext.defer(function(){
             if (this.observable.hasListener(this.args[0])){
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 this.destroy();
-                Ext.fn.App.notification('Ups', 'Gagal menghubungi server pemrosesan data...');
+                POS.fn.App.notification('Ups', 'Gagal menghubungi server pemrosesan data...');
                 
                 if (this.panel != '') {
                     var panel = Ext.getCmp(this.panel.id);

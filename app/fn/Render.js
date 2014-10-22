@@ -1,4 +1,4 @@
-Ext.define('Ext.fn.Render', {
+Ext.define('POS.fn.Render', {
     singleton: true,
 
     amount: function(value){
@@ -15,14 +15,14 @@ Ext.define('Ext.fn.Render', {
     creditBalance: function(value){
         value = parseInt(value);
         
-        return (value <= 0 ? 'Lunas' : Ext.fn.Render.plainCurrency(value));
+        return (value <= 0 ? 'Lunas' : POS.fn.Render.plainCurrency(value));
     },
 
     currency: function(value, cls){
         value = parseInt(value);
         cls = (typeof(cls) == 'string' ? cls : '');
         
-        return '<span class="' + cls + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
+        return '<span class="' + cls + '">' + POS.fn.Render.plainCurrency(value) + '</span>';
     },
     
     date: function(value, withDay){
@@ -42,7 +42,7 @@ Ext.define('Ext.fn.Render', {
     paymentBalance: function(value){
         value = parseInt(value);
         
-        return '<span class="' + (value < 0 ? 'red' : 'green') + '">' + Ext.fn.Render.plainCurrency(value) + '</span>';
+        return '<span class="' + (value < 0 ? 'red' : 'green') + '">' + POS.fn.Render.plainCurrency(value) + '</span>';
     },
     
     plainCurrency: function(value){

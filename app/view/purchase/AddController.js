@@ -83,7 +83,7 @@ Ext.define('POS.view.purchase.AddController', {
     },
 
     addSecondParty: function(){
-        var panel = Ext.fn.App.window('add-second-party');
+        var panel = POS.fn.App.window('add-second-party');
 
         panel.bindCombo = this.lookupReference('second_party').getId();
         
@@ -91,7 +91,7 @@ Ext.define('POS.view.purchase.AddController', {
     },
 
     addProduct: function(){
-        var panel = Ext.fn.App.window('add-product');
+        var panel = POS.fn.App.window('add-product');
 
         panel.bindCombo = this.lookupReference('product').getId();
     },
@@ -102,7 +102,7 @@ Ext.define('POS.view.purchase.AddController', {
         
         // make sure a product is selected
         if (!Ext.isEmpty(record)) {
-            var panel           = Ext.fn.App.window('add-stock'),
+            var panel           = POS.fn.App.window('add-stock'),
                 panelController = panel.getController();
             
             panel.bindCombo = this.lookupReference('stock').getId();
@@ -117,7 +117,7 @@ Ext.define('POS.view.purchase.AddController', {
                 panelController.lookupReference('unit').focus();
             }, 10);
         } else {
-            Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
+            POS.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
             
             this.focusProduct();
         }
@@ -130,7 +130,7 @@ Ext.define('POS.view.purchase.AddController', {
     edit: function(){
         var rec = this.lookupReference('grid-purchase-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('add-purchase-detail');
+        var edit = POS.fn.App.window('add-purchase-detail');
         edit.getController().load(rec);
     },
     
@@ -193,7 +193,7 @@ Ext.define('POS.view.purchase.AddController', {
         }
         
         // populate stock and add it to combo stock variant
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
@@ -223,7 +223,7 @@ Ext.define('POS.view.purchase.AddController', {
                         this.lookupReference('stock').focus(true);
                     }
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -295,17 +295,17 @@ Ext.define('POS.view.purchase.AddController', {
                 
                 values.second_party_id = values.second_party;
 
-                Ext.fn.App.setLoading(true);
-                var monitor = Ext.fn.WebSocket.monitor(
+                POS.fn.App.setLoading(true);
+                var monitor = POS.fn.WebSocket.monitor(
                     Ext.ws.Main.on('purchase/create', function(websocket, result){
                         clearTimeout(monitor);
-                        Ext.fn.App.setLoading(false);
+                        POS.fn.App.setLoading(false);
                         if (result.success){
                             me.close();
                             
                             POS.app.getStore('Purchase').load();
                         }else{
-                            Ext.fn.App.notification('Ups', result.errmsg);
+                            POS.fn.App.notification('Ups', result.errmsg);
                         }
                     }, this, {
                         single: true,
@@ -314,7 +314,7 @@ Ext.define('POS.view.purchase.AddController', {
                 );
                 Ext.ws.Main.send('purchase/create', values);
             } else {
-                Ext.fn.App.notification('Ups', ERROR_1);
+                POS.fn.App.notification('Ups', ERROR_1);
             }
         }
     },

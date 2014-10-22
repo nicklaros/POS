@@ -32,7 +32,7 @@ Ext.define('POS.view.role.AddController', {
             var values = form.getValues();
 
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('role/create', function(websocket, result){
                     clearTimeout(monitor);
                     panel.setLoading(false);
@@ -52,7 +52,7 @@ Ext.define('POS.view.role.AddController', {
                             bindCombo.fireEvent('select', bindCombo, [role]);
                         }
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                         var name = this.lookupReference('name');
                         setTimeout(function(){
                             name.focus();

@@ -2,7 +2,7 @@ Ext.define('POS.view.main.MainController', {
     extend: 'Ext.app.ViewController',
 
     requires: [
-        'Ext.fn.App',
+        'POS.fn.App',
         'Ext.MessageBox'
     ],
 
@@ -52,7 +52,7 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        var addSales = Ext.fn.App.newTab('add-sales');
+                        var addSales = POS.fn.App.newTab('add-sales');
                     }
                 }
             },{
@@ -60,7 +60,7 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        var addPurchase = Ext.fn.App.newTab('add-purchase');
+                        var addPurchase = POS.fn.App.newTab('add-purchase');
                     }
                 }
             }]

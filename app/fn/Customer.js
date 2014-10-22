@@ -1,4 +1,4 @@
-Ext.define('Ext.fn.Customer', {
+Ext.define('POS.fn.Customer', {
     singleton: true,
 
     showCredit: function(customerId){
@@ -6,7 +6,7 @@ Ext.define('Ext.fn.Customer', {
         
         if (customerDetail) customerDetail.close();
         
-        Ext.fn.App.showSecondPartyCredit(customerId);
+        POS.fn.App.showSecondPartyCredit(customerId);
     },
 
     showDebit: function(customerId){
@@ -14,7 +14,7 @@ Ext.define('Ext.fn.Customer', {
         
         if (customerDetail) customerDetail.close();
         
-        Ext.fn.App.showSecondPartyDebit(customerId);
+        POS.fn.App.showSecondPartyDebit(customerId);
     }
     
 });

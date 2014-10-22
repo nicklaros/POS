@@ -1,4 +1,4 @@
-Ext.define('Ext.tpl.MainNavigation', {
+Ext.define('POS.tpl.MainNavigation', {
     extend: 'Ext.XTemplate',
 
     html: [
@@ -6,7 +6,7 @@ Ext.define('Ext.tpl.MainNavigation', {
             '<div class="main-nav-container">',
             '<div class="main-nav-body">',
             '<tpl for="main">',
-                '<a onClick="Ext.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
+                '<a onClick="POS.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
             '</tpl>',
             '</div></div>',
         '</tpl>',
@@ -15,7 +15,7 @@ Ext.define('Ext.tpl.MainNavigation', {
             '<div class="main-nav-header">Laporan</div>',
             '<div class="main-nav-body">',
             '<tpl for="report">',
-                '<a onClick="Ext.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
+                '<a onClick="POS.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
             '</tpl>',
             '</div></div>',
         '</tpl>',
@@ -24,7 +24,7 @@ Ext.define('Ext.tpl.MainNavigation', {
             '<div class="main-nav-header">Pengaturan</div>',
             '<div class="main-nav-body">',
             '<tpl for="option">',
-                '<a onClick="Ext.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
+                '<a onClick="POS.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
             '</tpl>',
             '</div></div>',
         '</tpl>',
@@ -33,7 +33,7 @@ Ext.define('Ext.tpl.MainNavigation', {
             '<div class="main-nav-header">Support</div>',
             '<div class="main-nav-body">',
             '<tpl for="support">',
-                '<a onClick="Ext.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
+                '<a onClick="POS.fn.App.mn{action}()"><i class="fa fa-{icon} main-nav-icon"></i> {text}</a>',
             '</tpl>',
             '</div></div>',
         '</tpl>'

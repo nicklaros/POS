@@ -1,8 +1,8 @@
-Ext.define('Ext.fn.Notification', {
+Ext.define('POS.fn.Notification', {
     singleton: true,
     
     checkProductPrice: function(productId){
-        Ext.fn.App.showProductPrice(productId);
+        POS.fn.App.showProductPrice(productId);
 
         var notification = Ext.ComponentQuery.query('list-notification')[0];
         if (notification) notification.close();
@@ -12,7 +12,7 @@ Ext.define('Ext.fn.Notification', {
         var panel = Ext.ComponentQuery.query('list-notification')[0];
         
         if (panel) panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('notification/destroy', function(websocket, data){
                 clearTimeout(monitor);
                 panel.setLoading(false);
@@ -23,7 +23,7 @@ Ext.define('Ext.fn.Notification', {
                         store.remove(store.getById(id));
                     });
                 }else{
-                    Ext.fn.App.notification('Ups', data.errmsg);
+                    POS.fn.App.notification('Ups', data.errmsg);
                 }
             }, this, {
                 single: true,

@@ -1,9 +1,9 @@
-Ext.define('Ext.fn.App', {
+Ext.define('POS.fn.App', {
     singleton: true,
 
     init: function(){
         // add native javascript function
-        Ext.fn.Util.addNativeFunction();
+        POS.fn.Util.addNativeFunction();
         
         // create WebSocket container
         Ext.ws = {};
@@ -15,11 +15,11 @@ Ext.define('Ext.fn.App', {
         Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(App.init);
 
         if (App.init.state == 1) { // if already loged in then
-            Ext.fn.Util.afterLogin();
+            POS.fn.Util.afterLogin();
         }
     
         // disable browser context menu
-        Ext.fn.Util.disableBrowserContextMenu();
+        POS.fn.Util.disableBrowserContextMenu();
                 
         console.log('Application successfully initiated.');
     },
@@ -116,7 +116,7 @@ Ext.define('Ext.fn.App', {
 
                 Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(result);
 
-                Ext.fn.Util.afterLogout();
+                POS.fn.Util.afterLogout();
 
                 setTimeout(function(){
                     Ext.ComponentQuery.query('login textfield[name=user]')[0].focus();
@@ -165,11 +165,11 @@ Ext.define('Ext.fn.App', {
     },
 
     notify: function(title, message, icon, manager){
-        Ext.fn.Notification.show(title, message, icon, manager);
+        POS.fn.Notification.show(title, message, icon, manager);
     },
 
     notification: function(title, message, icon, manager){
-        Ext.fn.Notification.show(title, message, icon, manager);
+        POS.fn.Notification.show(title, message, icon, manager);
     },
 
     printNotaCredit: function(id){
@@ -199,7 +199,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartyCredit: function(secondPartyId){
-        Ext.fn.App.newTab('list-credit');
+        POS.fn.App.newTab('list-credit');
                 
         POS.app.getStore('Credit').search({
             second_party_id: secondPartyId,
@@ -208,7 +208,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartyDebit: function(secondPartyId){
-        Ext.fn.App.newTab('list-debit');
+        POS.fn.App.newTab('list-debit');
                 
         POS.app.getStore('Debit').search({
             second_party_id: secondPartyId,
@@ -217,7 +217,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartySales: function(secondPartyId){
-        Ext.fn.App.newTab('list-sales');
+        POS.fn.App.newTab('list-sales');
                 
         POS.app.getStore('Sales').search({
             second_party_id: secondPartyId
@@ -225,7 +225,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showProductPrice: function(productId){
-        Ext.fn.App.newTab('list-stock');
+        POS.fn.App.newTab('list-stock');
                 
         POS.app.getStore('Stock').search({
             product_id: productId

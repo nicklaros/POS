@@ -4,7 +4,7 @@ Ext.define('POS.view.purchase.List' ,{
     controller: 'list-purchase',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Purchase',
         'POS.view.purchase.Add',
@@ -28,11 +28,11 @@ Ext.define('POS.view.purchase.List' ,{
 
         this.columns = [
             {header: 'Nota', dataIndex:'id', width: 75},
-            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
+            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: POS.fn.Render.date},
             {header: 'Dibeli Dari', dataIndex: 'second_party_name', width: 200},
-            {header: 'Total', dataIndex: 'total_price', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.paymentBalance, align: 'right'},
+            {header: 'Total', dataIndex: 'total_price', width: 125, renderer: POS.fn.Render.currency, align: 'right'},
+            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: POS.fn.Render.currency, align: 'right'},
+            {header: 'Kembali', dataIndex: 'balance', width: 125, renderer: POS.fn.Render.paymentBalance, align: 'right'},
             {header: 'Catatan', dataIndex: 'note', width: 150}
         ];
 

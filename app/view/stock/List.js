@@ -4,7 +4,7 @@ Ext.define('POS.view.stock.List' ,{
     controller: 'list-stock',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Stock',
         'POS.view.stock.Add',
@@ -34,15 +34,15 @@ Ext.define('POS.view.stock.List' ,{
                 text: 'Harga Jual',
                 columns:[
                     {header: 'Biasa', dataIndex: 'sell_public', width: 100, renderer: function(value){
-                        return Ext.fn.Render.currency(value, 'green bold');
+                        return POS.fn.Render.currency(value, 'green bold');
                     }, align: 'right'},
-                    {header: 'Grosir', dataIndex: 'sell_distributor', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-                    {header: 'Lain', dataIndex: 'sell_misc', width: 100, renderer: Ext.fn.Render.currency, align: 'right'}
+                    {header: 'Grosir', dataIndex: 'sell_distributor', width: 100, renderer: POS.fn.Render.currency, align: 'right'},
+                    {header: 'Lain', dataIndex: 'sell_misc', width: 100, renderer: POS.fn.Render.currency, align: 'right'}
                 ]
             },
-            {header: 'Stock', dataIndex: 'amount', width: 70, renderer: Ext.fn.Render.amountOnGrid, align: 'right'},
-            {header: 'Harga<br />Beli', dataIndex: 'buy', width: 100, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: Ext.fn.Render.discount, align: 'right'}
+            {header: 'Stock', dataIndex: 'amount', width: 70, renderer: POS.fn.Render.amountOnGrid, align: 'right'},
+            {header: 'Harga<br />Beli', dataIndex: 'buy', width: 100, renderer: POS.fn.Render.currency, align: 'right'},
+            {header: 'Diskon', dataIndex: 'discount', width: 90, renderer: POS.fn.Render.discount, align: 'right'}
         ];
 
         this.dockedItems = [{

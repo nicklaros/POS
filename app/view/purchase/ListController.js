@@ -25,7 +25,7 @@ Ext.define('POS.view.purchase.ListController', {
     },
     
     add: function(){
-        var addPurchase = Ext.fn.App.newTab('add-purchase');
+        var addPurchase = POS.fn.App.newTab('add-purchase');
 
         addPurchase.getController().add();
     },
@@ -36,7 +36,7 @@ Ext.define('POS.view.purchase.ListController', {
                 id: rec.get('id')
             };
 
-        var detail = Ext.fn.App.window('detail-purchase');
+        var detail = POS.fn.App.window('detail-purchase');
         detail.getController().load(params);
     },
 
@@ -46,7 +46,7 @@ Ext.define('POS.view.purchase.ListController', {
                 id: rec.get('id')
             };
 
-        var edit = Ext.fn.App.newTab('edit-purchase');
+        var edit = POS.fn.App.newTab('edit-purchase');
         edit.getController().load(params);
     },
     
@@ -65,15 +65,15 @@ Ext.define('POS.view.purchase.ListController', {
                         id.push(sel[i].get('id'));
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('purchase/cancel', function(websocket, data){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (data.success){
                                 POS.app.getStore('Purchase').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                POS.fn.App.notification('Ups', data.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -87,7 +87,7 @@ Ext.define('POS.view.purchase.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-purchase');
+        POS.fn.App.window('search-purchase');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

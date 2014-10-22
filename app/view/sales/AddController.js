@@ -81,7 +81,7 @@ Ext.define('POS.view.sales.AddController', {
     },
 
     addSecondParty: function(){
-        var panel = Ext.fn.App.window('add-second-party');
+        var panel = POS.fn.App.window('add-second-party');
 
         panel.bindCombo = this.lookupReference('second_party').getId();
     },
@@ -103,7 +103,7 @@ Ext.define('POS.view.sales.AddController', {
     edit: function(){
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('add-sales-detail');
+        var edit = POS.fn.App.window('add-sales-detail');
         edit.getController().load(rec);
     },
     
@@ -217,12 +217,12 @@ Ext.define('POS.view.sales.AddController', {
 
                 values.products = Ext.encode(products);
 
-                Ext.fn.App.setLoading(true);
+                POS.fn.App.setLoading(true);
                 Ext.ws.Main.send('sales/create', values);
-                var monitor = Ext.fn.WebSocket.monitor(
+                var monitor = POS.fn.WebSocket.monitor(
                     Ext.ws.Main.on('sales/create', function(websocket, data){
                         clearTimeout(monitor);
-                        Ext.fn.App.setLoading(false);
+                        POS.fn.App.setLoading(false);
                         if (data.success){
                             me.close();
                             POS.app.getStore('Sales').load();
@@ -233,13 +233,13 @@ Ext.define('POS.view.sales.AddController', {
                                     'Print Nota Penjualan?',
                                     function(btn){
                                         if (btn == 'yes'){
-                                            Ext.fn.App.printNotaSales(data.id);
+                                            POS.fn.App.printNotaSales(data.id);
                                         }
                                     }
                                 );
                             }, 10);
                         }else{
-                            Ext.fn.App.notification('Ups', data.errmsg);
+                            POS.fn.App.notification('Ups', data.errmsg);
                         }
                     }, this, {
                         single: true,
@@ -247,7 +247,7 @@ Ext.define('POS.view.sales.AddController', {
                     })
                 );
             } else {
-                Ext.fn.App.notification('Ups', ERROR_1);
+                POS.fn.App.notification('Ups', ERROR_1);
             }
         }
     },

@@ -5,7 +5,7 @@ Ext.define('POS.view.notification.List' ,{
     controller: 'list-notification',
 
     requires: [
-        'Ext.fn.Notification',
+        'POS.fn.Notification',
         'POS.custom.grid.Notification',
         'POS.view.notification.ListController'
     ],

@@ -24,13 +24,13 @@ Ext.define('POS.view.stock.AddController', {
     },
 
     addProduct: function(){
-        var panel = Ext.fn.App.window('add-product');
+        var panel = POS.fn.App.window('add-product');
 
         panel.bindCombo = this.lookupReference('product').getId();
     },
 
     addUnit: function(){
-        var panel = Ext.fn.App.window('add-unit');
+        var panel = POS.fn.App.window('add-unit');
 
         panel.bindCombo = this.lookupReference('unit').getId();
     },
@@ -70,12 +70,12 @@ Ext.define('POS.view.stock.AddController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
+            POS.fn.App.setLoading(true);
             Ext.ws.Main.send('stock/create', values);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('stock/create', function(websocket, result){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (result.success){
                         panel.close();
                         POS.app.getStore('Stock').load();
@@ -94,7 +94,7 @@ Ext.define('POS.view.stock.AddController', {
                             bindCombo.fireEvent('select', bindCombo, [stock]);
                         }
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                     }
                 }, this, {
                     single: true,

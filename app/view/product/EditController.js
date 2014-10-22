@@ -24,19 +24,19 @@ Ext.define('POS.view.product.EditController', {
         var panel = this.getView(),
             form = this.lookupReference('form');
 
-        Ext.fn.App.setLoading(true);
+        POS.fn.App.setLoading(true);
         Ext.ws.Main.send('product/loadFormEdit', {id: id});
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('product/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     form.getForm().setValues(result.data);
                     
                     this.lookupReference('name').focus();
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -53,18 +53,18 @@ Ext.define('POS.view.product.EditController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
+            POS.fn.App.setLoading(true);
             Ext.ws.Main.send('product/update', values);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('product/update', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
                         POS.app.getStore('Product').load();
                         POS.app.getStore('Stock').load();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,

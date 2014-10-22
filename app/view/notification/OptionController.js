@@ -23,7 +23,7 @@ Ext.define('POS.view.notification.OptionController', {
     },
     
     addOptionPrice: function(){
-        var panel = Ext.fn.App.window('add-notification-option');
+        var panel = POS.fn.App.window('add-notification-option');
         
         panel.notificationType = 'price';
     },
@@ -38,14 +38,14 @@ Ext.define('POS.view.notification.OptionController', {
             };
 
         panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('notification/subOptionPrice', function(websocket, result){
                 clearTimeout(monitor);
                 panel.setLoading(false);
                 if (result.success){
                     store.load();
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,

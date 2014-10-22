@@ -3,7 +3,7 @@ Ext.define('POS.custom.chart.transaction.SalesVsPurchase', {
     alias: 'widget.chart-sales-vs-purchase',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.chart.PolarChart'
     ],
     
@@ -39,7 +39,7 @@ Ext.define('POS.custom.chart.transaction.SalesVsPurchase', {
                 tooltip: {
                     trackMouse: true,
                     renderer: function(storeItem, item) {
-                        this.setHtml(storeItem.get('type') + ': ' + Ext.fn.Render.currency(storeItem.get('amount')));
+                        this.setHtml(storeItem.get('type') + ': ' + POS.fn.Render.currency(storeItem.get('amount')));
                     }
                 }
             }],

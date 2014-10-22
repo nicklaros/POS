@@ -23,17 +23,17 @@ Ext.define('POS.view.report.CustomController', {
             panel   = this.getView();
         
         panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('report/custom', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 panel.setLoading(false);
                 if (result.success){
                     panel.show();
                     me.getViewModel().set('stats', result.data);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,

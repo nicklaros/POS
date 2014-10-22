@@ -3,7 +3,7 @@ Ext.define('POS.view.currentuser.ChangePasswordController', {
     alias: 'controller.change-password',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -40,8 +40,8 @@ Ext.define('POS.view.currentuser.ChangePasswordController', {
 
         if(form.getForm().isValid()){
             // encrypt password
-            var oldPassEncrypted = Ext.fn.Util.SHA512(oldPass.getValue());
-            var newPassEncrypted = Ext.fn.Util.SHA512(newPass.getValue());
+            var oldPassEncrypted = POS.fn.Util.SHA512(oldPass.getValue());
+            var newPassEncrypted = POS.fn.Util.SHA512(newPass.getValue());
             
             var params = {
                 oldPassEncrypted: oldPassEncrypted,
@@ -49,15 +49,15 @@ Ext.define('POS.view.currentuser.ChangePasswordController', {
             }
 
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('option/changePassword', function(websocket, data){
                     clearTimeout(monitor);
                     panel.setLoading(false);
                     if (data.success){
-                        Ext.fn.App.notification('Password Diubah', 'Selamat, password Anda telah berhasil diubah.');
+                        POS.fn.App.notification('Password Diubah', 'Selamat, password Anda telah berhasil diubah.');
                         panel.close();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                         oldPass.setValue('');
                     }
                 }, this, {

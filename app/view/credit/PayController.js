@@ -24,11 +24,11 @@ Ext.define('POS.view.credit.PayController', {
             panel  = me.getView(),
             form   = panel.down('form');
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('credit/loadFormPay', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 POS.app.getStore('Credit').load();
                 POS.app.getStore('CreditPayment').load();
                 if (result.success){
@@ -48,7 +48,7 @@ Ext.define('POS.view.credit.PayController', {
                     }, 10);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -67,7 +67,7 @@ Ext.define('POS.view.credit.PayController', {
             var values = form.getValues();
 
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('credit/pay', function(websocket, result){
                     clearTimeout(monitor);
                     panel.setLoading(false);
@@ -78,7 +78,7 @@ Ext.define('POS.view.credit.PayController', {
                     if (result.success){
                         panel.close();
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                     }
                 }, this, {
                     single: true,

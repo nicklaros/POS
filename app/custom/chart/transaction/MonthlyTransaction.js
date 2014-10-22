@@ -3,7 +3,7 @@ Ext.define('POS.custom.chart.transaction.MonthlyTransaction', {
     alias: 'widget.chart-monthly-transaction',
 
     requires: [
-        'Ext.fn.Render'
+        'POS.fn.Render'
     ],
     
     cls: 'panel',
@@ -23,7 +23,7 @@ Ext.define('POS.custom.chart.transaction.MonthlyTransaction', {
                 fields: ['sales'],
                 grid: true,
                 minimum: 0,
-                renderer: Ext.fn.Render.plainCurrency
+                renderer: POS.fn.Render.plainCurrency
             },{
                 type: 'category',
                 position: 'bottom',
@@ -56,7 +56,7 @@ Ext.define('POS.custom.chart.transaction.MonthlyTransaction', {
                     style: 'background: #fff',
                     renderer: function(storeItem, item) {
                         var title = item.series.getTitle();
-                        this.setHtml(title + ' bulan ' + Ext.util.Format.date(storeItem.get('month'), "F") + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                        this.setHtml(title + ' bulan ' + Ext.util.Format.date(storeItem.get('month'), "F") + ': ' + POS.fn.Render.currency(storeItem.get(item.series.getYField())));
                     }
                 }
             }],

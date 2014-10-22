@@ -3,7 +3,7 @@ Ext.define('POS.view.user.EditController', {
     alias: 'controller.edit-user',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -22,12 +22,12 @@ Ext.define('POS.view.user.EditController', {
         var panel = this.getView(),
             form = this.lookupReference('form');
 
-        Ext.fn.App.setLoading(true);
+        POS.fn.App.setLoading(true);
         Ext.ws.Main.send('user/loadFormEdit', {id: id});
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('user/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     var role = Ext.create('POS.model.Role', {
                         id  : result.data.role_id,
@@ -39,7 +39,7 @@ Ext.define('POS.view.user.EditController', {
                     form.getForm().setValues(result.data);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -58,17 +58,17 @@ Ext.define('POS.view.user.EditController', {
                 
             values.role_id = values.role;
 
-            Ext.fn.App.setLoading(true);
+            POS.fn.App.setLoading(true);
             Ext.ws.Main.send('user/update', values);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('user/update', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
                         POS.app.getStore('User').load();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,

@@ -28,7 +28,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
     },
 
     addProduct: function(){
-        var panel = Ext.fn.App.window('add-product');
+        var panel = POS.fn.App.window('add-product');
 
         panel.bindCombo = this.lookupReference('product').getId();
     },
@@ -38,7 +38,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             
         // make sure a product is selected
         if (!Ext.isEmpty(product)) {
-            var panel           = Ext.fn.App.window('add-stock'),
+            var panel           = POS.fn.App.window('add-stock'),
                 panelController = panel.getController();
             
             panel.bindCombo = this.lookupReference('stock').getId();
@@ -53,7 +53,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
                 panelController.lookupReference('unit').focus();
             }, 10);
         } else {
-            Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
+            POS.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
         }
     },
     
@@ -92,13 +92,13 @@ Ext.define('POS.view.purchase.AddDetailController', {
         var params = {
             product_id: record.get('product_id')
         }        
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
                     POS.app.getStore('combo.Stock').loadData(result.data);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -110,13 +110,13 @@ Ext.define('POS.view.purchase.AddDetailController', {
         var params = {
             id: record.get('stock_id')
         }        
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('stock/getOne', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
                     this.onSetValueStock(result.data);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -147,7 +147,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             product_id: record[0].getData().id
         }
         
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
@@ -172,7 +172,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
                         this.lookupReference('stock').focus(true);
                     }
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -251,7 +251,7 @@ Ext.define('POS.view.purchase.AddDetailController', {
             priceDifference = this.getViewModel().get('stock.buy') - value,
             params          = {};
             
-        unitPrice.setHtml(Ext.fn.Render.currency(value));
+        unitPrice.setHtml(POS.fn.Render.currency(value));
         
         if (priceDifference == 0) {
             params.status = 'stagnant';

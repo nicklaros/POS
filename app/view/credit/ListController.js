@@ -19,7 +19,7 @@ Ext.define('POS.view.credit.ListController', {
     },
     
     listPayment: function(){
-        var panel = Ext.fn.App.newTab('list-credit-payment');
+        var panel = POS.fn.App.newTab('list-credit-payment');
         panel.getStore().search({});
     },
     
@@ -30,17 +30,17 @@ Ext.define('POS.view.credit.ListController', {
             };
         
         if (rec.get('balance') > 0) {
-            var panel = Ext.fn.App.window('pay-credit');
+            var panel = POS.fn.App.window('pay-credit');
             panel.getController().load(params);
         } else {
-            Ext.fn.Notification.show('Lunas', 'Piutang ini sudah dilunasi.');
+            POS.fn.Notification.show('Lunas', 'Piutang ini sudah dilunasi.');
         }
     },
     
     print: function(){
         var rec  = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.printNotaCredit(rec.get('id'));
+        POS.fn.App.printNotaCredit(rec.get('id'));
     },
 
     salesDetail: function(){
@@ -49,12 +49,12 @@ Ext.define('POS.view.credit.ListController', {
                 id: rec.get('sales_id')
             };
 
-        var detail = Ext.fn.App.window('detail-sales');
+        var detail = POS.fn.App.window('detail-sales');
         detail.getController().load(params);
     },
     
     search: function(){
-        Ext.fn.App.window('search-credit');
+        POS.fn.App.window('search-credit');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

@@ -79,7 +79,7 @@ Ext.define('POS.view.purchase.EditController', {
     },
 
     addSecondParty: function(){
-        var panel = Ext.fn.App.window('add-second-party');
+        var panel = POS.fn.App.window('add-second-party');
 
         panel.bindCombo = this.lookupReference('second_party').getId();
         
@@ -93,7 +93,7 @@ Ext.define('POS.view.purchase.EditController', {
     edit: function(){
         var rec = this.lookupReference('grid-purchase-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-purchase-detail');
+        var edit = POS.fn.App.window('edit-purchase-detail');
         edit.getController().load(rec);
     },
     
@@ -147,11 +147,11 @@ Ext.define('POS.view.purchase.EditController', {
         var panel = this.getView(),
             form = panel.down('form');
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('purchase/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     var secondParty = Ext.create('POS.model.SecondParty', {
                         id  : result.data.second_party_id,
@@ -165,7 +165,7 @@ Ext.define('POS.view.purchase.EditController', {
                     POS.app.getStore('purchase.EditDetail').loadData(result.detail);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -189,7 +189,7 @@ Ext.define('POS.view.purchase.EditController', {
         }
         
         // populate stock and add it to combo stock variant
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
@@ -219,7 +219,7 @@ Ext.define('POS.view.purchase.EditController', {
                         this.lookupReference('stock').focus(true);
                     }
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -298,17 +298,17 @@ Ext.define('POS.view.purchase.EditController', {
                 
                 values.second_party_id = values.second_party;
 
-                Ext.fn.App.setLoading(true);
-                var monitor = Ext.fn.WebSocket.monitor(
+                POS.fn.App.setLoading(true);
+                var monitor = POS.fn.WebSocket.monitor(
                     Ext.ws.Main.on('purchase/update', function(websocket, result){
                         clearTimeout(monitor);
-                        Ext.fn.App.setLoading(false);
+                        POS.fn.App.setLoading(false);
                         if (result.success){
                             me.close();
                             
                             POS.app.getStore('Purchase').load();
                         }else{
-                            Ext.fn.App.notification('Ups', result.errmsg);
+                            POS.fn.App.notification('Ups', result.errmsg);
                         }
                     }, this, {
                         single: true,
@@ -317,7 +317,7 @@ Ext.define('POS.view.purchase.EditController', {
                 );
                 Ext.ws.Main.send('purchase/update', values);
             } else {
-                Ext.fn.App.notification('Ups', ERROR_1);
+                POS.fn.App.notification('Ups', ERROR_1);
             }
         }
     },

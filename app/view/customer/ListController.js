@@ -3,7 +3,7 @@ Ext.define('POS.view.customer.ListController', {
     alias: 'controller.list-customer',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -24,11 +24,11 @@ Ext.define('POS.view.customer.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-customer');
+        POS.fn.App.window('add-customer');
     },
     
     addSales: function(){
-        var sales = Ext.fn.App.newTab('add-sales'),
+        var sales = POS.fn.App.newTab('add-sales'),
             customer = this.getView().getSelectionModel().getSelection()[0],
             secondParty = sales.down('combo-second-party');
         
@@ -45,14 +45,14 @@ Ext.define('POS.view.customer.ListController', {
                 customer_id: rec.get('id')
             };
 
-        var detail = Ext.fn.App.window('customer-detail');
+        var detail = POS.fn.App.window('customer-detail');
         detail.getController().load(params);
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-customer');
+        var edit = POS.fn.App.window('edit-customer');
         edit.getController().load(rec.get('id'));
     },
     
@@ -77,15 +77,15 @@ Ext.define('POS.view.customer.ListController', {
                         id: id
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('customer/destroy', function(websocket, result){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (result.success){
                                 POS.app.getStore('Customer').load();
                             }else{
-                                Ext.fn.App.notification('Ups', result.errmsg);
+                                POS.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -103,19 +103,19 @@ Ext.define('POS.view.customer.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-customer');
+        POS.fn.App.window('search-customer');
     },
     
     showCredit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.showSecondPartyCredit(rec.get('id'))
+        POS.fn.App.showSecondPartyCredit(rec.get('id'))
     },
     
     showDebit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.showSecondPartyDebit(rec.get('id'))
+        POS.fn.App.showSecondPartyDebit(rec.get('id'))
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {
@@ -169,7 +169,7 @@ Ext.define('POS.view.customer.ListController', {
     showSales: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.showSecondPartySales(rec.get('id'))
+        POS.fn.App.showSecondPartySales(rec.get('id'))
     }
     
 });

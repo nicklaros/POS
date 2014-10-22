@@ -34,14 +34,14 @@ Ext.define('POS.view.notification.AddOptionController', {
             }
 
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on(action, function(websocket, result){
                     clearTimeout(monitor);
                     panel.setLoading(false);
                     if (result.success){
                         panel.close();
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                     }
                     POS.app.getStore(store).load();
                 }, this, {

@@ -3,7 +3,7 @@ Ext.define('POS.view.form.LoginController', {
     alias: 'controller.login',
 
     requires: [
-        'Ext.fn.Util',
+        'POS.fn.Util',
         'Ext.MessageBox'
     ],
 
@@ -24,7 +24,7 @@ Ext.define('POS.view.form.LoginController', {
         var pass = this.lookupReference('pass'),
             val = field.getValue();
 
-        pass.setValue(val != "" ? Ext.fn.Util.SHA512(val) : "");
+        pass.setValue(val != "" ? POS.fn.Util.SHA512(val) : "");
     },
 
     login: function () {
@@ -50,7 +50,7 @@ Ext.define('POS.view.form.LoginController', {
 
                     Ext.main.ViewModel.setData(result);
 
-                    Ext.fn.Util.afterLogin();
+                    POS.fn.Util.afterLogin();
 
                     form.getForm().reset();
                 }else{

@@ -23,15 +23,15 @@ Ext.define('POS.view.debit.ListPaymentController', {
             'Apakah Anda yakin akan membatalkan Pembayaran Hutang ini?',
             function(btn){
                 if (btn == 'yes'){
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('debit/cancelPayment', function(websocket, result){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             POS.app.getStore('Debit').load();
                             POS.app.getStore('DebitPayment').load();
                             if (result.success == false) {
-                                Ext.fn.App.notification('Ups', result.errmsg);
+                                POS.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -45,7 +45,7 @@ Ext.define('POS.view.debit.ListPaymentController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-debit-payment');
+        POS.fn.App.window('search-debit-payment');
     },
     
     reset: function(){

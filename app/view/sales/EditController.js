@@ -77,7 +77,7 @@ Ext.define('POS.view.sales.EditController', {
     },
 
     addSecondParty: function(){
-        var panel = Ext.fn.App.window('add-second-party');
+        var panel = POS.fn.App.window('add-second-party');
 
         panel.bindCombo = this.lookupReference('second_party').getId();
     },
@@ -89,7 +89,7 @@ Ext.define('POS.view.sales.EditController', {
     edit: function(){
         var rec = this.lookupReference('grid-sales-detail').getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-sales-detail');
+        var edit = POS.fn.App.window('edit-sales-detail');
         edit.getController().load(rec);
     },
     
@@ -143,12 +143,12 @@ Ext.define('POS.view.sales.EditController', {
         var panel = this.getView(),
             form = panel.down('form');
 
-        Ext.fn.App.setLoading(true);
+        POS.fn.App.setLoading(true);
         Ext.ws.Main.send('sales/loadFormEdit', params);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('sales/loadFormEdit', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     var secondParty = Ext.create('POS.model.SecondParty', {
                         id  : result.data.second_party_id,
@@ -169,7 +169,7 @@ Ext.define('POS.view.sales.EditController', {
                     POS.app.getStore('sales.EditDetail').loadData(result.detail);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -260,12 +260,12 @@ Ext.define('POS.view.sales.EditController', {
                 values.products = Ext.encode(products);
                 values.removed_id = removed_id;
 
-                Ext.fn.App.setLoading(true);
+                POS.fn.App.setLoading(true);
                 Ext.ws.Main.send('sales/update', values);
-                var monitor = Ext.fn.WebSocket.monitor(
+                var monitor = POS.fn.WebSocket.monitor(
                     Ext.ws.Main.on('sales/update', function(websocket, data){
                         clearTimeout(monitor);
-                        Ext.fn.App.setLoading(false);
+                        POS.fn.App.setLoading(false);
                         if (data.success){
                             me.close();
                             POS.app.getStore('Sales').load();
@@ -276,13 +276,13 @@ Ext.define('POS.view.sales.EditController', {
                                     'Print Nota Penjualan?',
                                     function(btn){
                                         if (btn == 'yes'){
-                                            Ext.fn.App.printNotaSales(data.id);
+                                            POS.fn.App.printNotaSales(data.id);
                                         }
                                     }
                                 );
                             }, 10);
                         }else{
-                            Ext.fn.App.notification('Ups', data.errmsg);
+                            POS.fn.App.notification('Ups', data.errmsg);
                         }
                     }, this, {
                         single: true,
@@ -290,7 +290,7 @@ Ext.define('POS.view.sales.EditController', {
                     })
                 );
             } else {
-                Ext.fn.App.notification('Ups', ERROR_1);
+                POS.fn.App.notification('Ups', ERROR_1);
             }
         }
     },

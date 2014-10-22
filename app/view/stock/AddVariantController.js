@@ -27,11 +27,11 @@ Ext.define('POS.view.stock.AddVariantController', {
             
             values.unit_id = values.unit;
 
-            Ext.fn.App.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            POS.fn.App.setLoading(true);
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('stock/addVariant', function(websocket, result){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (result.success){
                         panel.close();
                         
@@ -49,7 +49,7 @@ Ext.define('POS.view.stock.AddVariantController', {
                             bindCombo.fireEvent('select', bindCombo, [stock]);
                         }
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                     }
                 }, this, {
                     single: true,

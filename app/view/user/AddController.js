@@ -3,7 +3,7 @@ Ext.define('POS.view.user.AddController', {
     alias: 'controller.add-user',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -33,17 +33,17 @@ Ext.define('POS.view.user.AddController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
+            POS.fn.App.setLoading(true);
             Ext.ws.Main.send('user/create', values);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('user/create', function(websocket, data){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (data.success){
                         panel.close();
                         POS.app.getStore('User').load();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,

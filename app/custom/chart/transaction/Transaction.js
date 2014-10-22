@@ -3,7 +3,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
     alias: 'widget.chart-transaction',
 
     requires: [
-        'Ext.fn.Render'
+        'POS.fn.Render'
     ],
     
     cls: 'panel',
@@ -26,7 +26,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                 fields: ['sales', 'purchase'],
                 grid: true,
                 minimum: 0,
-                renderer: Ext.fn.Render.plainCurrency
+                renderer: POS.fn.Render.plainCurrency
             },{
                 type: 'category',
                 position: 'bottom',
@@ -59,7 +59,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                     style: 'background: #fff',
                     renderer: function(storeItem, item) {
                         var title = item.series.getTitle();
-                        this.setHtml(title + ' hari ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                        this.setHtml(title + ' hari ' + POS.fn.Render.date(storeItem.get('date'), true) + ': ' + POS.fn.Render.currency(storeItem.get(item.series.getYField())));
                     }
                 }
             },{
@@ -87,7 +87,7 @@ Ext.define('POS.custom.chart.transaction.Transaction', {
                     style: 'background: #fff',
                     renderer: function(storeItem, item) {
                         var title = item.series.getTitle();
-                        this.setHtml(title + ' hari ' + Ext.fn.Render.date(storeItem.get('date'), true) + ': ' + Ext.fn.Render.currency(storeItem.get(item.series.getYField())));
+                        this.setHtml(title + ' hari ' + POS.fn.Render.date(storeItem.get('date'), true) + ': ' + POS.fn.Render.currency(storeItem.get(item.series.getYField())));
                     }
                 }
             }],
