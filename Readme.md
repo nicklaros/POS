@@ -9,28 +9,27 @@ user = admin
 pass = admin
 
 ## Requirements
- - Sencha CMD (http://www.sencha.com/products/sencha-cmd/download)
- - ExtJS 5 (http://www.sencha.com/products/extjs/download/ext-js-5.0.1/)
- - Composer (https://getcomposer.org/)
- - Memcache (http://memcached.org/)
- - Zero MQ (http://zeromq.org/)
+ - [`Sencha CMD`](http://www.sencha.com/products/sencha-cmd/download)
+ - [`ExtJS 5`](http://www.sencha.com/products/extjs/download/ext-js-5.0.1/)
+ - [`Composer`](https://getcomposer.org/)
+ - [`Memcache`](http://memcached.org/)
+ - [`Zero MQ`](http://zeromq.org/)
  - Httpd server (nginx, apache atau lainnya)
  - MariaDB atau MySql
  - PHP 5.4 +
  
 ## Backend Repository
  
- POS-ws-server (https://github.com/nicklaros/POS-ws-server)
+ [`POS-ws-server`](https://github.com/nicklaros/POS-ws-server)
  
 # Setting Up POS Project
  
  - Clone or fork POS to your computer
- - Use the following command in POS root directory to tell composer to gather required 
+ - Use `composer update` command in POS root directory to tell composer to gather required 
    repository for you
-   `composer update` 
  - Import database from included sql file in `database` folder
- - Before viewing it on Browser, you must run the following command to build POS
-   `sencha app build` 
+ - Before viewing it on Browser, you must run `sencha app build` command in POS root 
+   directory to build POS Project
 
 # Files and Folders
 
