@@ -105,22 +105,30 @@ Ext.define('POS.fn.App', {
     mnLogout: function(){
         Mains.logout(function(result){
             if (result.success){
-                var appTab = Ext.ComponentQuery.query('app-tab')[0],
-                    tabItems = appTab.items.items,
-                    tabLength = tabItems.length;
+                var appTab = Ext.main.AppTab;
 
                 appTab.setActiveTab(0);
-                for(i=1;i<tabLength;i++){
-                    tabItems[1].close();
-                }
+                
+                appTab.items.each(function(child) {
+                    
+                    // check wether child tab is closable
+                    if (child.closable) { 
+                        
+                        // if closable then remove it from it's parent
+                        appTab.remove(child); 
+                        
+                    }
+                    
+                });
 
-                Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(result);
+                Ext.main.ViewModel.setData(result);
 
                 POS.fn.Util.afterLogout();
 
                 setTimeout(function(){
                     Ext.ComponentQuery.query('login textfield[name=user]')[0].focus();
                 }, 10);
+                
             }else{
                 console.log('Login error');
             }
