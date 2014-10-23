@@ -31,6 +31,14 @@ pass = admin
  - Before viewing it on Browser, you must run `sencha app build` command in POS root 
    directory to build POS Project
 
+# Building Project
+ 
+Use following command in POS root directory to build project
+
+```bash
+$ sencha app build
+```
+
 # Files and Folders
 
 The following files are all needed to build and load the application.
