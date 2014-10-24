@@ -31,7 +31,7 @@ pass = admin
  - Before viewing it on Browser, you must run `sencha app build` command in POS root 
    directory to build POS Project
 
-# Building Project
+# Building Project for Production
  
 Use following command in POS root directory to build project
 
@@ -39,6 +39,25 @@ Use following command in POS root directory to build project
 $ sencha app build
 ```
 
+# Important Information
+
+ - By default, POS will try to connect websocket at `ws://pos.localhost:8080`, so that means
+   you have to set your POS development address to `http://pos.localhost` and make sure `port 8080`
+   is open. Edit these two file if you want to change default setting
+   - Frontend: `POS/app/fn/Util.js` on `line 19`
+   
+     ```bash
+     Ext.ws.Main = POS.fn.WebSocket.create('ws://pos.localhost:8080/POS/Mains');
+     ```
+     
+   - Backend: `POS-ws-server/bin/server.php` on `line 20`
+   
+     ```bash
+     $app = new App('pos.localhost', 8080);
+     ```
+     
+   Important to note that the address and port on each file above must be identical or the connection will fail!
+ 
 # Files and Folders
 
 The following files are all needed to build and load the application.
