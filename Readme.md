@@ -57,6 +57,14 @@ $ sencha app build
      ```
      
    Important to note that the address and port on each file above must be identical or the connection will fail!
+ - Default MySql database configuration:
+   - host: "localhost"
+   - database: "pos"
+   - user: "root"
+   - password: "sqlpass"
+   Edit these two file if you want to change default setting
+   - Frontend: `POS/remote/propel-config.php`
+   - Backend: `POS-ws-server/propel-config.php`
  
 # Files and Folders
 
