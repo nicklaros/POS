@@ -225,11 +225,11 @@ html{
 .overline{
     text-decoration: overline;
 }
-.tahoma {
-    font-family: tahoma, arial, sans-serif;
-}
 .standar {
     font-size: 12px;
+}
+.tahoma {
+    font-family: tahoma, arial, sans-serif;
 }
 
 
