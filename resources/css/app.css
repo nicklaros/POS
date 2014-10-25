@@ -225,6 +225,12 @@ html{
 .overline{
     text-decoration: overline;
 }
+.standar {
+    font-size: 12px;
+}
+.tahoma {
+    font-family: tahoma, arial, sans-serif;
+}
 
 
 /* miscellaneous */

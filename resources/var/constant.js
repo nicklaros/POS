@@ -13,6 +13,8 @@ var FORMAT_1 = 'H:i:s'; // alternate time input format
 var MASK_RE_0 = /[() A-Z a-z 0-9 , . \- \/ ']/; //char
 var MASK_RE_1 = /[A-Za-z0-9]/; //char tanpa spasi
 var MASK_RE_2 = /[0-9]/; //integer
+var MASK_RE_3 = /[A-Za-z0-9,.\-\/:]/; //domain
+var MASK_RE_4 = /[A-Za-z0-9,.\-@]/; //email
 
 // Regex
 var REGEX_0 = /^.*\.(jpg|JPG|jpeg|JPEG|png|PNG)$/; //regex picture

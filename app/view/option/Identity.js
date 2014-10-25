@@ -48,7 +48,7 @@ Ext.define('POS.view.option.Identity', {
             xtype: 'textfield',
             fieldLabel: 'Email',
             name: 'client_email',
-            maskRe: MASK_RE_1,
+            maskRe: MASK_RE_4,
             maxLength: 128,
             tabOnEnter: true,
             width: 300
@@ -56,7 +56,7 @@ Ext.define('POS.view.option.Identity', {
             xtype: 'textfield',
             fieldLabel: 'Website',
             name: 'client_website',
-            maskRe: MASK_RE_1,
+            maskRe: MASK_RE_3,
             maxLength: 128,
             saveOnEnter: true,
             width: 300
