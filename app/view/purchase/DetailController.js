@@ -19,11 +19,11 @@ Ext.define('POS.view.purchase.DetailController', {
         
         panel.purchase_id = params.id;
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('purchase/viewDetail', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     // update purchase detail template
                     this.lookupReference('detail-panel').update(result.data);
@@ -33,7 +33,7 @@ Ext.define('POS.view.purchase.DetailController', {
                     panel.show();
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,

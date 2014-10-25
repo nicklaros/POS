@@ -22,9 +22,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRoleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildRoleQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildRoleQuery orderByStatus($order = Criteria::ASC) Order by the status column
  *
  * @method     ChildRoleQuery groupById() Group by the id column
  * @method     ChildRoleQuery groupByName() Group by the name column
+ * @method     ChildRoleQuery groupByStatus() Group by the status column
  *
  * @method     ChildRoleQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildRoleQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,10 +51,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRole findOneById(string $id) Return the first ChildRole filtered by the id column
  * @method     ChildRole findOneByName(string $name) Return the first ChildRole filtered by the name column
+ * @method     ChildRole findOneByStatus(string $status) Return the first ChildRole filtered by the status column
  *
  * @method     ChildRole[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildRole objects based on current ModelCriteria
  * @method     ChildRole[]|ObjectCollection findById(string $id) Return ChildRole objects filtered by the id column
  * @method     ChildRole[]|ObjectCollection findByName(string $name) Return ChildRole objects filtered by the name column
+ * @method     ChildRole[]|ObjectCollection findByStatus(string $status) Return ChildRole objects filtered by the status column
  * @method     ChildRole[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -142,7 +146,7 @@ abstract class RoleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NAME FROM role WHERE ID = :p0';
+        $sql = 'SELECT ID, NAME, STATUS FROM role WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -300,6 +304,35 @@ abstract class RoleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(RoleTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the status column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStatus('fooValue');   // WHERE status = 'fooValue'
+     * $query->filterByStatus('%fooValue%'); // WHERE status LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $status The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildRoleQuery The current query, for fluid interface
+     */
+    public function filterByStatus($status = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($status)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $status)) {
+                $status = str_replace('*', '%', $status);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(RoleTableMap::COL_STATUS, $status, $comparison);
     }
 
     /**

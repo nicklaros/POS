@@ -3,7 +3,7 @@ Ext.define('POS.view.stock.ListController', {
     alias: 'controller.list-stock',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -24,20 +24,20 @@ Ext.define('POS.view.stock.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-stock')
+        POS.fn.App.window('add-stock')
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-stock');
+        var edit = POS.fn.App.window('edit-stock');
         edit.getController().load(rec.get('id'));
     },
 
     editProduct: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-product');
+        var edit = POS.fn.App.window('edit-product');
         edit.getController().load(rec.get('product_id'));
     },
     
@@ -56,15 +56,15 @@ Ext.define('POS.view.stock.ListController', {
                         id.push(sel[i].get('id'));
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('stock/destroy', function(websocket, data){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (data.success){
                                 POS.app.getStore('Stock').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                POS.fn.App.notification('Ups', data.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -78,7 +78,7 @@ Ext.define('POS.view.stock.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-stock');
+        POS.fn.App.window('search-stock');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

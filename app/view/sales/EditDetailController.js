@@ -4,33 +4,51 @@ Ext.define('POS.view.sales.EditDetailController', {
 
     control: {
         '#': {
-            boxready: function(panel){
-                var stock = this.lookupReference('stock');
-                
+            hide: function(){
+                // remove combo stock's store
+                this.lookupReference('stock').getStore().removeAll();
+
                 setTimeout(function(){
-                    stock.focus();
+                    // focus on combo stock
+                    Ext.ComponentQuery.query('edit-sales [name = stock]')[0].focus();
                 }, 10);
             }
         },
-        'textfield[tabOnEnter = true]': {
+        'textfield[amountOnEnter = true]': {
             specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
+                if(e.getKey() == e.ENTER) {
+                    this.lookupReference('amount').focus(true);
+                }
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
     },
 
     close: function(){
-        this.getView().close();
+        var panel = this.getView(),
+            form = panel.down('form');
+        
+        panel.hide();
+        
+        form.reset();
     },
 
     load: function(record){
         var panel = this.getView(),
             form = panel.down('form');
+        
+        // save reference to edited record
+        panel.record = record.get('id');
 
         // create stock model from edited sales detail record
         var stock = Ext.create('POS.model.Stock', record.getData());
@@ -61,7 +79,7 @@ Ext.define('POS.view.sales.EditDetailController', {
         }, 10);
     },
     
-    productSelect: function(combo, record){
+    onProductSelect: function(combo, record){
         // get selected record data
         var record = (Ext.isArray(record) ? record[0].getData() : record.getData());
         
@@ -75,6 +93,14 @@ Ext.define('POS.view.sales.EditDetailController', {
         
         this.lookupReference('amount').setValue(1);
         this.lookupReference('amount').focus(true);
+    },
+    
+    onProductBlur: function(combo){
+        if (Ext.isEmpty(combo.getSelectedRecord())) combo.reset();
+    },
+    
+    onTypeSelect: function(){
+        this.lookupReference('amount').focus();
     },
 
     save: function(){
@@ -103,20 +129,26 @@ Ext.define('POS.view.sales.EditDetailController', {
             values.total_price_wo_discount = values.amount * values.unit_price;
             values.total_price = values.total_price_wo_discount - (values.total_price_wo_discount * values.discount / 100);
             
-            if (!panel.isEdit) {            
-                var store = POS.app.getStore('SalesDetail'),
-                    rec = Ext.create('POS.model.SalesDetail', values);
-                    
-                store.add(rec);
-            }else{
-                var rec = Ext.ComponentQuery.query('grid-sales-detail')[0].getSelectionModel().getSelection()[0];
-                
-                rec.set(values);
-            }
-
-            panel.close();
+            // update record
+            POS.app.getStore('sales.EditDetail').getById(panel.record).set(values);
             
-            Ext.ComponentQuery.query('edit-sales')[0].getController().setTotalPrice();
+            // hide panel
+            panel.hide();
+            
+            // get reference to add-sales panel and it's controller
+            var editSales = Ext.ComponentQuery.query('edit-sales')[0],
+                editSalesController = editSales.getController();
+            
+            // set total price
+            editSalesController.setTotalPrice();
+            
+            // set sales type
+            editSalesController.lookupReference('type').setValue(values.type);
+            
+            // focus on combo stock
+            editSalesController.lookupReference('stock').focus();
+            
+            form.reset();
         }
     }
 });

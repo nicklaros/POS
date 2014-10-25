@@ -3,7 +3,7 @@ Ext.define('POS.custom.grid.CashierReport', {
     alias: 'widget.grid-cashier-report',
     
     requires: [
-        'Ext.fn.Render'
+        'POS.fn.Render'
     ],
     
     autoScroll: true,
@@ -24,10 +24,10 @@ Ext.define('POS.custom.grid.CashierReport', {
             }),
             {header: 'Nama Kasir', dataIndex:'cashier_name', width: 300},
             {header: 'Banyak Penjualan', dataIndex: 'sales_amount', width: 150},
-            {header: 'Besar Penjualan', dataIndex: 'sales_total', width: 150, renderer: Ext.fn.Render.currency, align: 'right',
+            {header: 'Besar Penjualan', dataIndex: 'sales_total', width: 150, renderer: POS.fn.Render.currency, align: 'right',
                 summaryType: 'sum',
                 summaryRenderer: function(value) {
-                    return '<strong>' + Ext.fn.Render.currency(value) + '</strong>';
+                    return '<strong>' + POS.fn.Render.currency(value) + '</strong>';
                 }
             }
         ];

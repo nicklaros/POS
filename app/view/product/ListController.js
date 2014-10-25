@@ -3,7 +3,7 @@ Ext.define('POS.view.product.ListController', {
     alias: 'controller.list-product',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -22,13 +22,13 @@ Ext.define('POS.view.product.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-product');
+        POS.fn.App.window('add-product');
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-product');
+        var edit = POS.fn.App.window('edit-product');
         edit.getController().load(rec.get('id'));
     },
     
@@ -50,15 +50,15 @@ Ext.define('POS.view.product.ListController', {
                         id.push(sel[i].get('id'));
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('product/destroy', function(websocket, data){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (data.success){
                                 POS.app.getStore('Product').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                POS.fn.App.notification('Ups', data.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -76,7 +76,7 @@ Ext.define('POS.view.product.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-product');
+        POS.fn.App.window('search-product');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {
@@ -110,7 +110,7 @@ Ext.define('POS.view.product.ListController', {
     showStock: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
         
-        Ext.fn.App.showProductPrice(rec.get('id'));
+        POS.fn.App.showProductPrice(rec.get('id'));
     }
     
 });

@@ -6,6 +6,7 @@ Ext.define('POS.view.purchase.Detail' ,{
 
     requires: [
         'POS.custom.grid.PurchaseDetail',
+        'POS.store.PurchaseDetail',
         'POS.tpl.PurchaseDetail',
         'POS.view.purchase.DetailController'
     ],
@@ -72,6 +73,7 @@ Ext.define('POS.view.purchase.Detail' ,{
                     cls: 'panel-header'
                 },{
                     xtype: 'grid-purchase-detail',
+                    store: POS.app.getStore('PurchaseDetail'),
                     selType: 'rowmodel',
                     withRowNumber: true
                 }]

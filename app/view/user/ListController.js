@@ -3,14 +3,11 @@ Ext.define('POS.view.user.ListController', {
     alias: 'controller.list-user',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
         '#': {
-            boxready: function(panel){
-                
-            },
             selectionchange: function(sm, selected){
                 var btnEdit = this.lookupReference('edit'),
                     btnResetPassword = this.lookupReference('resetPassword'),
@@ -26,13 +23,13 @@ Ext.define('POS.view.user.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-user')
+        POS.fn.App.window('add-user');
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-user');
+        var edit = POS.fn.App.window('edit-user');
         edit.getController().load(rec.get('id'));
     },
     
@@ -50,16 +47,16 @@ Ext.define('POS.view.user.ListController', {
                         id.push(sel[i].get('id'));
                     }
 
-                    Ext.fn.App.setLoading(true);
+                    POS.fn.App.setLoading(true);
                     Ext.ws.Main.send('user/destroy', {id: id});
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('user/destroy', function(websocket, data){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (data.success){
                                 POS.app.getStore('User').load();
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                POS.fn.App.notification('Ups', data.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -83,16 +80,16 @@ Ext.define('POS.view.user.ListController', {
             '<b>Password user ' + rec.get('name') + ' akan direset sama dengan "User ID" nya. <br /> Lanjutkan?</b><br>',
             function(btn){
                 if (btn == 'yes'){
-                    Ext.fn.App.setLoading(true);
+                    POS.fn.App.setLoading(true);
                     Ext.ws.Main.send('user/resetPassword', {id: rec.get('id')});
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('user/resetPassword', function(websocket, data){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (data.success){
-                                Ext.fn.App.notification('Berhasil', 'Password berhasil direset, selanjutnya user tersebut bisa masuk dengan password yang sama dengan User Id nya');
+                                POS.fn.App.notification('Berhasil', 'Password berhasil direset, selanjutnya user tersebut bisa masuk dengan password yang sama dengan User Id nya');
                             }else{
-                                Ext.fn.App.notification('Ups', data.errmsg);
+                                POS.fn.App.notification('Ups', data.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -105,7 +102,7 @@ Ext.define('POS.view.user.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-user');
+        POS.fn.App.window('search-user');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

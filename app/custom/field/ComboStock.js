@@ -17,11 +17,11 @@ Ext.define('POS.custom.field.ComboStock', {
     hideTrigger: true,
     matchFieldWidth: true,
     minChars: 1,
-    queryDelay: 50,
+    queryDelay: 100,
     queryMode: 'remote',
     selectOnFocus: true,
     triggerAction: 'query',
-    typeAhead: true,
+    typeAhead: false,
     typeAheadDelay: 250,
 
     initComponent: function(){

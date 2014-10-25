@@ -112,7 +112,7 @@ abstract class Stock implements ActiveRecordInterface
 
     /**
      * The value for the discount field.
-     * @var        int
+     * @var        string
      */
     protected $discount;
 
@@ -470,7 +470,7 @@ abstract class Stock implements ActiveRecordInterface
     /**
      * Get the [discount] column value.
      *
-     * @return int
+     * @return string
      */
     public function getDiscount()
     {
@@ -568,7 +568,7 @@ abstract class Stock implements ActiveRecordInterface
             $this->sell_misc = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : StockTableMap::translateFieldName('Discount', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->discount = (null !== $col) ? (int) $col : null;
+            $this->discount = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : StockTableMap::translateFieldName('Unlimited', TableMap::TYPE_PHPNAME, $indexType)];
             $this->unlimited = (null !== $col) ? (boolean) $col : null;
@@ -784,13 +784,13 @@ abstract class Stock implements ActiveRecordInterface
     /**
      * Set the value of [discount] column.
      *
-     * @param  int $v new value
+     * @param  string $v new value
      * @return $this|\ORM\Stock The current object (for fluent API support)
      */
     public function setDiscount($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->discount !== $v) {
@@ -1152,7 +1152,7 @@ abstract class Stock implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->sell_misc, PDO::PARAM_INT);
                         break;
                     case 'DISCOUNT':
-                        $stmt->bindValue($identifier, $this->discount, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->discount, PDO::PARAM_STR);
                         break;
                     case 'UNLIMITED':
                         $stmt->bindValue($identifier, (int) $this->unlimited, PDO::PARAM_INT);

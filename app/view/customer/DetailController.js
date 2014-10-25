@@ -23,17 +23,17 @@ Ext.define('POS.view.customer.DetailController', {
             };
         
         panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('report/monthly', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 panel.setLoading(false);
                 if (result.success){
                     panel.show();
                     me.getViewModel().set('stats', result.data);
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -51,11 +51,11 @@ Ext.define('POS.view.customer.DetailController', {
         
         panel.customer_id = params.customer_id;
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('customer/viewDetail', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     panel.show();
                     
@@ -69,7 +69,7 @@ Ext.define('POS.view.customer.DetailController', {
                 }else{
                     panel.close();
                     
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,

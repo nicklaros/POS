@@ -185,7 +185,7 @@ class StockTableMap extends TableMap
         $this->addColumn('SELL_PUBLIC', 'SellPublic', 'INTEGER', false, 10, null);
         $this->addColumn('SELL_DISTRIBUTOR', 'SellDistributor', 'INTEGER', false, 10, null);
         $this->addColumn('SELL_MISC', 'SellMisc', 'INTEGER', false, 10, null);
-        $this->addColumn('DISCOUNT', 'Discount', 'TINYINT', false, 3, null);
+        $this->addColumn('DISCOUNT', 'Discount', 'DECIMAL', false, 5, null);
         $this->addColumn('UNLIMITED', 'Unlimited', 'BOOLEAN', false, 1, null);
         $this->addColumn('STATUS', 'Status', 'CHAR', true, null, null);
     } // initialize()

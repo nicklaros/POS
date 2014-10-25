@@ -12,7 +12,7 @@ Ext.define('POS.model.Stock', {
         {name: 'sell_public',       type: 'int'},
         {name: 'sell_distributor',  type: 'int'},
         {name: 'sell_misc',         type: 'int'},
-        {name: 'discount',          type: 'int'},
+        {name: 'discount',          type: 'number'},
         {name: 'unlimited',         type: 'int'}
     ]
 });

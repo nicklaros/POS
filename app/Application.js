@@ -4,8 +4,6 @@
  * details.
  */
 
-Ext.Loader.setPath('Ext.fn', 'app/fn');
-Ext.Loader.setPath('Ext.tpl', 'app/tpl');
 Ext.Loader.setPath('Overrides', 'overrides');
 
 Ext.define('POS.Application', {
@@ -22,14 +20,15 @@ Ext.define('POS.Application', {
         'Ext.chart.interactions.ItemInfo',
         'Ext.data.proxy.Direct',
         'Ext.direct.*',
-        'Ext.fn.App',
-        'Ext.fn.WebSocket',
         'Ext.form.*',
+        'Ext.layout.container.Accordion',
         'Ext.ux.data.proxy.WebSocket',
         'Ext.ux.WebSocket',
         'Ext.ux.WebSocketManager',
         'Ext.ux.window.Notification',
-        'Overrides.view.BoundListKeyNav'
+        'Overrides.view.BoundListKeyNav',
+        'POS.fn.App',
+        'POS.fn.WebSocket'
     ],
 
     views: [
@@ -45,11 +44,16 @@ Ext.define('POS.Application', {
         'purchase.List',
         'report.Custom',
         'report.Monthly',
+        'role.List',
         'sales.List',
         'stock.List',
         'supplier.List',
         'unit.List',
         'user.List'
+    ],
+    
+    controllers: [
+        'Global'
     ],
     
     launch: function () {
@@ -60,9 +64,9 @@ Ext.define('POS.Application', {
         Ext.direct.Manager.addProvider(Ext.REMOTING_API);
 
         // Initialize application
-        Ext.fn.App.init();
+        POS.fn.App.init();
 
         // Override standart configurations
-        Ext.fn.Util.overrides();
+        POS.fn.Util.overrides();
     }
 });

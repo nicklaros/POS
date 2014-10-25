@@ -3,7 +3,7 @@ Ext.define('POS.view.supplier.ListController', {
     alias: 'controller.list-supplier',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -21,13 +21,13 @@ Ext.define('POS.view.supplier.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-supplier');
+        POS.fn.App.window('add-supplier');
     },
 
     edit: function(){
         var rec = this.getView().getSelectionModel().getSelection()[0];
 
-        var edit = Ext.fn.App.window('edit-supplier');
+        var edit = POS.fn.App.window('edit-supplier');
         edit.getController().load(rec.get('id'));
     },
     
@@ -48,15 +48,15 @@ Ext.define('POS.view.supplier.ListController', {
                         id: id
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('supplier/destroy', function(websocket, result){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (result.success){
                                 POS.app.getStore('Supplier').load();
                             }else{
-                                Ext.fn.App.notification('Ups', result.errmsg);
+                                POS.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -74,7 +74,7 @@ Ext.define('POS.view.supplier.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-supplier');
+        POS.fn.App.window('search-supplier');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

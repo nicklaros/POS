@@ -1,12 +1,19 @@
 Ext.define('POS.store.combo.Role', {
     extend: 'Ext.data.Store',
-    fields: [
-        {name: 'id', type: 'string'},
-        {name: 'role', type: 'string'}
-    ],
-
-    data : [
-        {id: 1, role: 'Super Admin'},
-        {id: 2, role: 'Pegawai'}
-    ]
+    model: 'POS.model.Role',
+    
+    init: function(){
+        this.setProxy({
+            type: 'websocket',
+            storeId: this.getStoreId(),
+            websocket: Ext.ws.Main,
+            api: {
+                read: 'combo/role'
+            },
+            reader: {
+                type: 'json',
+                rootProperty: 'data'
+            }
+        });
+    }
 })

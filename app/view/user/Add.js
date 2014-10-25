@@ -24,7 +24,7 @@ Ext.define('POS.view.user.Add' ,{
             bodyPadding: 10,
             items: [{
                 xtype: 'combo-role',
-                fieldLabel: 'Level',
+                fieldLabel: 'Jabatan',
                 name: 'role_id',
                 afterLabelTextTpl: REQUIRED,
                 allowBlank: false,

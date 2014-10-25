@@ -35,11 +35,11 @@ Ext.define('POS.view.product.AddController', {
         if(form.getForm().isValid()){
             var values = form.getValues();
 
-            Ext.fn.App.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            POS.fn.App.setLoading(true);
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('product/create', function(websocket, result){
                     clearTimeout(monitor);
-                    Ext.fn.App.setLoading(false);
+                    POS.fn.App.setLoading(false);
                     if (result.success){
                         panel.close();
                         POS.app.getStore('Product').load();
@@ -57,7 +57,7 @@ Ext.define('POS.view.product.AddController', {
                             bindCombo.fireEvent('select', bindCombo, [product]);
                         }
                     }else{
-                        Ext.fn.App.notification('Ups', result.errmsg);
+                        POS.fn.App.notification('Ups', result.errmsg);
                     }
                 }, this, {
                     single: true,

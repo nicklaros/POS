@@ -19,11 +19,11 @@ Ext.define('POS.view.sales.DetailController', {
         
         panel.sales_id = params.id;
 
-        Ext.fn.App.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        POS.fn.App.setLoading(true);
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('sales/viewDetail', function(websocket, result){
                 clearTimeout(monitor);
-                Ext.fn.App.setLoading(false);
+                POS.fn.App.setLoading(false);
                 if (result.success){
                     // update sales detail template
                     this.lookupReference('detail-panel').update(result.data);
@@ -33,7 +33,7 @@ Ext.define('POS.view.sales.DetailController', {
                     panel.show();
                 }else{
                     panel.close();
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -46,7 +46,7 @@ Ext.define('POS.view.sales.DetailController', {
     },
 
     print: function(){
-        Ext.fn.App.printNotaSales(this.getView().sales_id);
+        POS.fn.App.printNotaSales(this.getView().sales_id);
     }
     
 });

@@ -2,7 +2,7 @@ Ext.define('POS.view.main.MainController', {
     extend: 'Ext.app.ViewController',
 
     requires: [
-        'Ext.fn.App',
+        'POS.fn.App',
         'Ext.MessageBox'
     ],
 
@@ -19,6 +19,8 @@ Ext.define('POS.view.main.MainController', {
 
                 Ext.main.View = panel;
                 Ext.main.ViewModel = panel.getViewModel();
+                Ext.main.AppNav = Ext.ComponentQuery.query('app-nav')[0];
+                Ext.main.AppTab = Ext.ComponentQuery.query('app-tab')[0];
                 
                 this.keyMap(panel);
                 
@@ -37,27 +39,11 @@ Ext.define('POS.view.main.MainController', {
     isKeyBlocked: function(){
         return !(
             Ext.main.ViewModel.get('state') == 1
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-sales'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-sales-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-sales-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('add-purchase-detail'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase'))
-            &&
-            Ext.isEmpty(Ext.ComponentQuery.query('edit-purchase-detail'))
         );
     },
     
     keyMap: function(panel){
-        var me = this;
+        var me      = this;
         
         new Ext.util.KeyMap({
             target: Ext.getDoc(),
@@ -66,7 +52,7 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        Ext.fn.App.window('add-sales');
+                        var addSales = POS.fn.App.newTab('add-sales');
                     }
                 }
             },{
@@ -74,7 +60,7 @@ Ext.define('POS.view.main.MainController', {
                 defaultEventAction: 'preventDefault',
                 fn: function(){ 
                     if (!me.isKeyBlocked()) {
-                        Ext.fn.App.window('add-purchase');
+                        var addPurchase = POS.fn.App.newTab('add-purchase');
                     }
                 }
             }]

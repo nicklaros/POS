@@ -27,7 +27,7 @@ Ext.define('POS.view.option.IdentityController', {
             form    = panel.down('form');
         
         panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('option/loadClientIdentity', function(websocket, result){
                 clearTimeout(monitor);
                 panel.setLoading(false);
@@ -39,7 +39,7 @@ Ext.define('POS.view.option.IdentityController', {
                         name.focus();
                     }, 10);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                     me.lookupReference('status').setHtml('<span class="red">Gagal membaca data dari server</span>');
                 }
             }, this, {
@@ -61,7 +61,7 @@ Ext.define('POS.view.option.IdentityController', {
             var params = form.getValues();
             
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('option/updateClientIdentity', function(websocket, data){
                     clearTimeout(monitor);
                     panel.setLoading(false);
@@ -77,7 +77,7 @@ Ext.define('POS.view.option.IdentityController', {
                         
                         me.lookupReference('status').setHtml('<span class="green">Pengaturan berhasil tersimpan</span>');
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                         
                         me.lookupReference('status').setHtml('<span class="red">Gagal menyimpan</span>');
                     }

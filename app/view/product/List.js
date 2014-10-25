@@ -4,7 +4,7 @@ Ext.define('POS.view.product.List' ,{
     controller: 'list-product',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Product',
         'POS.view.product.Add',

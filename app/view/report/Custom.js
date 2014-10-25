@@ -16,6 +16,7 @@ Ext.define('POS.view.report.Custom' ,{
         'POS.custom.grid.SaledProduct',
         'POS.custom.grid.SalesReport',
         'POS.custom.panel.ReportStats',
+        'POS.store.chart.transaction.CustomDaily',
         'POS.store.chart.transaction.CustomSalesVsPurchase',
         'POS.store.report.CustomPurchase',
         'POS.store.report.CustomPurchasedProduct',

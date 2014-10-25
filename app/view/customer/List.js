@@ -26,11 +26,11 @@ Ext.define('POS.view.customer.List', {
         this.store = store;
 
         this.columns = [
-            {header: 'Terdaftar Pada', dataIndex: 'registered_date', width: 150, renderer: Ext.fn.Render.date},
+            {header: 'Terdaftar Pada', dataIndex: 'registered_date', width: 150, renderer: POS.fn.Render.date},
             {header: 'Nama', dataIndex: 'name', width: 200},
             {header: 'Alamat', dataIndex: 'address', width: 200},
-            {header: 'Tanggal lahir', dataIndex: 'birthday', width: 150, renderer: Ext.fn.Render.date},
-            {header: 'Jenis Kelamin', dataIndex: 'gender', width: 125, renderer: Ext.fn.Render.gender},
+            {header: 'Tanggal lahir', dataIndex: 'birthday', width: 150, renderer: POS.fn.Render.date},
+            {header: 'Jenis Kelamin', dataIndex: 'gender', width: 125, renderer: POS.fn.Render.gender},
             {header: 'Telp', dataIndex: 'phone', width: 125}
         ];
 

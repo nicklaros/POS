@@ -4,31 +4,31 @@ Ext.define('POS.view.purchase.EditDetailController', {
 
     control: {
         '#': {
-            boxready: function(panel){
-                var product = this.lookupReference('product');
-                
+            hide: function(){
+                // remove combo stock's store
+                this.lookupReference('stock').getStore().removeAll();
+
                 setTimeout(function(){
-                    product.focus();
+                    // focus on combo product
+                    Ext.ComponentQuery.query('edit-purchase [name = product]')[0].focus();
                 }, 10);
-            },
-            close: function(){
-                POS.app.getStore('combo.Stock').removeAll();
-            }
-        },
-        'textfield[tabOnEnter = true]': {
-            specialkey: function(field, e){
-                if(e.getKey() == e.ENTER) field.next('field').focus();
             }
         },
         'textfield[saveOnEnter = true]': {
             specialkey: function(f, e){
-                if(e.getKey() == e.ENTER) this.save();
+                if(e.getKey() == e.ENTER) {
+                    var me = this;
+                
+                    setTimeout(function(){
+                        me.save();
+                    }, 10);
+                }
             }
         }
     },
 
     addProduct: function(){
-        var panel = Ext.fn.App.window('add-product');
+        var panel = POS.fn.App.window('add-product');
 
         panel.bindCombo = this.lookupReference('product').getId();
     },
@@ -38,7 +38,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
             
         // make sure product is selected
         if (!Ext.isEmpty(product)) {
-            var panel           = Ext.fn.App.window('add-stock'),
+            var panel           = POS.fn.App.window('add-stock'),
                 panelController = panel.getController();
             
             panel.bindCombo = this.lookupReference('stock').getId();
@@ -53,17 +53,25 @@ Ext.define('POS.view.purchase.EditDetailController', {
                 panelController.lookupReference('unit').focus();
             }, 10);
         } else {
-            Ext.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
+            POS.fn.App.notification('Ups', 'Pilih Produk terlebih dahulu');
         }
     },
 
     close: function(){
-        this.getView().close();
+        var panel = this.getView(),
+            form = panel.down('form');
+        
+        panel.hide();
+        
+        form.reset();
     },
 
     load: function(record){
         var panel = this.getView(),
             form = panel.down('form');
+        
+        // save reference to edited record
+        panel.record = record.get('id');
 
         var product = Ext.create('POS.model.Product', {
             id: record.get('product_id'),
@@ -84,13 +92,13 @@ Ext.define('POS.view.purchase.EditDetailController', {
         var params = {
             product_id: record.get('product_id')
         }
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
                     POS.app.getStore('combo.Stock').loadData(result.data);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -102,13 +110,13 @@ Ext.define('POS.view.purchase.EditDetailController', {
         var params = {
             id: record.get('stock_id')
         }        
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('stock/getOne', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
                     this.onSetValueStock(result.data);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -137,7 +145,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
             product_id: record[0].getData().id
         }
         
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('populate/stock', function(websocket, result){
                 clearTimeout(monitor);
                 if (result.success){
@@ -162,7 +170,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
                         this.lookupReference('stock').focus(true);
                     }
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                 }
             }, this, {
                 single: true,
@@ -211,21 +219,27 @@ Ext.define('POS.view.purchase.EditDetailController', {
             values.unit_name = viewModelData.stock.unit_name;
             values.unit_price = parseInt(values.total_price / values.amount);
             
-            if (!panel.isEdit) {            
-                var store = POS.app.getStore('PurchaseDetail'),
-                    rec = Ext.create('POS.model.PurchaseDetail');
-                    
-                rec.set(values);
-                store.add(rec);
-            }else{
-                // perhaps there is a better way to select currently edited record than this clumsy code below
-                var rec = Ext.ComponentQuery.query('edit-purchase grid-purchase-detail')[0].getSelectionModel().getSelection()[0];
-                rec.set(values);
-            }
-
-            panel.close();
+            // update record
+            POS.app.getStore('purchase.EditDetail').getById(panel.record).set(values);
             
-            Ext.ComponentQuery.query('edit-purchase')[0].getController().setTotalPrice();
+            // hide panel
+            panel.hide();
+
+            // reset form
+            form.reset();
+            
+            // reset price status
+            this.lookupReference('price_status').update({});
+            
+            // get reference to add-sales panel and it's controller
+            var editPurchase = Ext.ComponentQuery.query('edit-purchase')[0],
+                editPurchaseController = editPurchase.getController();
+            
+            // set total price
+            editPurchaseController.setTotalPrice();
+            
+            // focus on combo product
+            editPurchaseController.lookupReference('product').focus();
         }
     },
     
@@ -237,7 +251,7 @@ Ext.define('POS.view.purchase.EditDetailController', {
             priceDifference = this.getViewModel().get('stock.buy') - value,
             params          = {};
             
-        unitPrice.setHtml(Ext.fn.Render.currency(value));
+        unitPrice.setHtml(POS.fn.Render.currency(value));
         
         if (priceDifference == 0) {
             params.status = 'stagnant';

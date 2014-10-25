@@ -147,7 +147,7 @@ class NotificationOptionTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Role', '\\ORM\\Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'CASCADE', 'RESTRICT');
+        $this->addRelation('Role', '\\ORM\\Role', RelationMap::MANY_TO_ONE, array('role_id' => 'id', ), 'CASCADE', 'CASCADE');
     } // buildRelations()
 
     /**

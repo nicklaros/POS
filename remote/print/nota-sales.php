@@ -81,6 +81,7 @@ $info = (object) $info;
 
     $salesDetails = SalesDetailQuery::create()
         ->filterBySalesId($sales->id)
+        ->filterByStatus('Active')
         ->select(array(
             'amount',
             'unit_price',

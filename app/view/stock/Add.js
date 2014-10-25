@@ -86,7 +86,10 @@ Ext.define('POS.view.stock.Add' ,{
                         name: 'sell_public',
                         reference: 'sell_public',
                         tabOnEnter: true,
-                        width: 150
+                        width: 150,
+                        listeners: {
+                            change: 'setDiscountNumber'
+                        }
                     },{
                         xtype: 'field-price',
                         fieldLabel: 'Grosir',
@@ -150,12 +153,39 @@ Ext.define('POS.view.stock.Add' ,{
                     }
                 }]
             },{
-                xtype: 'field-discount',
-                fieldLabel: 'Diskon (%)',
-                name: 'discount',
-                reference: 'discount',
-                saveOnEnter: true,
-                width:125
+                xtype: 'container',
+                anchor: '100%',
+                layout: 'hbox',
+                margin: '0 0 10 0',
+                items:[{
+                    xtype: 'field-discount',
+                    fieldLabel: 'Diskon (%)',
+                    name: 'discount',
+                    reference: 'discount',
+                    saveOnEnter: true,
+                    width: 100,
+                    listeners: {
+                        change: 'setDiscountNumber'
+                    }
+                },{
+                    xtype: 'container',
+                    html: 'atau',
+                    margin: '30 0 0 15'
+                },{
+                    xtype: 'field-price',
+                    fieldLabel: 'Diskon (Rp)',
+                    reference: 'discount_in_number',
+                    saveOnEnter: true,
+                    margin: '0 0 0 15',
+                    width: 150,
+                    listeners: {
+                        change: 'setDiscountPercentage'
+                    }
+                },{
+                    xtype: 'container',
+                    html: 'berdasarkan harga jual biasa',
+                    margin: '30 0 0 15'
+                }]
             }]
         }];
 

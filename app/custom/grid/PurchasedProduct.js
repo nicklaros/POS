@@ -27,10 +27,10 @@ Ext.define('POS.custom.grid.PurchasedProduct', {
                     return '<strong>Total</strong>';
                 }
             },
-            {header: 'Total', dataIndex: 'purchased_total', width: 150, sortable: true, renderer: Ext.fn.Render.currency, align: 'right',
+            {header: 'Total', dataIndex: 'purchased_total', width: 150, sortable: true, renderer: POS.fn.Render.currency, align: 'right',
                 summaryType: 'sum',
                 summaryRenderer: function(value) {
-                    return '<strong>' + Ext.fn.Render.currency(value) + '</strong>';
+                    return '<strong>' + POS.fn.Render.currency(value) + '</strong>';
                 }
             }
         ];

@@ -1,6 +1,6 @@
 // Error
 var ERROR_0 = "Anda belum masuk atau sesi Anda telah berakhir. Silahkan masuk terlebih dahulu. Apabila Anda tidak dapat masuk, hubungi Administrator.<br />Terimakasih."
-var ERROR_1 = "Belum ada produk yang dibeli.";
+var ERROR_1 = "Belum ada produk yang ditransaksikan.";
 
 // Empty Text
 var EMPTY_TEXT_0 = "Akan diabaikan apabila kosong"; //field Search

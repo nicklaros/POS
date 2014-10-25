@@ -77,7 +77,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStock findOneBySellPublic(int $sell_public) Return the first ChildStock filtered by the sell_public column
  * @method     ChildStock findOneBySellDistributor(int $sell_distributor) Return the first ChildStock filtered by the sell_distributor column
  * @method     ChildStock findOneBySellMisc(int $sell_misc) Return the first ChildStock filtered by the sell_misc column
- * @method     ChildStock findOneByDiscount(int $discount) Return the first ChildStock filtered by the discount column
+ * @method     ChildStock findOneByDiscount(string $discount) Return the first ChildStock filtered by the discount column
  * @method     ChildStock findOneByUnlimited(boolean $unlimited) Return the first ChildStock filtered by the unlimited column
  * @method     ChildStock findOneByStatus(string $status) Return the first ChildStock filtered by the status column
  *
@@ -90,7 +90,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStock[]|ObjectCollection findBySellPublic(int $sell_public) Return ChildStock objects filtered by the sell_public column
  * @method     ChildStock[]|ObjectCollection findBySellDistributor(int $sell_distributor) Return ChildStock objects filtered by the sell_distributor column
  * @method     ChildStock[]|ObjectCollection findBySellMisc(int $sell_misc) Return ChildStock objects filtered by the sell_misc column
- * @method     ChildStock[]|ObjectCollection findByDiscount(int $discount) Return ChildStock objects filtered by the discount column
+ * @method     ChildStock[]|ObjectCollection findByDiscount(string $discount) Return ChildStock objects filtered by the discount column
  * @method     ChildStock[]|ObjectCollection findByUnlimited(boolean $unlimited) Return ChildStock objects filtered by the unlimited column
  * @method     ChildStock[]|ObjectCollection findByStatus(string $status) Return ChildStock objects filtered by the status column
  * @method     ChildStock[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit

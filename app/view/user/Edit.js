@@ -29,7 +29,7 @@ Ext.define('POS.view.user.Edit' ,{
             },{
                 xtype: 'combo-role',
                 fieldLabel: 'Jabatan',
-                name: 'role_id',
+                name: 'role',
                 afterLabelTextTpl: REQUIRED,
                 allowBlank: false,
                 width: 150

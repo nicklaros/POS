@@ -4,7 +4,7 @@ Ext.define('POS.view.debit.List' ,{
     controller: 'list-debit',
 
     requires: [
-        'Ext.fn.Render',
+        'POS.fn.Render',
         'Ext.ux.container.ButtonSegment',
         'POS.store.Debit',
         'POS.view.debit.ListController',
@@ -28,12 +28,12 @@ Ext.define('POS.view.debit.List' ,{
         this.columns = [
             {header: 'Kode', dataIndex:'id', width: 75},
             {header: 'Nota Pembelian', dataIndex:'purchase_id', width: 125},
-            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: Ext.fn.Render.date},
+            {header: 'Tanggal', dataIndex: 'date', width: 150, renderer: POS.fn.Render.date},
             {header: 'Nama', dataIndex: 'second_party_name', width: 200},
-            {header: 'Hutang', dataIndex: 'total', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: Ext.fn.Render.currency, align: 'right'},
-            {header: 'Sisa Hutang', dataIndex: 'balance', width: 125, renderer: Ext.fn.Render.creditBalance, align: 'right'},
-            {header: 'Kembali', dataIndex: 'cash_back', width: 125, renderer: Ext.fn.Render.currency, align: 'right'}
+            {header: 'Hutang', dataIndex: 'total', width: 125, renderer: POS.fn.Render.currency, align: 'right'},
+            {header: 'Dibayar', dataIndex: 'paid', width: 125, renderer: POS.fn.Render.currency, align: 'right'},
+            {header: 'Sisa Hutang', dataIndex: 'balance', width: 125, renderer: POS.fn.Render.creditBalance, align: 'right'},
+            {header: 'Kembali', dataIndex: 'cash_back', width: 125, renderer: POS.fn.Render.currency, align: 'right'}
         ];
 
         this.dockedItems = [{

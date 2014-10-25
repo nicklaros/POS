@@ -3,7 +3,7 @@ Ext.define('POS.view.currentuser.UpdateBiodataController', {
     alias: 'controller.update-biodata',
 
     requires: [
-        'Ext.fn.Util'
+        'POS.fn.Util'
     ],
 
     control: {
@@ -30,7 +30,7 @@ Ext.define('POS.view.currentuser.UpdateBiodataController', {
         var	form   = panel.down('form');
         
         panel.setLoading(true);
-        var monitor = Ext.fn.WebSocket.monitor(
+        var monitor = POS.fn.WebSocket.monitor(
             Ext.ws.Main.on('option/loadBiodata', function(websocket, result){
                 clearTimeout(monitor);
                 panel.setLoading(false);
@@ -42,7 +42,7 @@ Ext.define('POS.view.currentuser.UpdateBiodataController', {
                         name.focus();
                     }, 10);
                 }else{
-                    Ext.fn.App.notification('Ups', result.errmsg);
+                    POS.fn.App.notification('Ups', result.errmsg);
                     panel.close();
                 }
             }, this, {
@@ -63,7 +63,7 @@ Ext.define('POS.view.currentuser.UpdateBiodataController', {
             var params = form.getValues();
             
             panel.setLoading(true);
-            var monitor = Ext.fn.WebSocket.monitor(
+            var monitor = POS.fn.WebSocket.monitor(
                 Ext.ws.Main.on('option/updateBiodata', function(websocket, data){
                     clearTimeout(monitor);
                     panel.setLoading(false);
@@ -73,7 +73,7 @@ Ext.define('POS.view.currentuser.UpdateBiodataController', {
                         Ext.main.ViewModel.set('current_user.phone', params.phone);
                         panel.close();
                     }else{
-                        Ext.fn.App.notification('Ups', data.errmsg);
+                        POS.fn.App.notification('Ups', data.errmsg);
                     }
                 }, this, {
                     single: true,

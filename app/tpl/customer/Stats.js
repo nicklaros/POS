@@ -2,7 +2,7 @@ Ext.define('POS.tpl.customer.Stats', {
     extend: 'Ext.XTemplate',
     
     requires: [
-        'Ext.fn.Customer'
+        'POS.fn.Customer'
     ],
 
     html: [
@@ -16,7 +16,7 @@ Ext.define('POS.tpl.customer.Stats', {
                 '<tr>',
                     '<td></td>',
                     '<td></td>',
-                    '<td class="auto left">{[ Ext.fn.Render.currency(values.sales_total_this_month) ]}</td>',
+                    '<td class="auto left">{[ POS.fn.Render.currency(values.sales_total_this_month) ]}</td>',
                 '</tr>',
                 '<tr>',
                     '<td class="right">Penjualan tahun ini</td>',
@@ -26,17 +26,17 @@ Ext.define('POS.tpl.customer.Stats', {
                 '<tr>',
                     '<td></td>',
                     '<td></td>',
-                    '<td class="auto left">{[ Ext.fn.Render.currency(values.sales_total_this_year) ]}</td>',
+                    '<td class="auto left">{[ POS.fn.Render.currency(values.sales_total_this_year) ]}</td>',
                 '</tr>',
                 '<tr>',
                     '<td class="right">Piutang</td>',
                     '<td>:</td>',
-                    '<td class="left"><a onClick="Ext.fn.Customer.showCredit({customer_id})">{[ Ext.fn.Render.currency(values.credit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
+                    '<td class="left"><a onClick="POS.fn.Customer.showCredit({customer_id})">{[ POS.fn.Render.currency(values.credit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
                 '</tr>',
                 '<tr>',
                     '<td class="right">Hutang</td>',
                     '<td>:</td>',
-                    '<td class="left"><a onClick="Ext.fn.Customer.showDebit({customer_id})">{[ Ext.fn.Render.currency(values.debit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
+                    '<td class="left"><a onClick="POS.fn.Customer.showDebit({customer_id})">{[ POS.fn.Render.currency(values.debit) ]} <i class="fa fa-external-link-square"></i> </a></td>',
                 '</tr>',
             '</table>',
         '</div>'

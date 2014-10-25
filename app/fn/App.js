@@ -1,9 +1,9 @@
-Ext.define('Ext.fn.App', {
+Ext.define('POS.fn.App', {
     singleton: true,
 
     init: function(){
         // add native javascript function
-        Ext.fn.Util.addNativeFunction();
+        POS.fn.Util.addNativeFunction();
         
         // create WebSocket container
         Ext.ws = {};
@@ -15,11 +15,11 @@ Ext.define('Ext.fn.App', {
         Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(App.init);
 
         if (App.init.state == 1) { // if already loged in then
-            Ext.fn.Util.afterLogin();
+            POS.fn.Util.afterLogin();
         }
     
         // disable browser context menu
-        Ext.fn.Util.disableBrowserContextMenu();
+        POS.fn.Util.disableBrowserContextMenu();
                 
         console.log('Application successfully initiated.');
     },
@@ -72,6 +72,11 @@ Ext.define('Ext.fn.App', {
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
     },
 
+    mnListRole: function(){
+        var panel = this.newTab('list-role');
+        if (!Ext.isEmpty(panel)) panel.getStore().search({});
+    },
+
     mnListSales: function(){
         var panel = this.newTab('list-sales');
         if (!Ext.isEmpty(panel)) panel.getStore().search({});
@@ -100,22 +105,30 @@ Ext.define('Ext.fn.App', {
     mnLogout: function(){
         Mains.logout(function(result){
             if (result.success){
-                var appTab = Ext.ComponentQuery.query('app-tab')[0],
-                    tabItems = appTab.items.items,
-                    tabLength = tabItems.length;
+                var appTab = Ext.main.AppTab;
 
                 appTab.setActiveTab(0);
-                for(i=1;i<tabLength;i++){
-                    tabItems[1].close();
-                }
+                
+                appTab.items.each(function(child) {
+                    
+                    // check wether child tab is closable
+                    if (child.closable) { 
+                        
+                        // if closable then remove it from it's parent
+                        appTab.remove(child); 
+                        
+                    }
+                    
+                });
 
-                Ext.ComponentQuery.query('app-main')[0].getViewModel().setData(result);
+                Ext.main.ViewModel.setData(result);
 
-                Ext.fn.Util.afterLogout();
+                POS.fn.Util.afterLogout();
 
                 setTimeout(function(){
                     Ext.ComponentQuery.query('login textfield[name=user]')[0].focus();
                 }, 10);
+                
             }else{
                 console.log('Login error');
             }
@@ -144,9 +157,13 @@ Ext.define('Ext.fn.App', {
             ||
             ( (state == 1) && (main.get('state') == 1) )
         ){
-            if(!panel){
-                var panel = tab.add({xtype:alias});
+            if( !panel ){
+                var panel = tab.add( { xtype:alias } );
                 panel.show();
+            } else {
+                if ( Ext.isEmpty(tab.child(alias)) ) {
+                    tab.add(panel);
+                }
             }
             tab.setActiveTab(panel);
             return panel;
@@ -156,11 +173,11 @@ Ext.define('Ext.fn.App', {
     },
 
     notify: function(title, message, icon, manager){
-        Ext.fn.Notification.show(title, message, icon, manager);
+        POS.fn.Notification.show(title, message, icon, manager);
     },
 
     notification: function(title, message, icon, manager){
-        Ext.fn.Notification.show(title, message, icon, manager);
+        POS.fn.Notification.show(title, message, icon, manager);
     },
 
     printNotaCredit: function(id){
@@ -190,7 +207,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartyCredit: function(secondPartyId){
-        Ext.fn.App.newTab('list-credit');
+        POS.fn.App.newTab('list-credit');
                 
         POS.app.getStore('Credit').search({
             second_party_id: secondPartyId,
@@ -199,7 +216,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartyDebit: function(secondPartyId){
-        Ext.fn.App.newTab('list-debit');
+        POS.fn.App.newTab('list-debit');
                 
         POS.app.getStore('Debit').search({
             second_party_id: secondPartyId,
@@ -208,7 +225,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showSecondPartySales: function(secondPartyId){
-        Ext.fn.App.newTab('list-sales');
+        POS.fn.App.newTab('list-sales');
                 
         POS.app.getStore('Sales').search({
             second_party_id: secondPartyId
@@ -216,7 +233,7 @@ Ext.define('Ext.fn.App', {
     },
     
     showProductPrice: function(productId){
-        Ext.fn.App.newTab('list-stock');
+        POS.fn.App.newTab('list-stock');
                 
         POS.app.getStore('Stock').search({
             product_id: productId

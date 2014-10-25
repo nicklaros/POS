@@ -27,7 +27,9 @@ Ext.define('POS.view.sales.ListController', {
     },
     
     add: function(){
-        Ext.fn.App.window('add-sales');
+        var addSales = POS.fn.App.newTab('add-sales');
+
+        addSales.getController().add();
     },
 
     detail: function(){
@@ -36,7 +38,7 @@ Ext.define('POS.view.sales.ListController', {
                 id: rec.get('id')
             };
 
-        var detail = Ext.fn.App.window('detail-sales');
+        var detail = POS.fn.App.window('detail-sales');
         detail.getController().load(params);
     },
 
@@ -46,14 +48,15 @@ Ext.define('POS.view.sales.ListController', {
                 id: rec.get('id')
             };
 
-        var edit = Ext.fn.App.window('edit-sales');
-        edit.getController().load(params);
+        var editSales = POS.fn.App.newTab('edit-sales');
+        
+        editSales.getController().load(params);
     },
 
     print: function(){
         var rec  = this.getView().getSelectionModel().getSelection()[0];
 
-        Ext.fn.App.printNotaSales(rec.get('id'));
+        POS.fn.App.printNotaSales(rec.get('id'));
     },
     
     cancel: function(){
@@ -71,15 +74,15 @@ Ext.define('POS.view.sales.ListController', {
                         id.push(sel[i].get('id'));
                     }
 
-                    Ext.fn.App.setLoading(true);
-                    var monitor = Ext.fn.WebSocket.monitor(
+                    POS.fn.App.setLoading(true);
+                    var monitor = POS.fn.WebSocket.monitor(
                         Ext.ws.Main.on('sales/cancel', function(websocket, result){
                             clearTimeout(monitor);
-                            Ext.fn.App.setLoading(false);
+                            POS.fn.App.setLoading(false);
                             if (result.success){
                                 POS.app.getStore('Sales').load();
                             }else{
-                                Ext.fn.App.notification('Ups', result.errmsg);
+                                POS.fn.App.notification('Ups', result.errmsg);
                             }
                         }, this, {
                             single: true,
@@ -93,7 +96,7 @@ Ext.define('POS.view.sales.ListController', {
     },
     
     search: function(){
-        Ext.fn.App.window('search-sales');
+        POS.fn.App.window('search-sales');
     },
     
     showMenu: function(view, record, item, index, e, eOpts) {

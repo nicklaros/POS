@@ -1,4 +1,15 @@
 {
+    "name": "nicklaros/pos",
+    "type": "application",
+    "description": "Next Generation Point Of Sale Application",
+    "keywords": ["pos","sale","shop"],
+    "homepage": "http://github.com/nicklaros/POS",
+    "authors": [
+        {
+            "name": "Nick Laros",
+            "email": "nicklaros@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-0": {
             "ORM": "remote"

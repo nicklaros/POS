@@ -73,6 +73,12 @@ abstract class Role implements ActiveRecordInterface
     protected $name;
 
     /**
+     * The value for the status field.
+     * @var        string
+     */
+    protected $status;
+
+    /**
      * @var        ObjectCollection|ChildNotificationOption[] Collection to store aggregation of ChildNotificationOption objects.
      */
     protected $collNotificationOptions;
@@ -347,6 +353,16 @@ abstract class Role implements ActiveRecordInterface
     }
 
     /**
+     * Get the [status] column value.
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -387,6 +403,9 @@ abstract class Role implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RoleTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RoleTableMap::translateFieldName('Status', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->status = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -395,7 +414,7 @@ abstract class Role implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = RoleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = RoleTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\ORM\\Role'), 0, $e);
@@ -458,6 +477,26 @@ abstract class Role implements ActiveRecordInterface
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [status] column.
+     *
+     * @param  string $v new value
+     * @return $this|\ORM\Role The current object (for fluent API support)
+     */
+    public function setStatus($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->status !== $v) {
+            $this->status = $v;
+            $this->modifiedColumns[RoleTableMap::COL_STATUS] = true;
+        }
+
+        return $this;
+    } // setStatus()
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
@@ -684,6 +723,9 @@ abstract class Role implements ActiveRecordInterface
         if ($this->isColumnModified(RoleTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
         }
+        if ($this->isColumnModified(RoleTableMap::COL_STATUS)) {
+            $modifiedColumns[':p' . $index++]  = 'STATUS';
+        }
 
         $sql = sprintf(
             'INSERT INTO role (%s) VALUES (%s)',
@@ -700,6 +742,9 @@ abstract class Role implements ActiveRecordInterface
                         break;
                     case 'NAME':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case 'STATUS':
+                        $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -769,6 +814,9 @@ abstract class Role implements ActiveRecordInterface
             case 1:
                 return $this->getName();
                 break;
+            case 2:
+                return $this->getStatus();
+                break;
             default:
                 return null;
                 break;
@@ -800,6 +848,7 @@ abstract class Role implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
+            $keys[2] => $this->getStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -856,6 +905,9 @@ abstract class Role implements ActiveRecordInterface
             case 1:
                 $this->setName($value);
                 break;
+            case 2:
+                $this->setStatus($value);
+                break;
         } // switch()
 
         return $this;
@@ -887,6 +939,9 @@ abstract class Role implements ActiveRecordInterface
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setName($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setStatus($arr[$keys[2]]);
         }
     }
 
@@ -928,6 +983,9 @@ abstract class Role implements ActiveRecordInterface
         }
         if ($this->isColumnModified(RoleTableMap::COL_NAME)) {
             $criteria->add(RoleTableMap::COL_NAME, $this->name);
+        }
+        if ($this->isColumnModified(RoleTableMap::COL_STATUS)) {
+            $criteria->add(RoleTableMap::COL_STATUS, $this->status);
         }
 
         return $criteria;
@@ -1016,6 +1074,7 @@ abstract class Role implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
+        $copyObj->setStatus($this->getStatus());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1569,6 +1628,7 @@ abstract class Role implements ActiveRecordInterface
     {
         $this->id = null;
         $this->name = null;
+        $this->status = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
