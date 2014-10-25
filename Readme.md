@@ -112,3 +112,8 @@ is loaded.
 
 This folder contains the styling for the application's views. See POS/sass/Readme.md
 for details.
+
+# Future Development
+
+[See future development plan here](https://github.com/nicklaros/POS/wiki/Plan)
+ 
