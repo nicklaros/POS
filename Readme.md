@@ -39,6 +39,10 @@ Use following command in POS root directory to build project
 $ sencha app build
 ```
 
+# Database Scheme
+
+[Click here to view database scheme](https://github.com/nicklaros/POS-ws-server/blob/master/schema.xml)
+
 # Important Information
 
  - By default, POS will try to connect websocket at `ws://pos.localhost:8080`, so that means
@@ -112,3 +116,8 @@ is loaded.
 
 This folder contains the styling for the application's views. See POS/sass/Readme.md
 for details.
+
+# Future Development
+
+[See future development plan here](https://github.com/nicklaros/POS/wiki/Plan)
+ 
