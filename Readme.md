@@ -17,6 +17,7 @@ pass = admin
  - Httpd server (nginx, apache atau lainnya)
  - MariaDB atau MySql
  - PHP 5.4 +
+ - [`Propel ORM`](http://propelorm.org/) [Optional]
  
 ## Backend Repository
  
@@ -26,7 +27,7 @@ pass = admin
  
  - Clone or fork POS to your computer
  - Use `composer update` command in POS root directory to tell composer to gather required 
-   repository for you
+   dependencies for you
  - Import database from included sql file in `database` folder
  - Before viewing it on Browser, you must run `sencha app build` command in POS root 
    directory to build POS Project
