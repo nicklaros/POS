@@ -35,11 +35,12 @@ Icon
 .Spotlight-V100
 .Trashes
 
-# Folder
+# Folders
 .idea/
 build/
 vendor/
 
-# File
+# Files
 bootstrap.json
+composer.lock
 sass/example/bootstrap.json
